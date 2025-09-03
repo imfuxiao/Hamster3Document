@@ -1,0 +1,152 @@
+---
+title: 事件通知
+---
+
+
+import { Aside, Code } from "@astrojs/starlight/components";
+
+当键盘元素需要根据某些状态动态变化时，就可以使用「事件通知」功能。
+
+比如：
+
+- 模仿系统键盘回车键在某些场景下是蓝色，某些是正常系统键颜色。
+- 跟踪并显示当前 rime 某个 option 的值，比如 ascii_mode 的值，以完成 rime 的中英文输入切换。
+
+通知的设置需要绑定在按键样式上，具体来说，就是在按键样式的 `notification` 配置中进行设置。
+
+> 按键也包含工具栏上的按键。
+
+export const highlighted = ["notification"];
+
+示例：
+
+export const notificationCode = `
+qButton:
+  backgroundStyle: alphabeticBackgroundStyle
+  foregroundStyle:
+    - qButtonForegroundStyle
+    - qButtonUpForegroundStyle
+  ...
+  notification:
+    - keyboardActionNotification
+`;
+
+<Code lang="yaml" code={notificationCode} ins={{range: "7-8"}} mark={highlighted}  />
+
+目前通知有以下几种类型：
+
+- RIME 类型通知: 监听 Rime 引擎通知事件。
+- 键盘动作类型通知: 监听键盘发出的某一种 KeyboardAction。
+- 回车键类型通知: 监听系统回车键的类型。
+
+## 通知类型
+
+### RIME 类型通知
+
+RIME 类型通知用于监听 Rime 输入法的通知事件。
+
+```yaml
+notificationType: rime
+```
+
+RIME 类型通知也有自己的分类，通过 `rimeNotificationType` 设置：
+
+- `optionChanged`: 监听 rime option 变更
+- `schemaChanged`: 监听 rime 输入方案变更
+
+#### RIME Option 变更通知
+
+RIME Option 变更通知用于监听 Rime 输入法的 option 变更事件。
+
+export const rimeOptionNotificationCode = `
+notificationType: rime
+rimeNotificationType: optionChanged
+
+rimeOptionName: ascii_mode
+
+rimeOptionValue: true
+`;
+
+<Code lang="yaml"
+  code={rimeOptionNotificationCode}
+  mark={{range: "1-2"}}
+  ins={[
+    {range: "3-4", label: "必选：设置想要监听的 option 标签"},
+    {range: "5-6", label: "必选：与 option 匹配的值"},
+    ]}
+  />
+
+只有当通知中的内容与 rimeOptionName 和 rimeOptionValue 设置的内容匹配时，才会触发样式变化。
+
+#### RIME schema 变更通知
+
+RIME schema 变更通知用于监听 RIME 引擎的输入方案变更事件。
+
+export const rimeSchemaNotificationCode = `
+notificationType: rime
+rimeNotificationType: schemaChanged
+`;
+
+<Code lang="yaml"
+  code={rimeSchemaNotificationCode}
+  mark={{range: "2-2"}}
+  />
+
+### 键盘动作类型通知
+
+键盘动作类型通知用于监听键盘发出的某一种 KeyboardAction。
+
+export const keyboardActionNotificationCode = `
+notificationType: keyboardAction
+
+notificationKeyboardAction: { character: 'a' }
+`;
+
+<Code lang="yaml"
+  code={keyboardActionNotificationCode}
+  ins={{range: "2-3", label: "必选：设置想要监听的 KeyboardAction"}}
+  />
+
+### 回车键类型通知
+
+回车键类型通知用于监听系统回车键的类型。
+
+export const returnKeyTypeNotificationCode = `
+notificationType: returnKeyType
+
+returnKeyType: [1, 4, 7]
+`;
+
+<Code lang="yaml"
+  code={returnKeyTypeNotificationCode}
+  ins={{range: "2-3", label: "必选：设置想要监听的回车键类型"}}
+  />
+
+
+## 根据通知调整按键样式及动作
+
+在通知设置中，可以通过 `backgroundStyle`，`foregroundStyle`，`action` 参数改变按键的样式及触发动作。
+
+export const sample01Code = `
+blueReturnKeyTypeNotification:
+  notificationType: returnKeyType
+  returnKeyType: [1, 4, 7]
+
+  backgroundStyle: blueSystemButtonBackgroundStyle
+  foregroundStyle: enterButtonWhiteForegroundStyle
+
+  action: enter
+`;
+
+<Code lang="yaml" code={sample01Code}
+ins={[
+  {range: "4-6", label: "必选：与通知匹配后，按键使用的样式"},
+  {range: "7-8", label: "可选：与通知匹配后，按键使用的按键动作"},
+  ]}
+  />
+
+<Aside type="danger" title="注意">
+在通知匹配后，按键会按照通知中设置的样式进行渲染。如果没有设置样式，则按键会显示为空白。
+
+如果没有为通知设置按键动作 `action`参数，则按键会继续使用原样式中设置的动作。
+</Aside>

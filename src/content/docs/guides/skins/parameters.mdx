@@ -1,0 +1,139 @@
+---
+title: 配置参数
+---
+
+## 参数
+
+### buttonStyleType
+
+类型：`'geometry' | 'systemImage' | 'assetImage' | 'fileImage' | 'text'`
+
+必选项：是
+
+用于标识样式的类型，不同类型的样式，所支持解析的配置参数不同。
+
+- 'geometry'：表示使用 iOS 原生属性绘制样式
+- 'systemImage'：使用 SF Symbol 图片
+- 'assetImage'：使用 app 内部的图片资源
+- 'fileImage'：使用皮肤中的图片文件作为样式
+- 'text'：使用文本文字作为样式
+
+### backgroundStyle
+
+类型：`String | Array<ConditionStyle> | undefined`
+
+用来引用按键的背景样式。
+
+### foregroundStyle
+
+类型：`String | Array<String> | Array<ConditionStyle> | undefined`
+
+用来引用按键的前景样式。
+
+### notification
+
+类型：`String | Array<String>`
+
+为按键绑定通知。此属性只能在按键样式中使用。
+
+### notificationType
+
+类型：`'rime' | 'keyboardAction' | 'returnKeyType'`
+
+必选项：是
+
+用于标识监听的通知的类型，不同类型的通知，所支持解析的配置参数不同。
+
+- 'rime'：表示 Rime 输入法的通知
+- 'keyboardAction'：表示键盘按键动作的通知
+- 'returnKeyType'：表示回车键类型的通知
+
+### rimeNotificationType
+
+类型：`'optionChanged' | 'schemaChanged'`
+
+必选项：是
+
+用于标识 Rime 输入法的通知类型，不同类型的通知，所支持解析的配置参数不同。
+
+- 'optionChanged'：表示 option 配置选项变更
+- 'schemaChanged'：表示输入方案变更
+
+### rimeOptionName
+
+类型：`String`
+
+必选项：否，当 `rimeNotificationType` 设置为 `'optionChanged'` 时，此项为必选。
+
+用于标识 Rime 输入法的配置选项名称。
+
+### rimeOptionValue
+
+类型：`Bool`
+
+必选项：否，当 `rimeNotificationType` 设置为 `'optionChanged'` 时，此项为必选。
+
+用于标识 Rime 输入法的配置选项值。
+
+### notificationKeyboardAction
+
+类型： [`KeyboardAction`]()
+
+必选项：否，当 `notificationType` 设置为 `'keyboardAction'` 时，此项为必选。
+
+用于标识监听键盘触发的 KeyboardAction 的类型。
+
+当键盘通知的 action 与当前设置的 notificationKeyboardAction 类型匹配时，会触发样式变更。当 action 值不匹配时，样式恢复为默认状态。
+
+### returnKeyType
+
+类型：`Int | [Int]`
+
+必选项：否，当 `notificationType` 设置为 `'returnKeyType'` 时，此项为必选。
+
+用于标识回车键的类型。
+
+当系统回车键类型与当前设置的 returnKeyType 类型匹配时，会触发样式变更。当回车键类型值不匹配时，样式恢复为默认状态。
+
+### animationType
+
+类型：`'scale' | 'cartoon' | 'physics'`
+
+必选项：是
+
+用于标识动画的类型，不同类型的动画，所支持解析的配置参数不同。
+
+- 'scale'：表示缩放动画
+- 'cartoon'：表示卡通动画，用来替代之前版本的 APNG 图片
+- 'physics'：表示物理动画，可以用来描述移动、旋转、透明度变化等
+
+## 类型
+
+### ConditionStyle 条件样式
+
+部分按键的样式需要根据条件判断来决定，例如：符号键盘锁定按键的样式，它初始显示时需要根据当前锁定状态来决定显示样式。
+
+类型：`{ conditionKey: String, conditionValue: Bool, styleName: String }`
+
+配置示例：
+
+```yaml
+foregroundStyle:
+  - {
+      styleName: unlockButtonForegroundStyle,
+      conditionKey: $symbolicKeyboardLockState,
+      conditionValue: false,
+    }
+  - {
+      styleName: lockButtonForegroundStyle,
+      conditionKey: $symbolicKeyboardLockState,
+      conditionValue: true,
+    }
+```
+
+#### conditionKey
+
+类型：`'$symbolicKeyboardLockState' | 'rime${optionName}'`
+
+- `$symbolicKeyboardLockState`: 表示符号键盘的锁定状态
+- `rime${optionName}`: 表示 Rime option 选项状态，比如 `rime$ascii_mode` 表示 `ascii_mode` 选项的状态

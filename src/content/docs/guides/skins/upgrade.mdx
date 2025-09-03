@@ -1,0 +1,307 @@
+---
+title: 「仓输入法皮肤」迁移指南
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+
+## 为什么要做迁移？
+
+每次升级做迁移的确会让人头大，如果可以无感升级，当然是最好的，然而软件的设计及开发就是这样，你无法提前设计出完美的解决方案。
+
+比如之前版本通过在皮肤中嵌入 JavaScript 文本内容，实现一定程度的动态变化。但更复杂的动态需求，就无能为力了。比如按一个键，其他键也随这个键变化而变化。
+
+还有一些个人技术成长的问题，之前无法解决的问题，随着技术的提高，问题解决了。
+
+总之，这次皮肤功能的改造是为了更好地满足之前的一些需求。
+
+## 如何迁移
+
+<br />
+
+<Aside title="温馨提示" type="tip">
+  1. 迁移前请先备份原始皮肤文件;
+  2. 请小范围更新并测试，确保每一步的修改是有效的。
+</Aside>
+
+### 背景及前景样式添加 `buttonStyleType` 参数
+
+新增**必选**参数 `buttonStyleType`，用于设定样式的类型。
+
+确保背景样式（`backgroundStyle`）及前景样式（`foregroundStyle`）中都指定了 `buttonStyleType` 参数，否则无法解析定义的样式。
+
+示例：
+
+export const code = `
+# 改造前
+foregroundStyle: qButtonForegroundStyle
+qButtonForegroundStyle:
+  text: "q"
+
+# 改造后
+foregroundStyle: qButtonForegroundStyle
+qButtonForegroundStyle:
+  buttonStyleType: text
+  text: "q"
+`;
+
+<Code lang="yaml" ins={9} code={code} />
+
+根据你想要添加的样式内容，为 `buttonStyleType` 指定相应的值，具体内容请查阅 `buttonStyleType` [配置参考](../parameters/#buttonstyletype)。
+
+### 文字位置
+
+在新版中，文字样式的初始位置为「居中」对齐。如果之前为文字样式添加了 `center` 属性，需要将其移除或者调整其值，使文字显示在你想要的位置。
+
+### JavaScript 脚本内容移除
+
+在新版中，皮肤中的 JavaScript 脚本功能已被废除。这意味着之前通过 JavaScript 动态生成的样式名称或文本内容将不再有效。
+
+如需动态生成样式或文本，请使用[事件通知](/apps/hamster/v3/docs/guides/skins/notifications/)、[条件样式](/apps/hamster/v3/docs/guides/skins/parameters/#conditionstyle-条件样式)来代替。
+
+- 事件通知：用来监听某个键盘的状态变化，当状态改变时，更新相应的样。使用场景：根据输入了某个按键，切换另一个按键的样式；回车键根据环境变化。
+- 条件样式：用来初始化按键的样式，根据某个条件来决定使用哪种样式。使用场景：中英切换，简繁切换。
+
+示例：
+
+export const jsCode = `
+lockButton:
+  backgroundStyle: systemButtonBackgroundStyle
+
+  foregroundStyle: |-
+    // JavaScript
+    function getText() {
+      return $getSymbolicKeyboardLockState() ? "lockButtonForegroundStyle" : "unlockButtonForegroundStyle";
+    }
+
+lockButtonForegroundStyle:
+  systemImageName: "lock"
+  normalColor: 000000
+  highlightColor: 000000
+  fontSize: 20
+
+unlockButtonForegroundStyle:
+  systemImageName: "lock.open"
+  normalColor: 000000
+  highlightColor: 000000
+  fontSize: 20
+`;
+
+<Code lang="yaml" title={"修改前"}
+del={[{range: "3-8", label: "删除 JavaScript 脚本内容"}]}
+code={jsCode} />
+
+export const afterDelJavaScriptCode = `
+lockButton:
+  backgroundStyle: systemButtonBackgroundStyle
+
+  foregroundStyle:
+    - {
+        styleName: unlockButtonForegroundStyle,
+        conditionKey: $symbolicKeyboardLockState,
+        conditionValue: false,
+      }
+    - {
+        styleName: lockButtonForegroundStyle,
+        conditionKey: $symbolicKeyboardLockState,
+        conditionValue: true,
+      }
+
+lockButtonForegroundStyle:
+  buttonStyleType: systemImage
+  systemImageName: "lock"
+  normalColor: 000000
+  highlightColor: 000000
+  fontSize: 20
+
+unlockButtonForegroundStyle:
+  buttonStyleType: systemImage
+  systemImageName: "lock.open"
+  normalColor: 000000
+  highlightColor: 000000
+  fontSize: 20
+`;
+
+<Code lang="yaml" title={"修改后"}
+ins={[
+  {range: "3-14", label: "改为条件样式"},
+  ]}
+code={afterDelJavaScriptCode} />
+
+### 按键长按显示符号样式调整
+
+在新版本中使用 `hintSymbolsStyle`（旧版本为：`holdSymbolsStyle`）来定义按键长按时显示的符号样式。
+
+示例：
+
+export const holdSymbolsCode = `
+qButton:
+
+  holdSymbolsStyle: qButtonHoldSymbolsStyle
+
+  hintSymbolsStyle: qButtonHintSymbolsStyle
+`;
+
+<Code lang="yaml" title={"长按样式名变更"} del={{label: "替换前", range: "2-3"}} ins={{label: "替换后", range: "4-5"}} code={holdSymbolsCode} />
+
+同时，里面的参数也发生了一些变化。
+
+- 新增可选 `size` 参数，可自定义符号列表中符号的大小，如果不指定，默认与当前按键的可视区域大小相同。
+- 旧版本使用 `selectedStyle` 定义选中后的符号高亮样式，新版本中使用 `selectedBackgroundStyle` 参数。
+- 旧版本使用 `foregroundStyle` 与 `actions` 联合定义一个符号的外观及它的行为。新版本新增 `symbolStyles` 参数，用于定义长按后显示的每个符号的样式。
+
+export const beforeSymbolStylesCode = `
+qButtonHoldSymbolsStyle:
+  backgroundStyle: alphabeticHoldSymbolsBackgroundStyle
+
+  foregroundStyle:
+    - qButtonHoldSymbolsOfqForegroundStyle
+    - qButtonHoldSymbolsOf1ForegroundStyle
+    - qButtonHoldSymbolsOfQForegroundStyle
+  actions:
+    - { character: q }
+    - { symbol: 1 }
+    - { character: Q }
+
+
+  selectedStyle: alphabeticHoldSymbolsSelectedStyle
+  selectedIndex: 0
+`;
+
+<Code lang="yaml"
+title={"修改前"}
+del={[
+  {label: "使用 symbolStyles 替换 foregroundStyle + actions", range: "3-11"},
+  {label: "使用 selectedBackgroundStyle 替换 selectedStyle", range: "13-14"},
+]}
+code={beforeSymbolStylesCode} />
+
+export const afterSymbolStylesCode = `
+qButtonHintSymbolsStyle:
+
+  size:
+    width: 50
+    height: 50
+  insets: { top: 4, bottom: 4, left: 4, right: 4 }
+
+  backgroundStyle: alphabeticHoldSymbolsBackgroundStyle
+
+  selectedBackgroundStyle: alphabeticHoldSymbolsSelectedStyle
+
+  selectedIndex: 0
+
+  symbolStyles:
+    - qButtonHintSymbolsOf1Style
+    - qButtonHintSymbolsOf2Style
+    - qButtonHintSymbolsOf3Style
+`;
+
+<Code lang="yaml"
+title={"修改后"}
+ins={[
+  {label: "（可选）定义单个按键尺寸及整个符号列表的内边距", range: "2-6"},
+  {label: "定义高亮样式", range: "9-10"},
+  {label: "定义每个符号的样式", range: "13-17"},
+]}
+code={afterSymbolStylesCode} />
+
+现在单个符号的样式与键盘按键样式是相同的。如：
+
+```yaml
+qButtonHintSymbolsOf1Style:
+  foregroundStyle: qButtonHoldSymbolsOfqForegroundStyle
+  action: { character: q }
+```
+
+### 动画调整
+
+旧版本的动画定义是在背景样式或前景样式中定义的，而新版本中，动画必须定义在「按键」的样式下。
+
+示例：
+
+export const oldAnimatorCode = `
+# 字母按键背景样式
+alphabeticBackgroundStyle:
+  ...
+  animation: alphabeticBackgroundAnimation
+
+
+# 字母按键背景动画
+alphabeticBackgroundAnimation:
+  # type: 动画类型
+  # - bounds: 尺寸大小变化动画
+  - type: bounds
+    duration: 40 # 动画时长，单位毫秒
+    repeatCount: 1
+    fromScale: 1
+    toScale: 0.87
+  - type: bounds
+    duration: 80
+    repeatCount: 1
+    fromScale: 0.87
+    toScale: 1
+  - type: apng
+    file: animation
+`;
+
+<Code lang="yaml" title="修改前" code={oldAnimatorCode} mark={[4, "animation", "alphabeticBackgroundAnimation"]} del={[{range: "8-22"}]}/>
+
+
+export const editorAnimatorCode = `
+qButton:
+  backgroundStyle: qButtonBackgroundStyle
+
+  animation:
+    - scaleAnimation
+    - cartoonAnimation
+    - physicsAnimation
+
+# 放大或缩小的动画
+scaleAnimation:
+  animationType: scale
+  isAutoReverse: false
+  scale: 0.80
+  pressDuration: 40
+  releaseDuration: 80
+
+# 用于替代 apng 图片类型的动画
+cartoonAnimation:
+  animationType: cartoon
+  # 默认60，可不设置
+  fps: 60
+  images:
+    - lleeimage_0.png
+    - lleeimage_1.png
+
+# 用于替换之前 emit 动画
+physicsAnimation:
+  animationType: physics
+  duration: 1500
+  images:
+    - 01.png
+    - 02.png
+  randomImage: true
+  randomPosition: { x: 50, y: 10 }
+  startPosition: { x: 0, y: 0 }
+  endPosition: { x: 0, y: -70 }
+  useOpacity: true
+  startOpacity: 1
+  endOpacity: 0.2
+  useRotation: true
+  randomAngle: 6.28
+  startAngle: 0
+  endAngle: 6.28
+`;
+
+<Code lang="yaml" title={"修改后"}  code={editorAnimatorCode} ins={[
+  {label: "为按键添加动画", range: "3-7"},
+]} />
+
+在按键的定义中，新增了 `animation` 参数，用于定义按键的动画效果。其中每个动画通过 `animationType` 参数来指定动画类型，不同的动画类型有不同的参数和动画效果。
+
+具体参数说明请查阅参数字典。
+
+### 工具栏按键数量不再限制
+
+之前版本中，工具栏按键数量被限制为最多 8 个按键，这次改造后，工具栏按键数量不再受限。
+
+初始可见数量为 7 个按键，超过 7 个后，可通过在工具栏滑动寻找更多的按键。

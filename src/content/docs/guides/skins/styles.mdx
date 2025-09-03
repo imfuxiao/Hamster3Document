@@ -1,0 +1,162 @@
+---
+title: 样式
+description: 如何编写样式
+---
+
+按键的样式可以通过 `backgroundStyle` 和 `foregroundStyle` 参数进行设置。
+
+- `backgroundStyle`：设置按键的背景样式，支持纯色、渐变色或图片等多种形式。
+- `foregroundStyle`：设置按键的前景样式，通常用于定义按键上的文本、图标或角标等元素样式。
+
+## 背景样式
+
+通过 `backgroundStyle` 参数进行设置。
+
+**类型**：`'String' | [ConditionStyle]`
+
+**是否必须**：否。不设置时，按键将使用默认背景样式。
+
+> 参见条件样式 [ConditionStyle](/apps/hamster/v3/docs/guides/skins/parameters/#conditionstyle-条件样式)
+
+## 前景样式
+
+通过 `foregroundStyle` 参数进行设置。
+
+**类型**：`'String' | [String] | [ConditionStyle]`
+
+**是否必须**：否。不设置时，按键将使用默认前景样式。
+
+> 参见条件样式 [ConditionStyle](/apps/hamster/v3/docs/guides/skins/parameters/#conditionstyle-条件样式)
+
+前景样式与背景样式的不同之处在于，前景样式可以是一个字符串数组，表示按键上可以叠加显示多个前景样式。
+
+## 样式类型
+
+无论是背景样式还是前景样式，都必须指定其样式类型。
+
+样式类型通过 `buttonStyleType` 参数进行设置。
+
+**类型**：`'geometry' | 'systemImage' | 'assetImage' | 'fileImage' | 'text'`
+
+各样式类型说明：
+
+- `geometry`：使用 iOS 原生属性绘制样式
+- `systemImage`：使用 SF Symbol 图标作为样式
+- `assetImage`：使用应用内置资源图片作为样式
+- `fileImage`：使用皮肤中的图片文件作为样式
+- `text`：使用文本内容作为样式
+
+### geometry
+
+通过设置 `buttonStyleType` 参数为 `geometry`，使用 iOS 原生属性绘制样式。
+
+它包含以下参数：
+
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
+- `normalColor`：未按下时的颜色
+- `highlightColor`：按下时的颜色
+- `colorLocation`：颜色位置，用于渐变色（单色时无效）
+- `colorStartPoint`：渐变开始位置（单色时无效）
+- `colorEndPoint`：渐变结束位置（单色时无效）
+- `colorGradientType`：渐变类型，用于定义渐变的方式
+- `cornerRadius`：设置圆角半径
+- `borderSize`：设置边框宽度
+- `borderColor`：设置边框颜色。**边框宽度与边框颜色需同时设置才会显示边框**
+- `normalLowerEdgeColor`：未按下时底部边缘的颜色
+- `highlightLowerEdgeColor`：按下时底部边缘的颜色
+- `normalShadowColor`：未按下时的阴影颜色
+- `highlightShadowColor`：按下时的阴影颜色
+- `shadowOpacity`：设置阴影透明度，默认为 1
+- `shadowRadius`：设置阴影模糊半径，默认为 3
+- `shadowOffset`：设置阴影偏移，默认为 `{x: 0, y: 3}`
+
+**配置示例：**
+
+```yaml
+geometryBackground:
+  buttonStyleType: geometry
+  insets: { top: 6, left: 3, bottom: 6, right: 3 }
+  normalColor:
+    - "#9bafd9"
+    - "#103783"
+  highlightColor:
+    - "#432371"
+    - "#faae7b"
+  colorLocation: [0, 1]
+  colorStartPoint: { x: 0.5, y: 0 }
+  colorEndPoint: { x: 0.5, y: 1 }
+  colorGradientType: radial
+  cornerRadius: 6
+  borderSize: 3
+  borderColor: '#f5d7a1'
+  normalLowerEdgeColor: '#f5d7a1'
+  highlightLowerEdgeColor: '#552E5A'
+  normalShadowColor: '#e60b09'
+  highlightShadowColor: '#e60b09'
+  shadowRadius: 2
+  shadowOffset: { x: 0, y: 3 }
+  shadowOpacity: 0.8
+```
+
+### systemImage
+
+通过设置 `buttonStyleType` 参数为 `systemImage`，使用 SF Symbol 图标作为样式。
+
+它包含以下参数：
+
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
+- `systemImageName`：SF Symbol 图标名称（注意版本要求，部分 SF Symbol 需要在 iOS 高版本中才能使用）
+- `contentMode`：设置图片的显示模式，默认为 `center`
+- `fontSize`：设置图标的大小
+- `fontWeight`：设置图标的粗细程度
+- `normalColor`：未按下时图标的颜色
+- `highlightColor`：按下时图标的颜色
+
+### assetImage
+
+通过设置 `buttonStyleType` 参数为 `assetImage`，使用应用内置资源图片作为样式。
+
+它包含以下参数：
+
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
+- `assetImageName`：App 内置资源图片名称
+- `contentMode`：设置图片的显示模式，默认为 `center`
+- `normalColor`：未按下时图片的颜色
+- `highlightColor`：按下时图片的颜色
+
+### fileImage
+
+通过设置 `buttonStyleType` 参数为 `fileImage`，使用皮肤中的图片文件作为样式。
+
+它包含以下参数：
+
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
+- `contentMode`：设置图片的显示模式，默认为 `scaleToFill`
+- `normalImage`：未按下时的图片
+  - `file`：图片文件名称
+  - `image`：图片描述文件中的图片名称
+- `highlightImage`：按下时的图片
+  - `file`：图片文件名称
+  - `image`：图片描述文件中的图片名称
+
+### text
+
+通过设置 `buttonStyleType` 参数为 `text`，使用文本内容作为样式。
+
+它包含以下参数：
+
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
+- `text`：设置文本内容
+
+  **特殊文本内容：**
+
+  - `$rimePreedit`：Rime 预编辑文本
+  - `$rimeCandidate`：Rime 首个候选字
+  - `$rimeSchemaName`：Rime 方案名称
+  - `$returnKeyType`：返回键文本
+
+- `fontSize`：设置文本大小
+- `fontWeight`：设置文本粗细程度
+- `normalColor`：未按下时文本的颜色
+- `highlightColor`：按下时文本的颜色
+
