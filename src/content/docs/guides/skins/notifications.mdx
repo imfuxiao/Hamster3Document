@@ -38,6 +38,7 @@ qButton:
 - RIME 类型通知: 监听 Rime 引擎通知事件。
 - 键盘动作类型通知: 监听键盘发出的某一种 KeyboardAction。
 - 回车键类型通知: 监听系统回车键的类型。
+- Rime 预编辑文本通知类型： 监听 Rime 预编辑文本的变化。
 
 ## 通知类型
 
@@ -123,6 +124,19 @@ returnKeyType: [1, 4, 7]
   />
 
 
+### Rime 预编辑文本通知类型
+
+Rime 预编辑文本通知类型用于监听 Rime 预编辑文本的变化。
+
+export const rimePreeditNotificationCode = `
+notificationType: preeditChanged
+`;
+
+<Code lang="yaml"
+  code={rimePreeditNotificationCode}
+  />
+
+
 ## 根据通知调整按键样式及动作
 
 在通知设置中，可以通过 `backgroundStyle`，`foregroundStyle`，`action` 参数改变按键的样式及触发动作。
@@ -145,8 +159,10 @@ ins={[
   ]}
   />
 
+<br />
+
 <Aside type="danger" title="注意">
 在通知匹配后，按键会按照通知中设置的样式进行渲染。如果没有设置样式，则按键会显示为空白。
 
-如果没有为通知设置按键动作 `action`参数，则按键会继续使用原样式中设置的动作。
+如果没有为通知设置按键动作 `action`参数，则按键会继续使用原始样式中设置的 `action`。
 </Aside>

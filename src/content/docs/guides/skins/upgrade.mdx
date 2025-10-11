@@ -2,7 +2,7 @@
 title: 「仓输入法皮肤」迁移指南
 ---
 
-import { Aside, Code } from "@astrojs/starlight/components";
+import { Aside, Code } from '@astrojs/starlight/components';
 
 ## 为什么要做迁移？
 
@@ -38,13 +38,14 @@ qButtonForegroundStyle:
   text: "q"
 
 # 改造后
+
 foregroundStyle: qButtonForegroundStyle
 qButtonForegroundStyle:
   buttonStyleType: text
   text: "q"
 `;
 
-<Code lang="yaml" ins={9} code={code} />
+<Code lang='yaml' ins={9} code={code} />
 
 根据你想要添加的样式内容，为 `buttonStyleType` 指定相应的值，具体内容请查阅 `buttonStyleType` [配置参考](../parameters/#buttonstyletype)。
 
@@ -86,9 +87,12 @@ unlockButtonForegroundStyle:
   fontSize: 20
 `;
 
-<Code lang="yaml" title={"修改前"}
-del={[{range: "3-8", label: "删除 JavaScript 脚本内容"}]}
-code={jsCode} />
+<Code
+  lang='yaml'
+  title={'修改前'}
+  del={[{ range: '3-8', label: '删除 JavaScript 脚本内容' }]}
+  code={jsCode}
+/>
 
 export const afterDelJavaScriptCode = `
 lockButton:
@@ -121,11 +125,12 @@ unlockButtonForegroundStyle:
   fontSize: 20
 `;
 
-<Code lang="yaml" title={"修改后"}
-ins={[
-  {range: "3-14", label: "改为条件样式"},
-  ]}
-code={afterDelJavaScriptCode} />
+<Code
+  lang='yaml'
+  title={'修改后'}
+  ins={[{ range: '3-14', label: '改为条件样式' }]}
+  code={afterDelJavaScriptCode}
+/>
 
 ### 按键长按显示符号样式调整
 
@@ -141,7 +146,13 @@ qButton:
   hintSymbolsStyle: qButtonHintSymbolsStyle
 `;
 
-<Code lang="yaml" title={"长按样式名变更"} del={{label: "替换前", range: "2-3"}} ins={{label: "替换后", range: "4-5"}} code={holdSymbolsCode} />
+<Code
+  lang='yaml'
+  title={'长按样式名变更'}
+  del={{ label: '替换前', range: '2-3' }}
+  ins={{ label: '替换后', range: '4-5' }}
+  code={holdSymbolsCode}
+/>
 
 同时，里面的参数也发生了一些变化。
 
@@ -167,13 +178,21 @@ qButtonHoldSymbolsStyle:
   selectedIndex: 0
 `;
 
-<Code lang="yaml"
-title={"修改前"}
-del={[
-  {label: "使用 symbolStyles 替换 foregroundStyle + actions", range: "3-11"},
-  {label: "使用 selectedBackgroundStyle 替换 selectedStyle", range: "13-14"},
-]}
-code={beforeSymbolStylesCode} />
+<Code
+  lang='yaml'
+  title={'修改前'}
+  del={[
+    {
+      label: '使用 symbolStyles 替换 foregroundStyle + actions',
+      range: '3-11',
+    },
+    {
+      label: '使用 selectedBackgroundStyle 替换 selectedStyle',
+      range: '13-14',
+    },
+  ]}
+  code={beforeSymbolStylesCode}
+/>
 
 export const afterSymbolStylesCode = `
 qButtonHintSymbolsStyle:
@@ -195,14 +214,16 @@ qButtonHintSymbolsStyle:
     - qButtonHintSymbolsOf3Style
 `;
 
-<Code lang="yaml"
-title={"修改后"}
-ins={[
-  {label: "（可选）定义单个按键尺寸及整个符号列表的内边距", range: "2-6"},
-  {label: "定义高亮样式", range: "9-10"},
-  {label: "定义每个符号的样式", range: "13-17"},
-]}
-code={afterSymbolStylesCode} />
+<Code
+  lang='yaml'
+  title={'修改后'}
+  ins={[
+    { label: '（可选）定义单个按键尺寸及整个符号列表的内边距', range: '2-6' },
+    { label: '定义高亮样式', range: '9-10' },
+    { label: '定义每个符号的样式', range: '13-17' },
+  ]}
+  code={afterSymbolStylesCode}
+/>
 
 现在单个符号的样式与键盘按键样式是相同的。如：
 
@@ -224,8 +245,8 @@ alphabeticBackgroundStyle:
   ...
   animation: alphabeticBackgroundAnimation
 
-
 # 字母按键背景动画
+
 alphabeticBackgroundAnimation:
   # type: 动画类型
   # - bounds: 尺寸大小变化动画
@@ -243,8 +264,13 @@ alphabeticBackgroundAnimation:
     file: animation
 `;
 
-<Code lang="yaml" title="修改前" code={oldAnimatorCode} mark={[4, "animation", "alphabeticBackgroundAnimation"]} del={[{range: "8-22"}]}/>
-
+<Code
+  lang='yaml'
+  title='修改前'
+  code={oldAnimatorCode}
+  mark={[4, 'animation', 'alphabeticBackgroundAnimation']}
+  del={[{ range: '8-22' }]}
+/>
 
 export const editorAnimatorCode = `
 qButton:
@@ -273,6 +299,7 @@ cartoonAnimation:
     - lleeimage_1.png
 
 # 用于替换之前 emit 动画
+
 physicsAnimation:
   animationType: physics
   duration: 1500
@@ -292,16 +319,362 @@ physicsAnimation:
   endAngle: 6.28
 `;
 
-<Code lang="yaml" title={"修改后"}  code={editorAnimatorCode} ins={[
-  {label: "为按键添加动画", range: "3-7"},
-]} />
+<Code
+  lang='yaml'
+  title={'修改后'}
+  code={editorAnimatorCode}
+  ins={[{ label: '为按键添加动画', range: '3-7' }]}
+/>
 
 在按键的定义中，新增了 `animation` 参数，用于定义按键的动画效果。其中每个动画通过 `animationType` 参数来指定动画类型，不同的动画类型有不同的参数和动画效果。
 
 具体参数说明请查阅参数字典。
 
-### 工具栏按键数量不再限制
+### 预编辑区调整
 
-之前版本中，工具栏按键数量被限制为最多 8 个按键，这次改造后，工具栏按键数量不再受限。
+预编辑区样式关键字变更
 
-初始可见数量为 7 个按键，超过 7 个后，可通过在工具栏滑动寻找更多的按键。
+export const preeditStyleCode = `
+#
+preedit:
+
+preeditStyle:
+  insets: { left: 4, top: 1 }
+  backgroundStyle: preeditBackgroundStyle
+  foregroundStyle: preeditForegroundStyle
+`;
+
+<Code
+  lang='yaml'
+  title={'预编辑区样式调整'}
+  code={preeditStyleCode}
+  del={{ label: '调整前', range: '1-2' }}
+  ins={{ label: '调整后', range: '3-4' }}
+/>
+
+### 工具栏调整
+
+工具栏调整结构
+
+- 将工具栏样式与工具栏布局单独为两个属性：`toolbarStyle` 与 `toolbarLayout`，
+- 删除原候选文字栏设置相关属性
+
+
+> 工具栏布局 `toolbarLayout` 与按键区域布局逻辑相同
+
+export const toolbarCode = `
+#
+    toolbar:
+      backgroundStyle: toolbarBackgroundStyle
+      # primaryButtonStyle: primaryButtonStyle
+      secondaryButtonStyle:
+        - toolbarButton1Style
+        - toolbarButton2Style
+        - toolbarButton3Style
+        - toolbarButton4Style
+      horizontalCandidateStyle: horizontalCandidateStyle
+      verticalCandidateStyle: verticalCandidateStyle
+
+    # 工具栏样式
+    toolbarStyle:
+      insets: { left: 50, right: 50 }
+      backgroundStyle: toolbarBackgroundStyle
+    # 工具栏布局
+    toolbarLayout:
+    - HStack:
+        subviews:
+        - Cell: horizontalNumberSymbols
+        - Cell: leftArrowButton
+        - Cell: downArrowButton
+        - Cell: rightArrowButton
+    `;
+
+<Code
+  lang='yaml'
+  title={'工具栏调整'}
+  code={toolbarCode}
+  del={{ label: '调整前', range: '1-11' }}
+  ins={{ label: '调整后', range: '12-24' }}
+/>
+
+#### 横向候选文字栏调整
+
+横向候选文字栏从原 `toolbar` 属性中拆分，独立为 `horizontalCandidatesStyle`，`horizontalCandidatesLayout` 两个属性。
+
+- `horizontalCandidatesStyle`：用于设置文字栏整体的外观样式
+- `horizontalCandidatesLayout`：用于设置文字栏的内部空间的布局，与按键区域布局逻辑相同
+
+<Aside title="提示" type="tip">
+    横向候选文字栏尺寸与工具栏尺寸相同
+</Aside>
+
+
+export const horizontalCanidatesCode = `
+#
+    toolbar:
+      ...
+      horizontalCandidateStyle: horizontalCandidateStyle
+
+    # 横向候选文字栏调式
+    horizontalCandidatesStyle:
+      insets: { left: 3, bottom: 1, top: 3 }
+      backgroundStyle: horizontalCandidatesBackgroundStyle
+    # 横向候选文字栏布局
+    horizontalCandidatesLayout:
+    - HStack:
+        subviews:
+            - Cell: horizontalCandidates
+            - Cell: clearPreeditButton
+            - Cell: expandButto
+    `;
+
+<Code
+  lang='yaml'
+  title={'横向候选文字栏调整'}
+  code={horizontalCanidatesCode}
+  del={{ label: '调整前', range: '1-4' }}
+  ins={{ label: '调整后', range: '5-16' }}
+/>
+
+
+#### 纵向候选文字栏调整
+
+纵向候选文字栏也从原 `toolbar` 属性中拆分，独立为样式 `verticalCandidatesStyle` 布局 `verticalCandidatesLayout` 两个属性。
+
+- `verticalCandidatesStyle`：用于设置文字栏整体的外观样式
+- `verticalCandidatesLayout`：用于设置文字栏的内部空间的布局，与按键区域布局逻辑相同
+
+export const verticalCanidatesCode = `
+#
+    toolbar:
+      ...
+      verticalCandidateStyle: verticalCandidateStyle
+
+    # 纵向候选文字栏样式
+    verticalCandidatesStyle:
+      insets: { top: 3, bottom: 3, left: 4, right: 4 }
+      backgroundStyle: verticalCandidateBackgroundStyle
+    # 纵向候选文字栏布局
+    verticalCandidatesLayout:
+      - HStack:
+          subviews:
+            - Cell: verticalCandidates
+      - HStack:
+          style: verticalLastRowStyle
+          subviews:
+            - Cell: verticalPageUpButton
+            - Cell: verticalPageDownButton
+            - Cell: collapseCandidatesButton
+            - Cell: candidateBackspaceButton
+    `;
+
+<Code
+  lang='yaml'
+  title={'纵向候选文字栏调整'}
+  code={horizontalCanidatesCode}
+  del={{ label: '调整前', range: '1-4' }}
+  ins={{ label: '调整后', range: '5-21' }}
+/>
+
+#### 候选字长按列表调整
+
+候选字长按列表 `candidateContextMenu` 属性从 `toolbar` 中拆分。
+
+export const candidateContextMenuCode = `
+#
+    toolbar:
+      ...
+      candidateContextMenu: candidateContextMenu
+
+    candidateContextMenu:
+      - name: "测试删除"
+        action: { sendKeys: "Shift+Delete" }
+
+candidateContextMenu:
+  - name: "测试删除"
+  action: { sendKeys: "Shift+Delete" }
+    `;
+
+<Code
+  lang='yaml'
+  title={'候选字长按列表调整'}
+  code={candidateContextMenuCode}
+  del={{ label: '调整前', range: '1-9' }}
+  ins={{ label: '调整后', range: '9-12' }}
+/>
+
+#### 新增横向自定义符号列表
+
+export const horizontalSymbolsCode = `
+    horizontalNumberSymbols:
+
+      type: horizontalSymbols
+      size:
+        width: 2/3
+      # （非必须，默认为 5）用来调整显示区域内最大列数
+      maxColumns: 10
+      # （非必须，默认为 false）用来调整显示区域内的内容是否从右向左排列
+      contentRightToLeft: true
+      insets: { left: 3, right: 3 }
+      backgroundStyle: alphabeticBackgroundStyle
+      dataSource: horizontalSymbolsDataSource
+      cellStyle: collectionCellStyle
+
+    # 数据源无需定义在 dataSource 之下
+    horizontalSymbolsDataSource:
+      - { label: '1', action: tab }
+      - 2
+      - 3
+      - 4
+    `;
+
+<Code
+  lang='yaml'
+  title={'横向自定义符号列表'}
+  code={horizontalSymbolsCode}
+  ins={{ label: '新增横向自定义符号类型', range: '2-3' }}
+/>
+
+数据源的定义目前支持三种方式
+
+- 纯字符串
+
+```yaml
+horizontalSymbolsDataSource:
+  - 1
+  - 2
+  ...
+```
+
+- 显示与输出分开定义
+
+```yaml
+  horizontalSymbolsDataSource:
+    - { label: '1', value: "a" }
+    ...
+```
+
+注意：这种方式会使用 symbol 类型直接上屏，不会发送给 rime 引擎。
+
+- 独立 action 定义
+
+```yaml
+horizontalSymbolsDataSource:
+  - { label: '1', action: tab }
+  ...
+```
+
+这种方式有最大的灵活度，你可以为每个数据源自定义按键动作。
+
+#### 新增横向候选字列表类型
+
+为了支持横向候选文字栏可以自定义布局，新增了 `horizontalCandidates` 类型。
+
+用于在自定义布局中，自定义一块区域用来显示横向候选文字。
+
+注意：此类型仅适用于 `horizontalCandidatesLayout` 布局中，如果在其他布局中使用，会出现不显示候选字的问题。
+
+```yaml
+horizontalCandidates:
+  # 定义一个横向候选文字展示区域
+  type: horizontalCandidates
+  size:
+    width: 2/3
+  # （非必须，默认值为 7）用于定义显示区域内最大候选文字数量
+  maxColumns: 10
+  insets: { left: 3, right: 3 }
+  backgroundStyle: alphabeticBackgroundStyle
+  # 用于定义候选文字显示样式
+  candidateStyle: candidateStyle
+
+candidateStyle:
+  insets: { left: 3, right: 3 }
+  highlightBackgroundColor: ffffff
+  preferredBackgroundColor: ffffff
+  preferredIndexColor: 000000
+  preferredTextColor: 000000
+  preferredCommentColor: 000000
+  indexColor: 000000
+  textColor: 000000
+  commentColor: 000000
+  indexFontSize: 18
+  textFontSize: 18
+  commentFontSize: 18
+```
+#### 新增纵向候选文字列表类型
+
+为了支持纵向候选文字区域可以自定义布局，新增了 `verticalCandidates` 类型。
+
+用于在自定义布局中，自定义一块区域用来显示纵向候选文字。
+
+注意：此类型仅适用于 `verticalCandidatesLayout` 布局中，如果在其他布局中使用，会出现不显示候选字的问题。
+
+```yaml
+verticalCandidates:
+  # 定义一个纵向候选文字显示区域
+  type: verticalCandidates
+  insets: { left: 3, right: 3 }
+  # （非必须，默认值为 4）显示区域内候选文字最大行数
+  maxRows: 4
+  # （非必须，默认值为 5）显示区域内候选文字最大列数
+  maxColumns: 5
+  # （非必须）显示区域内分割线颜色
+  separatorColor: '#33338888'
+  backgroundStyle: alphabeticBackgroundStyle
+  # 候选文字样式
+  candidateStyle: verticalCandidateCellStyle
+
+verticalCandidateCellStyle:
+  highlightBackgroundColor: ffffff
+  preferredBackgroundColor: ffffff
+  preferredIndexColor: 1a73e9
+  preferredTextColor: 1a73e9
+  preferredCommentColor: 1a73e9
+  indexColor: 000000
+  textColor: 000000
+  commentColor: 000000
+  indexFontSize: 16
+  textFontSize: 16
+  commentFontSize: 16
+  bottomRowHeight: 50
+```
+
+### 数据源调整
+
+符号列表的数据源，无需在放在 `dataSource` 下。
+
+export const dataSourceCode = `
+#
+dataSource:
+  category:
+    [
+      "常用",
+      "中文",
+      ...
+    ]
+  常用:
+    - "，"
+    - "。"
+    - "？"
+    ...
+
+category:
+    [
+    "常用",
+    "中文",
+    ...
+    ]
+常用:
+    - "，"
+    - "。"
+    - "？"
+    ...
+`;
+
+<Code
+  lang='yaml'
+  title={'数据源调整'}
+  code={dataSourceCode}
+  del={{ label: '调整前', range: '1-13' }}
+  ins={{ label: '调整后', range: '14-25' }}
+/>
