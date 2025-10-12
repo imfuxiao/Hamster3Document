@@ -518,7 +518,26 @@ export const horizontalSymbolsCode = `
       insets: { left: 3, right: 3 }
       backgroundStyle: alphabeticBackgroundStyle
       dataSource: horizontalSymbolsDataSource
+      # 用于定义符号列表中每个符号的样式(仅支持文本)
       cellStyle: collectionCellStyle
+
+    collectionCellStyle:
+      backgroundStyle: collectionCellBackgroundStyle
+      foregroundStyle: collectionCellForegroundStyle
+
+    collectionCellBackgroundStyle:
+      buttonStyleType: fileImage
+      highlightImage:
+        file: anjian
+        image: image11
+
+    collectionCellForegroundStyle:
+      buttonStyleType: text
+      normalColor: 000000
+      badgeNormalColor: 575757
+      badgeHighlightColor: 575757
+      fontSize: 18
+      fontWeight: bold
 
     # 数据源无需定义在 dataSource 之下
     horizontalSymbolsDataSource:
