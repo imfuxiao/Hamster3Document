@@ -471,7 +471,7 @@ export const verticalCanidatesCode = `
 <Code
   lang='yaml'
   title={'纵向候选文字栏调整'}
-  code={horizontalCanidatesCode}
+  code={verticalCanidatesCode}
   del={{ label: '调整前', range: '1-4' }}
   ins={{ label: '调整后', range: '5-21' }}
 />
@@ -620,6 +620,7 @@ candidateStyle:
   textFontSize: 18
   commentFontSize: 18
 ```
+
 #### 新增纵向候选文字列表类型
 
 为了支持纵向候选文字区域可以自定义布局，新增了 `verticalCandidates` 类型。
@@ -634,9 +635,9 @@ verticalCandidates:
   type: verticalCandidates
   insets: { left: 3, right: 3 }
   # （非必须，默认值为 4）显示区域内候选文字最大行数
-  maxRows: 4
+  maxRows: 8
   # （非必须，默认值为 5）显示区域内候选文字最大列数
-  maxColumns: 5
+  maxColumns: 10
   # （非必须）显示区域内分割线颜色
   separatorColor: '#33338888'
   backgroundStyle: alphabeticBackgroundStyle
