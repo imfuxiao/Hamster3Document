@@ -585,6 +585,30 @@ horizontalSymbolsDataSource:
 
 这种方式有最大的灵活度，你可以为每个数据源自定义按键动作。
 
+数据源对象新增 `styleName` 参数，用于指定自定义样式。
+
+- 可选参数，默认为空，如果不指定，则使用 `cellStyle` 定义的文本样式。
+
+> 注意：此参数必须与 `label` 一起使用。
+
+```yaml
+horizontalSymbolsDataSource:
+  - { label: '1', action: tab, styleName: 'leftArrowButton'}
+  - { label: '1', value: "1", styleName: 'leftArrowButton'}
+  - 2
+  - 3
+  - 4
+leftArrowButton:
+  backgroundStyle: alphabeticBackgroundStyle
+  foregroundStyle:
+    - leftArrowButtonForegroundStyle
+```
+
+`styleName` 引用的样式与按键样式定义相同。
+
+> 注意：动作 `action` 的定义需要放在数据源中，样式引用中的定义的 `action` 是无效的。
+
+
 #### 新增横向候选字列表类型
 
 为了支持横向候选文字栏可以自定义布局，新增了 `horizontalCandidates` 类型。
