@@ -4,30 +4,20 @@ title: 「仓输入法皮肤」迁移指南
 
 import { Aside, Code } from '@astrojs/starlight/components';
 
-## 为什么要做迁移？
-
-每次升级做迁移的确会让人头大，如果可以无感升级，当然是最好的，然而软件的设计及开发就是这样，你无法提前设计出完美的解决方案。
-
-比如之前版本通过在皮肤中嵌入 JavaScript 文本内容，实现一定程度的动态变化。但更复杂的动态需求，就无能为力了。比如按一个键，其他键也随这个键变化而变化。
-
-还有一些个人技术成长的问题，之前无法解决的问题，随着技术的提高，问题解决了。
-
-总之，这次皮肤功能的改造是为了更好地满足之前的一些需求。
-
 ## 如何迁移
 
 <br />
 
 <Aside title="温馨提示" type="tip">
-  1. 迁移前请先备份原始皮肤文件;
-  2. 请小范围更新并测试，确保每一步的修改是有效的。
+  1. 迁移前请先备份原始皮肤文件
+  2. 请小范围更新并测试，确保每一步的修改是有效的
 </Aside>
 
 ### 背景及前景样式添加 `buttonStyleType` 参数
 
 新增**必选**参数 `buttonStyleType`，用于设定样式的类型。
 
-确保背景样式（`backgroundStyle`）及前景样式（`foregroundStyle`）中都指定了 `buttonStyleType` 参数，否则无法解析定义的样式。
+确保背景样式（`backgroundStyle`）及前景样式（`foregroundStyle`）中都指定了 `buttonStyleType` 参数，否则无法解析已定义的样式。
 
 示例：
 
@@ -51,7 +41,7 @@ qButtonForegroundStyle:
 
 ### 文字位置
 
-在新版中，文字样式的初始位置为「居中」对齐。如果之前为文字样式添加了 `center` 属性，需要将其移除或者调整其值，使文字显示在你想要的位置。
+在新版中，文字样式的初始位置为「居中」对齐。如果之前为文字样式添加了 `center` 属性，需要将其移除或者调整其值，使文字显示在您想要的位置。
 
 ### JavaScript 脚本内容移除
 
@@ -415,7 +405,7 @@ export const horizontalCanidatesCode = `
       ...
       horizontalCandidateStyle: horizontalCandidateStyle
 
-    # 横向候选文字栏调式
+    # 横向候选文字栏调整
     horizontalCandidatesStyle:
       insets: { left: 3, bottom: 1, top: 3 }
       backgroundStyle: horizontalCandidatesBackgroundStyle
@@ -425,7 +415,7 @@ export const horizontalCanidatesCode = `
         subviews:
             - Cell: horizontalCandidates
             - Cell: clearPreeditButton
-            - Cell: expandButto
+            - Cell: expandButton
     `;
 
 <Code

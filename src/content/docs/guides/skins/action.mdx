@@ -13,6 +13,7 @@ title: 按键动作
 - `moveCursorBackward`: 表示光标左移
 - `moveCursorForward`: 表示光标右移
 - `returnPrimaryKeyboard`: 表示返回主键盘。主键盘指 `pinyin` 中文键盘或者 `alphabetic` 英文键盘类型。
+- `returnLastKeyboard`: 表示返回上一个键盘。功能会按键盘切换顺序的逆序，返回上一个使用过的键盘类型。注意：当键盘切换到中文键盘`pinyin`时，会清空键盘切换栈，此时再触发返回上一个键盘动作无效。
 - `symbolicKeyboardLockStateToggle`: 表示符号键盘锁定状态切换。锁定状态下，点击符号键盘中的符号键不会切换回主键盘。符号键盘指类型为 `symbolic` 的键盘。
 - `settings`: 表示打开主应用界面
 
@@ -114,6 +115,7 @@ action: { runScript: 'myScript' }
 - `alphabetic`: 英文键盘
 - `symbolic`: 符号键盘
 - `numeric`: 数字键盘
+- `emojis`: Emoji 键盘
 
 配置示例：
 
@@ -139,8 +141,10 @@ action: { keyboardType: '自定义键盘名称' }
 - `#中英切换`：中文与英文切换。注意此切换是指 rime 中 ascii_mode 的切换，非键盘类型切换。
 - `#RimeSwitcher`：进入 rime switch 状态
 - `#次选上屏`：将当前第二个候选文字上屏。
-- `#三选上屏`：将当前第三个选候选文字上屏。
+- `#三选上屏`：将当前第三个候选文字上屏。
 - `#方案切换`：显示当前方案切换页面，用于切换当前方案列表中的其他方案。
+- `#左手模式`：切换到单手模式下的左手模式。
+- `#右手模式`：切换到单手模式下的右手模式
 
 - `#行首`：光标移动到当前行的行首。
 - `#行尾`：光标移动到当前行的行尾。
@@ -153,8 +157,8 @@ action: { keyboardType: '自定义键盘名称' }
 - `#verticalCandidatesPageDown`: 纵向候选栏向下翻页。
 - `#verticalCandidatesPageUp`: 纵向候选栏向上翻页。
 
-- `#showPhraseView`： 显示常用语视图。
-- `#showPasteboardView`： 显示剪贴板视图。
+- `#showPhraseView`：显示常用语视图。
+- `#showPasteboardView`：显示剪贴板视图。
 - `#toggleScriptView`：脚本页面显示与隐藏切换。
 
 - `#candidatesBarStateToggle`: 候选栏状态切换。用来展开候选文字或收起候选文字。

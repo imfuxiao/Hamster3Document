@@ -1,0 +1,35 @@
+
+---
+title: 预编辑区
+description: 预编辑区相关定义
+---
+
+预编辑区指工具栏上方区域，用于显示当前输入的信息，如当前输入的字母等。
+
+注意：启用「内嵌输入模式」后，预编辑区将不再显示。
+
+### 预编辑区配置属性
+
+- `preeditHeight`：用于定义预编辑区的高度，类型 `Int`，单位为点（points）。
+- `preeditStyle`：用于定义预编辑区的样式。类型：`Object`
+  - insets: 可选，用于定义预编辑区的内边距，类型：`Object`，默认为空，表示无内边距。
+    - top: 可选，类型：`Int`，单位为点（points）。
+    - left: 可选，类型：`Int`，单位为点（points）。
+    - bottom: 可选，类型：`Int`，单位为点（points）。
+    - right: 可选，类型：`Int`，单位为点（points）。
+  - `backgroundStyle`：可选，用于定义预编辑区的背景样式，类型：`String`，值为样式名称。
+  - `foregroundStyle`：可选，用于定义预编辑区的前景样式，类型：`String`，值为样式名称。
+
+配置示例：
+
+```yaml
+preeditHeight: 25
+preeditStyle:
+  insets:
+    top: 5
+    left: 10
+    bottom: 5
+    right: 10
+  backgroundStyle: preeditBackgroundStyle
+  foregroundStyle: preeditForegroundStyle
+```

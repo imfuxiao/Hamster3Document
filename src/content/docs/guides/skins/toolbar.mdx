@@ -1,0 +1,108 @@
+
+---
+title: 工具栏区
+description: 工具栏相关定义
+---
+
+工具栏位于预编辑区与按键区之间，通常用于放置功能按键，如中英切换、打开常用语/剪贴板等等。
+
+## 工具栏配置属性
+
+- `toolbarHeight`：用于定义工具栏的高度，类型 `Int`，单位为点（points）。
+- `toolbarStyle`：用于定义工具栏的样式。类型：`Object`
+    - insets: 可选，用于定义工具栏的内边距，类型：`Object`，默认为空，表示无内边距。
+        - top: 可选，类型：`Int`，单位为点（points）。
+        - left: 可选，类型：`Int`，单位为点（points）。
+        - bottom: 可选，类型：`Int`，单位为点（points）。
+        - right: 可选，类型：`Int`，单位为点（points）。
+    - `backgroundStyle`：可选，类型：`String`，引用一个样式，用于定义工具栏的背景样式
+- `toolbarLayout`：用于定义工具栏的布局，类型：`Array`，值为一个布局对象数组。
+
+配置示例：
+
+```yaml
+toolbarHeight: 40
+toolbarStyle:
+  insets:
+    top: 5
+    left: 10
+    bottom: 5
+    right: 10
+  backgroundStyle: toolbarBackgroundStyle
+toolbarLayout:
+  - HStack:
+      subviews:
+        - Cell: switchInputModeButton
+        - Cell: openCommonPhrasesButton
+        - Cell: openClipboardButton
+```
+
+## 横向候选字栏
+
+横向候选栏是与工具栏相同位置及大小的一个区域，用于放置键入按键后的候选文字。当出现横向候选栏时，工具栏将被隐藏。
+
+横向候选栏配置属性：
+
+- `horizontalCandidatesStyle`：用于定义横向候选栏的样式。类型：`Object`
+    - insets: 可选，用于定义横向候选栏的内边距，类型：`Object`，默认为空，表示无内边距。
+        - top: 可选，类型：`Int`，单位为点（points）。
+        - left: 可选，类型：`Int`，单位为点（points）。
+        - bottom: 可选，类型：`Int`，单位为点（points）。
+        - right: 可选，类型：`Int`，单位为点（points）。
+    - `backgroundStyle`：可选，类型：`String`，引用一个样式，用于定义横向候选栏的背景样式
+
+- `horizontalCandidatesLayout`：用于定义横向候选栏的布局，类型：`Array`，值为一个布局对象数组。
+
+
+配置示例：
+
+```yaml
+horizontalCandidatesStyle:
+  insets: { left: 3, bottom: 1, top: 3 }
+  backgroundStyle: horizontalCandidatesBackgroundStyle
+
+horizontalCandidatesLayout:
+  - HStack:
+      subviews:
+        - Cell: horizontalCandidates
+        - Cell: clearPreeditButton
+        - Cell: expandButton
+```
+
+需要注意的是：在布局的 Cell 中必须包含一个 `type` 为 `horizontalCandidates` 的单元格，用于显示横向候选字。
+
+## 纵向候选字栏
+
+纵向候选字栏是横向候选字栏的展开形态，它的位置及大小是工具栏区+按键区。当出现纵向候选字栏时，工具栏区、按键区、横向候选字栏将被隐藏。
+
+纵向候选栏配置属性：
+- `verticalCandidatesStyle`：用于定义纵向候选栏的样式。类型：`Object`
+    - insets: 可选，用于定义纵向候选栏的内边距，类型：`Object`，默认为空，表示无内边距。
+        - top: 可选，类型：`Int`，单位为点（points）。
+        - left: 可选，类型：`Int`，单位为点（points）。
+        - bottom: 可选，类型：`Int`，单位为点（points）。
+        - right: 可选，类型：`Int`，单位为点（points）。
+    - `backgroundStyle`：可选，类型：`String`，引用一个样式，用于定义纵向候选栏的背景样式
+- `verticalCandidatesLayout`：用于定义纵向候选栏的布局，类型：`Array`，值为一个布局对象数组。
+
+配置示例：
+
+```yaml
+verticalCandidatesStyle:
+  insets: { top: 3, bottom: 3, left: 4, right: 4 }
+  backgroundStyle: verticalCandidateBackgroundStyle
+
+verticalCandidatesLayout:
+  - HStack:
+      subviews:
+        - Cell: verticalCandidates
+  - HStack:
+      style: verticalLastRowStyle
+      subviews:
+        - Cell: verticalPageUpButton
+        - Cell: verticalPageDownButton
+        - Cell: collapseCandidatesButton
+        - Cell: candidateBackspaceButton
+```
+
+需要注意的是：在布局的 Cell 中必须包含一个 `type` 为 `verticalCandidates` 的单元格，用于显示纵向候选字。

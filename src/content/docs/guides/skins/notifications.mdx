@@ -10,7 +10,7 @@ import { Aside, Code } from "@astrojs/starlight/components";
 比如：
 
 - 模仿系统键盘回车键在某些场景下是蓝色，某些是正常系统键颜色。
-- 跟踪并显示当前 rime 某个 option 的值，比如 ascii_mode 的值，以完成 rime 的中英文输入切换。
+- 跟踪并显示当前 RIME 某个 option 的值，比如 ascii_mode 的值，以完成 RIME 的中英文输入切换。
 
 通知的设置需要绑定在按键样式上，具体来说，就是在按键样式的 `notification` 配置中进行设置。
 
@@ -31,20 +31,20 @@ qButton:
     - keyboardActionNotification
 `;
 
-<Code lang="yaml" code={notificationCode} ins={{range: "7-8"}} mark={highlighted}  />
+<Code lang="yaml" code={notificationCode} ins={{range: "7-8"}} mark={highlighted} />
 
 目前通知有以下几种类型：
 
-- RIME 类型通知: 监听 Rime 引擎通知事件。
-- 键盘动作类型通知: 监听键盘发出的某一种 KeyboardAction。
-- 回车键类型通知: 监听系统回车键的类型。
-- Rime 预编辑文本通知类型： 监听 Rime 预编辑文本的变化。
+- RIME 类型通知：监听 RIME 引擎通知事件。
+- 键盘动作类型通知：监听键盘发出的某一种 KeyboardAction。
+- 回车键类型通知：监听系统回车键的类型。
+- RIME 预编辑文本通知类型：监听 RIME 预编辑文本的变化。
 
 ## 通知类型
 
 ### RIME 类型通知
 
-RIME 类型通知用于监听 Rime 输入法的通知事件。
+RIME 类型通知用于监听 RIME 输入法的通知事件。
 
 ```yaml
 notificationType: rime
@@ -52,12 +52,12 @@ notificationType: rime
 
 RIME 类型通知也有自己的分类，通过 `rimeNotificationType` 设置：
 
-- `optionChanged`: 监听 rime option 变更
+- `optionChanged`: 监听 RIME option 变更
 - `schemaChanged`: 监听 rime 输入方案变更
 
 #### RIME Option 变更通知
 
-RIME Option 变更通知用于监听 Rime 输入法的 option 变更事件。
+RIME Option 变更通知用于监听 RIME 输入法的 option 变更事件。
 
 export const rimeOptionNotificationCode = `
 notificationType: rime
@@ -124,9 +124,9 @@ returnKeyType: [1, 4, 7]
   />
 
 
-### Rime 预编辑文本通知类型
+### RIME 预编辑文本通知类型
 
-Rime 预编辑文本通知类型用于监听 Rime 预编辑文本的变化。
+RIME 预编辑文本通知类型用于监听 RIME 预编辑文本的变化。
 
 export const rimePreeditNotificationCode = `
 notificationType: preeditChanged
@@ -164,5 +164,5 @@ ins={[
 <Aside type="danger" title="注意">
 在通知匹配后，按键会按照通知中设置的样式进行渲染。如果没有设置样式，则按键会显示为空白。
 
-如果没有为通知设置按键动作 `action`参数，则按键会继续使用原始样式中设置的 `action`。
+如果没有为通知设置按键动作 `action` 参数，则按键会继续使用原始样式中设置的 `action`。
 </Aside>

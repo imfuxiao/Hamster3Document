@@ -1,9 +1,214 @@
 ---
 title: 布局
-description: 如何布局一个键盘
+description: 如何设计和布局一个键盘
 ---
 
+布局是键盘设计的核心部分，它决定了按键在键盘上的排列方式。
 
-## TODO
+## 布局原理
 
+布局通过 *行 `HStack`* 和 *列 `VStack`* 划分空间，最终在 `行` 或 `列` 中放置按键。按键通过自身属性 `size` 的描述，最终确定了自己的位置及尺寸。
 
+举例：
+
+1. 定义一个包含两行，每行中有不同按键的布局：
+
+```yaml
+- HStack:
+    subviews:
+     - Cell: QButton
+     - Cell: WButton
+     - Cell: EButton
+- HStack:
+    subviews:
+     - Cell: AButton
+     - Cell: SButton
+```
+
+2. 定义一个包含三列，每列中有不同按键的布局：
+
+```yaml
+- VStack:
+    subviews:
+     - Cell: 1Button
+     - Cell: 4Button
+     - Cell: 7Button
+- VStack:
+    subviews:
+     - Cell: 2Button
+     - Cell: 5Button
+     - Cell: 8Button
+- VStack:
+    subviews:
+     - Cell: 3Button
+     - Cell: 6Button
+     - Cell: 9Button
+```
+
+3. 结合行和列布局，创建一个更复杂的键盘布局：
+
+  - 先是将空间划分为两行
+    - 在第一行中继续按列划分
+      - 在第一列中按行划分
+        - 在第一行中放置按键
+        - 在第二行中放置按键
+        - 在第三行中放置按键
+      - 在第二列中放置一个按键集合
+      - 在第三列中按行划分
+        - 在第一行中放置按键
+        - 在第二行中放置按键
+        - 在第三行中放置按键
+    - 在第二行中直接放置按键
+
+```yaml
+- HStack:
+    subviews:
+      - VStack:
+          subviews:
+            - HStack:
+                subviews:
+                  - Cell: hpButton
+                  - Cell: shButton
+                  - Cell: zhButton
+            - HStack:
+                subviews:
+                  - Cell: lButton
+                  - Cell: dButton
+                  - Cell: yButton
+            - HStack:
+                subviews:
+                  - Cell: chButton
+                  - Cell: qButton
+                  - Cell: gButton
+      - VStack:
+          subviews:
+            - Cell: symbolicCollection
+      - VStack:
+          subviews:
+            - HStack:
+                subviews:
+                  - Cell: bButton
+                  - Cell: xButton
+                  - Cell: msButton
+            - HStack:
+                subviews:
+                  - Cell: wzButton
+                  - Cell: jkButton
+                  - Cell: rnButton
+            - HStack:
+                subviews:
+                  - Cell: cfButton
+                  - Cell: tButton
+                  - Cell: backspaceButton
+- HStack:
+    subviews:
+      - Cell: bottom1Button
+      - Cell: alphabeticButton
+      - Cell: bottom2Button
+      - Cell: spaceButton
+      - Cell: bottom3Button
+      - Cell: enterButton
+```
+
+需要注意的是：**同级中只能使用相同的类型划分空间**。
+
+比如你先用了 *行* 划分空间，那么只能按 *行* 将空间划分完毕后，才能在行的子级中继续使用 *列*/*行* 进一步划分空间。
+
+**错误的示例**：
+
+* HStack 与 VStack 在同级别中混用
+
+```yaml
+- HStack:
+  ...
+- VStack:
+  ...
+```
+
+* Cell 与 HStack/VStack 在同级别中混用
+
+```yaml
+- HStack:
+    subviews:
+      - Cell: AButton
+      - HStack:
+          ...
+```
+
+## 布局的属性
+
+无论是 `HStack` 还是 `VStack`，都支持以下属性：
+
+- `subviews`: 必选，类型 `[Object]`，用于定义自己的子视图，可以是 `Cell`、`HStack` 或 `VStack`。
+- `style`: 可选，默认为空，类型 `String`，引用样式，用于设置`HStack` 或 `VStack` 所占容器的宽度（或高度）。
+   如果不设置该属性，则默认平均分配行宽度或列的高度。
+
+示例：
+
+```yaml
+- HStack:
+    style: "topRowStyle"
+    subviews:
+      - Cell: QButton
+      - Cell: WButton
+      - Cell: EButton
+- HStack:
+    subviews:
+      - Cell: AButton
+
+topRowStyle:
+  size: { height: 1/3 }
+```
+
+表示第一行的高度为容器高度的三分之一，第二行高度为剩余空间的高度。
+
+## 按键的定义
+
+按键的定义不需要特别的名称，只需要位于当前 Yaml 文件的主节点下即可。
+
+需要注意的是：定义的名称需要与布局中的 `Cell` 引用的值对应。
+
+示例：
+
+```yaml
+...
+- HStack:
+    subviews:
+      - Cell: QButton
+...
+
+qButton:
+  size: { width: 1/3 }
+  ...
+```
+
+### 按键的属性
+
+按键支持以下属性：
+
+- size: 用于定义按键的大小
+- bounds: 用于定义按键的可视区域
+- backgroundStyle: 用于定义按键的背景样式
+- foregroundStyle: 用于定义按键的前景样式
+- uppercasedStateForegroundStyle: 用于定义按键大写状态下的前景样式
+- capsLockedStateForegroundStyle: 用于定义按键大写锁定状态下的前景样式
+- hintStyle: 用于定义按键气泡样式
+- hintSymbolsStyle: 用于定义按键长按显示的符号列表样式
+- action: 用于定义按键的动作
+- uppercasedStateAction: 用于定义按键在大写或大小锁定状态下的动作
+- swipeUpAction： 用于定义按键向上滑动时的动作
+- swipeDownAction： 用于定义按键向下滑动时的动作
+- animation: 用于定义按键的动画效果
+- notification: 用于定义按键接收到匹配的通知时的样式
+
+## 如何布局一个键盘
+
+通常一个键盘会包含以下几个区域：
+
+- 预编辑区：显示当前输入的，但还未上屏的信息，如键入的拼音字母等。
+- 工具栏区：放置一些快捷功能，如打开常用语面板，关闭键盘等等。
+- 按键区：放置各种按键。
+- 横向候选字栏：显示当前输入的候选字。
+- 纵向候选字栏：全屏当前输入的候选字。
+
+将这几个区域组合起来，就可以形成一个完整的键盘布局。

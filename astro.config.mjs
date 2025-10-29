@@ -25,7 +25,11 @@ export default defineConfig({
           label: '键盘皮肤',
           items: [
             { label: '键盘布局', slug: 'guides/skins/layout' },
-            { label: '按键样式', slug: 'guides/skins/styles' },
+            { label: '预编辑区', slug: 'guides/skins/preedit' },
+            { label: '工具栏区', slug: 'guides/skins/toolbar' },
+            { label: '按键区', slug: 'guides/skins/keysarea' },
+            { label: '样式', slug: 'guides/skins/styles' },
+            { label: '集合视图', slug: 'guides/skins/collection' },
             { label: '按键动作', slug: 'guides/skins/action' },
             { label: '事件通知', slug: 'guides/skins/notifications' },
             { label: '按键动画', slug: 'guides/skins/animation' },

@@ -3,10 +3,10 @@ title: 样式
 description: 如何编写样式
 ---
 
-按键的样式可以通过 `backgroundStyle` 和 `foregroundStyle` 参数进行设置。
+样式可以通过 `backgroundStyle` 和 `foregroundStyle` 参数进行设置。
 
-- `backgroundStyle`：设置按键的背景样式，支持纯色、渐变色或图片等多种形式。
-- `foregroundStyle`：设置按键的前景样式，通常用于定义按键上的文本、图标或角标等元素样式。
+- `backgroundStyle`：设置背景样式，支持纯色、渐变色或图片等多种形式。
+- `foregroundStyle`：设置前景样式，通常用于定义按键上的文本、图标或角标等元素样式。
 
 ## 背景样式
 
@@ -41,7 +41,7 @@ description: 如何编写样式
 各样式类型说明：
 
 - `geometry`：使用 iOS 原生属性绘制样式
-- `systemImage`：使用 SF Symbol 图标作为样式
+- `systemImage`：使用 SF Symbols 图标作为样式
 - `assetImage`：使用应用内置资源图片作为样式
 - `fileImage`：使用皮肤中的图片文件作为样式
 - `text`：使用文本内容作为样式
@@ -53,22 +53,53 @@ description: 如何编写样式
 它包含以下参数：
 
 - `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
+    - 类型：`{ top: Double, left: Double, bottom: Double, right: Double }`
+    - 默认值：`{ top: 0, left: 0, bottom: 0, right: 0 }`
 - `normalColor`：未按下时的颜色
+    - 类型：`String | [String]`
+    - 支持单色或渐变色，使用数组表示渐变色
 - `highlightColor`：按下时的颜色
+    - 类型：`String | [String]`
+    - 支持单色或渐变色，使用数组表示渐变色
 - `colorLocation`：颜色位置，用于渐变色（单色时无效）
+   - 类型：`[Double]`
+   - 取值范围：`0.0` 到 `1.0`
 - `colorStartPoint`：渐变开始位置（单色时无效）
+    - 类型：`{ x: Double, y: Double }`
+    - 取值范围：`0.0` 到 `1.0`
+    - 默认值：`{ x: 0.5, y: 0.0 }`（表示从顶部中间开始渐变）
 - `colorEndPoint`：渐变结束位置（单色时无效）
-- `colorGradientType`：渐变类型，用于定义渐变的方式
+    - 类型：`{ x: Double, y: Double }`
+    - 取值范围：`0.0` 到 `1.0`
+    - 默认值：`{ x: 0.5, y: 1.0 }`（表示从底部中间结束渐变）
+- `colorGradientType`：渐变类型，用于定义渐变的方式。
+    - 类型：`枚举`，可选，默认值为 `axial`
+        - `axial`：线性渐变
+        - `conic`: 锥形渐变
+        - `radial`: 辐射状渐变
 - `cornerRadius`：设置圆角半径
+    - 类型：`Double`
 - `borderSize`：设置边框宽度
-- `borderColor`：设置边框颜色。**边框宽度与边框颜色需同时设置才会显示边框**
+    - 类型：`Double`
+- `normalBorderColor`: 未按下时边框颜色。**边框宽度与边框颜色需同时设置才会显示边框**
+    - 类型：`String`
+- `highlightBorderColor`: 按下时边框颜色。**边框宽度与边框颜色需同时设置才会显示边框**
+    - 类型：`String`
 - `normalLowerEdgeColor`：未按下时底部边缘的颜色
+    - 类型：`String`
 - `highlightLowerEdgeColor`：按下时底部边缘的颜色
+    - 类型：`String`
 - `normalShadowColor`：未按下时的阴影颜色
+    - 类型：`String`，默认为空，表示无阴影
 - `highlightShadowColor`：按下时的阴影颜色
-- `shadowOpacity`：设置阴影透明度，默认为 1
-- `shadowRadius`：设置阴影模糊半径，默认为 3
-- `shadowOffset`：设置阴影偏移，默认为 `{x: 0, y: 3}`
+    - 类型：`String`，默认为空，表示无阴影
+- `shadowOpacity`：设置阴影透明度，
+    - 类型：`Double`，取值范围：`0.0` 到 `1.0`，默认为 1，表示不透明
+- `shadowRadius`：设置阴影模糊半径。
+    - 类型：`Double`，默认为 3
+- `shadowOffset`：设置阴影偏移
+    - 类型：`{ x: Double, y: Double }`
+    - 默认值：`{ x: 0, y: 3 }`
 
 **配置示例：**
 
@@ -100,18 +131,40 @@ geometryBackground:
 
 ### systemImage
 
-通过设置 `buttonStyleType` 参数为 `systemImage`，使用 SF Symbol 图标作为样式。
+通过设置 `buttonStyleType` 参数为 `systemImage`，使用 SF Symbols 图标作为样式。
 
 它包含以下参数：
 
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
-- `systemImageName`：SF Symbol 图标名称（注意版本要求，部分 SF Symbol 需要在 iOS 高版本中才能使用）
-- `highlightSystemImageName`: 按下时的 SF Symbol 图标名称（可选，为空时使用 `systemImageName`）
-- `contentMode`：设置图片的显示模式，默认为 `center`
-- `fontSize`：设置图标的大小
-- `fontWeight`：设置图标的粗细程度
-- `normalColor`：未按下时图标的颜色
-- `highlightColor`：按下时图标的颜色
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
+- `systemImageName`：SF Symbols 图标名称（注意版本要求，部分 SF Symbols 需要在 iOS 高版本中才能使用）。
+- `highlightSystemImageName`: 按下时的 SF Symbols 图标名称（可选，为空时使用 `systemImageName`）。
+- `contentMode`：设置图片的显示模式
+    - 类型：枚举，默认为 `center`
+        - `scaleToFill`：拉伸填充
+        - `scaleAspectFit`：按比例缩放以适应
+        - `scaleAspectFill`：按比例缩放以填充
+        - `center`：居中显示
+- `fontSize`：设置图标的大小。
+    - 类型：`Double`
+- `fontWeight`：设置图标的粗细程度。
+    - 类型：枚举，默认为 `regular`
+        - `ultraLight`
+        - `thin`
+        - `light`
+        - `regular`
+        - `medium`
+        - `semibold`
+        - `bold`
+        - `heavy`
+        - `black`
+- `normalColor`：未按下时图标的颜色。
+- `highlightColor`：按下时图标的颜色。
+
+配置示例：
+
+```yaml
+
+```
 
 ### assetImage
 
@@ -119,11 +172,11 @@ geometryBackground:
 
 它包含以下参数：
 
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
-- `assetImageName`：App 内置资源图片名称
-- `contentMode`：设置图片的显示模式，默认为 `center`
-- `normalColor`：未按下时图片的颜色
-- `highlightColor`：按下时图片的颜色
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
+- `assetImageName`：App 内置资源图片名称。
+- `contentMode`：设置图片的显示模式，默认为 `center`，同 `systemImage` 的 `contentMode`。
+- `normalColor`：未按下时图片的颜色。
+- `highlightColor`：按下时图片的颜色。
 
 ### fileImage
 
@@ -131,8 +184,8 @@ geometryBackground:
 
 它包含以下参数：
 
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
-- `contentMode`：设置图片的显示模式，默认为 `scaleToFill`
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
+- `contentMode`：设置图片的显示模式，默认为 `scaleToFill`，同 `systemImage` 的 `contentMode`。
 - `normalImage`：未按下时的图片
   - `file`：图片文件名称
   - `image`：图片描述文件中的图片名称
@@ -146,8 +199,8 @@ geometryBackground:
 
 它包含以下参数：
 
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域
-- `text`：设置文本内容
+- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
+- `text`：设置文本内容。
 
   **特殊文本内容：**
 
@@ -156,8 +209,7 @@ geometryBackground:
   - `$rimeSchemaName`：Rime 方案名称
   - `$returnKeyType`：返回键文本
 
-- `fontSize`：设置文本大小
-- `fontWeight`：设置文本粗细程度
-- `normalColor`：未按下时文本的颜色
-- `highlightColor`：按下时文本的颜色
-
+- `fontSize`：设置文本大小。
+- `fontWeight`：设置文本粗细程度，同 `systemImage` 的 `fontWeight`。
+- `normalColor`：未按下时文本的颜色。
+- `highlightColor`：按下时文本的颜色。

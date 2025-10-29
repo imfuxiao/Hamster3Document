@@ -1,0 +1,66 @@
+---
+title: 按键区
+description: 按键区相关定义
+---
+
+按键区是键盘的主要区域，用于放置各种按键。
+
+## 按键区配置属性
+
+- `keyboardHeight`：用于定义按键区的高度，类型 `Int`，单位为点（points）。
+- `keyboardStyle`: 用于定义按键区的样式。类型：`Object`
+    - insets: 可选，用于定义按键区的内边距，类型：`Object`，默认为空，表示无内边距。
+        - top: 可选，类型：`Int`，单位为点（points）。
+        - left: 可选，类型：`Int`，单位为点（points）。
+        - bottom: 可选，类型：`Int`，单位为点（points）。
+        - right: 可选，类型：`Int`，单位为点（points）。
+    - `backgroundStyle`：可选，类型：`String`，引用一个样式，用于定义按键区的背景样式
+- `keyboardLayout`: 用于定义按键区的布局，类型：`Array`，值为一个布局对象数组。
+
+配置示例：
+
+```yaml
+keyboardStyle:
+  insets: {left: 2, right: 2, top: 2, bottom: 2}
+  backgroundStyle: keyboardBackgroundStyle
+keyboardLayout:
+  - HStack:
+      subviews:
+        - Cell: qButton
+        - Cell: wButton
+        - Cell: eButton
+        - Cell: rButton
+        - Cell: tButton
+        - Cell: yButton
+        - Cell: uButton
+        - Cell: iButton
+        - Cell: oButton
+        - Cell: pButton
+  - HStack:
+      subviews:
+        - Cell: aButton
+        - Cell: sButton
+        - Cell: dButton
+        - Cell: fButton
+        - Cell: gButton
+        - Cell: hButton
+        - Cell: jButton
+        - Cell: kButton
+        - Cell: lButton
+  - HStack:
+      subviews:
+        - Cell: shiftButton
+        - Cell: zButton
+        - Cell: xButton
+        - Cell: cButton
+        - Cell: vButton
+        - Cell: bButton
+        - Cell: nButton
+        - Cell: mButton
+        - Cell: backspaceButton
+  - HStack:
+      subviews:
+        - Cell: 123Button
+        - Cell: spaceButton
+        - Cell: enterButton
+```
