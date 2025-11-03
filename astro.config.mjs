@@ -38,6 +38,31 @@ export default defineConfig({
           ],
         },
         {
+          label: '常见问题',
+          items: [
+            {
+              label: '系统键盘列表中找不到元书输入法',
+              slug: 'guides/faqs/keyboard-not-in-system-list',
+            },
+            {
+              label: '如何将键盘文件复制到应用目录',
+              slug: 'guides/faqs/how-to-copy-keyboard-files',
+            },
+            {
+              label: '如何将 iCloud 云盘中的方案文件复制到应用目录',
+              slug: 'guides/faqs/how-to-copy-from-icloud',
+            },
+            {
+              label: '如何快速将仓迁移到元书中使用',
+              slug: 'guides/faqs/how-to-migrate-from-hamster',
+            },
+            {
+              label: '如何通过 iCloud 同步 RIME 自造词',
+              slug: 'guides/faqs/rime-user-words-sync',
+            },
+          ],
+        },
+        {
           label: '更新日志',
           slug: 'logs',
         },

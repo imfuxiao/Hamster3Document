@@ -1,0 +1,26 @@
+---
+title: 如何将键盘文件复制到应用目录？
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+元书在每次运行 RIME 部署或同步前，会自动将键盘文件复制到应用目录，无需手动操作。
+
+默认情况下，元书仅复制键盘目录中的 `text` 和 `userdb` 文件，并不会复制全部文件。
+
+若需复制其他类型的文件，请按以下步骤操作：
+
+1. 打开应用目录下的 `RimeSharedSupport/include_keyboard_rime_file.txt` 文件。
+2. 在该文件中添加需复制的文件类型（或具体文件）的正则表达式。
+
+    每行一个表达式。例如，添加 `.*[\/]schema_.*\.yaml$` 可复制所有以 `schema_` 开头的 YAML 文件。
+
+3. 保存文件后，重新运行部署即可。
+
+<Aside title="提示" type="tip">
+  您也可以将 `include_keyboard_rime_file.txt` 存放在方案目录下，元书会优先读取该目录中的同名文件。
+</Aside>
+
+<Aside type="danger" title="注意">
+  编写正则表达式时需考虑文件路径，而不仅仅是文件名，因此请慎用 `^`。
+</Aside>
