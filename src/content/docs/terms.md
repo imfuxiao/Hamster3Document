@@ -2,7 +2,7 @@
 title: 「元书输入法」服务条款
 published: 2025-06-24
 description: 元书输入法服务条款
-tags: [Apps,Hamster3]
+tags: [Apps]
 category: RIME
 draft: false
 ---
@@ -24,6 +24,7 @@ draft: false
 **取消订阅**：您可以随时在 App Store 取消自动续订。您在当前订阅周期已支付的费用将不予退还，但您仍可继续使用应用的扩展功能直至当前订阅周期结束。
 
 **免费试用权利保留**：我们保留以下权利，且无需另行通知：
+
 - 修改任何免费试用优惠的条款和条件
 - 取消任何免费试用优惠
 - 终止任何免费试用的订阅
@@ -52,4 +53,4 @@ draft: false
 
 ## 联系我们
 
-如果您对本服务条款有任何疑问或建议，请通过 hamster.app@outlook.com 与我们联系。
+如果您对本服务条款有任何疑问或建议，请通过 h3kb.app@outlook.com 与我们联系。
