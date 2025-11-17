@@ -137,3 +137,19 @@ foregroundStyle:
 
 - `$symbolicKeyboardLockState`：表示符号键盘的锁定状态
 - `rime${optionName}`：表示 RIME option 状态，比如 `rime$ascii_mode` 表示 `ascii_mode` 选项的状态
+
+## 浮动键盘相关参数
+
+### floatKeyboardLockedState
+
+类型：`Bool`
+
+浮动键盘的锁定状态。默认为 `true`，即：点击浮动键盘上的按键后，自动隐藏浮动键盘；当设置为 `false` 时，点击浮动键盘上的按键后，不会自动隐藏浮动键盘。
+
+### floatKeyboardAlpha
+
+类型：`Float`
+
+浮动键盘背景透明度。取值范围为 `0.1` 到 `1.0` 之间，默认为 `0.95`。
+
+> 注意：请勿使用 `0.0` 作为透明度值，否则会导致浮动键盘点击空白区域后，不会关闭当前浮动键盘。
