@@ -13,9 +13,9 @@ title: 按键动作
 - `moveCursorBackward`: 表示光标左移
 - `moveCursorForward`: 表示光标右移
 - `returnPrimaryKeyboard`: 表示返回主键盘。主键盘指 `pinyin` 中文键盘或者 `alphabetic` 英文键盘类型。
-- `returnLastKeyboard`: 表示返回上一个键盘。功能会按键盘切换顺序的逆序，返回上一个使用过的键盘类型。注意：当键盘切换到中文键盘`pinyin`时，会清空键盘切换栈，此时再触发返回上一个键盘动作无效。
+- `returnLastKeyboard`: 表示返回上一个键盘。功能会按键盘切换顺序的逆序，返回上一个使用过的键盘类型。注意：当键盘切换到中文键盘 `pinyin` 时，会清空键盘切换栈，此时再触发返回上一个键盘动作无效。
 - `symbolicKeyboardLockStateToggle`: 表示符号键盘锁定状态切换。锁定状态下，点击符号键盘中的符号键不会切换回主键盘。符号键盘指类型为 `symbolic` 的键盘。
-- `settings`: 表示打开主应用界面
+- `settings`: 表示打开主应用界面。
 
 配置示例：
 
@@ -33,7 +33,6 @@ action: space
 action: { character: 'a' }
 ```
 
-
 ## 符号输入 symbol
 
 `symbol`: 表示输入一个符号。此符号会直接发送给系统，不会经过输入法引擎 rime。
@@ -48,8 +47,8 @@ action: { symbol: '!' }
 
 `sendKeys`: 表示发送一组符号给输入法引擎 rime。
 
-- 当需要辅助键（如 Shift、Ctrl、Alt）时，可以在辅助键后加上 `+` 号，表示按下该辅助键；
-- 多个字符之间无需用 `+` 号连接，直接写在一起即可；
+- 当需要辅助键（如 Shift、Ctrl、Alt）时，可以在辅助键后加上 `+` 号，表示按下该辅助键。
+- 多个字符之间无需用 `+` 号连接，直接写在一起即可。
 
 配置示例：
 
@@ -57,7 +56,6 @@ action: { symbol: '!' }
 action: { sendKeys: 'Shift+a' }
 action: { sendKeys: 'nihao' }
 ```
-
 
 ## 打开链接
 
@@ -71,7 +69,7 @@ action: { openURL: 'https://imfuxiao.github.io/Hamster3Document' }
 
 打开链接的特殊用法：
 
-- 使用 `#pasteboardContent` 表示打开剪贴板内容作为链接；
+- 使用 `#pasteboardContent` 表示打开剪贴板内容作为链接。
 
 配置示例：
 
@@ -79,7 +77,7 @@ action: { openURL: 'https://imfuxiao.github.io/Hamster3Document' }
 action: { openURL: '#pasteboardContent' }
 ```
 
-- 使用 `#selectText` 表示打开当前选中内容作为链接；
+- 使用 `#selectText` 表示打开当前选中内容作为链接。
 
 配置示例：
 
@@ -139,18 +137,18 @@ action: { keyboardType: '自定义键盘名称' }
 
 - `#简繁切换`：简体与繁体切换。
 - `#中英切换`：中文与英文切换。注意此切换是指 rime 中 ascii_mode 的切换，非键盘类型切换。
-- `#RimeSwitcher`：进入 rime switch 状态
+- `#RimeSwitcher`：进入 rime switch 状态。
 - `#次选上屏`：将当前第二个候选文字上屏。
 - `#三选上屏`：将当前第三个候选文字上屏。
 - `#方案切换`：显示当前方案切换页面，用于切换当前方案列表中的其他方案。
 - `#左手模式`：切换到单手模式下的左手模式。
-- `#右手模式`：切换到单手模式下的右手模式
+- `#右手模式`：切换到单手模式下的右手模式。
 
 - `#行首`：光标移动到当前行的行首。
 - `#行尾`：光标移动到当前行的行尾。
 - `#换行`：插入一个 `\r`。
 - `#Enter`：插入一个 `\n`。
-- `#重输`：清空已键入的 preedit 内容
+- `#重输`：清空已键入的 preedit 内容。
 
 - `#subCollectionPageUp`：子分类符号页向上翻页。
 - `#subCollectionPageDown`：子分类符号页向下翻页。
@@ -163,10 +161,12 @@ action: { keyboardType: '自定义键盘名称' }
 
 - `#candidatesBarStateToggle`: 候选栏状态切换。用来展开候选文字或收起候选文字。
 
-- `#rimePreviousPage`： rime 候选页向前翻页。仅在开启手工分页模式下有效。
-- `#rimeNextPage`： rime 候选页向后翻页。仅在开启手工分页模式下有效。
+- `#rimePreviousPage`：rime 候选页向前翻页。仅在开启手工分页模式下有效。
+- `#rimeNextPage`：rime 候选页向后翻页。仅在开启手工分页模式下有效。
 
 - `#toggleEmbeddedInputMode`：内嵌模式状态切换。
+
+- `#keyboardPerformance`：显示当前键盘性能信息。
 
 配置示例：
 
