@@ -64,6 +64,10 @@ export default defineConfig({
               label: "元书与仓有什么区别",
               slug: "guides/faqs/what-is-the-difference-between-yuanshu-and-hamster",
             },
+            {
+              label: "如何导入输入方案",
+              slug: "guides/faqs/how-to-import-input-schemes",
+            },
           ],
         },
         {
