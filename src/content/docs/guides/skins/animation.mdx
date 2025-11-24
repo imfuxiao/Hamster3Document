@@ -24,8 +24,8 @@ scaleAnimation:
    - 当设置为 `true` 时，按键动画会使用 `pressDuration` 的时间播放缩小动画，随后使用 `releaseDuration` 的时间播放放大动画。动画是连贯的，由按键按下状态触发。
    - 当设置为 `false` 时：按键按下状态使用 `pressDuration` 的时间播放缩小动画；按键释放状态使用 `releaseDuration` 的时间播放放大动画。动画是不连贯的，按键按下和释放状态分别触发。
 - `scale`：按键缩放比例，默认为 `0.95`，表示按下时按键缩小到原来的 95%。
-- `pressDuration`：按键按下状态时，动画持续时间，单位为秒。
-- `releaseDuration`：按键释放状态时，动画持续时间，单位为秒。
+- `pressDuration`：按键按下状态时，动画持续时间，单位为毫秒。
+- `releaseDuration`：按键释放状态时，动画持续时间，单位为毫秒。
 
 ### 图片播放动画（cartoon）
 
@@ -72,7 +72,7 @@ physicsAnimation:
   randomAngle: 50
 ```
 
-- `duration`：动画持续时间，单位为秒。
+- `duration`：动画持续时间，单位为毫秒。
 - `randomImage`：是否从 `images` 图片列表中随机选择图片，默认为 `false`。
 - `targetScale`：图片缩放比例，默认为 `nil`，即不进行缩放，建议按效果设置，图片如果不缩放，会占用较多的内存。
 - `images`：图片文件名数组，按顺序列出所有用于动画的图片文件名。
