@@ -68,6 +68,10 @@ export default defineConfig({
               label: "如何导入输入方案",
               slug: "guides/faqs/how-to-import-input-schemes",
             },
+            {
+              label: "修改应用中的方案文件后不生效怎么办",
+              slug: "guides/faqs/modification-to-scheme-files-not-take-effect",
+            },
           ],
         },
         {

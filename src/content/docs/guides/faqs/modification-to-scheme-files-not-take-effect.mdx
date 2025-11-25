@@ -1,0 +1,85 @@
+---
+title: 修改方案文件后不生效怎么办？
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## 问题说明
+
+应用中有三个存储区域：
+
+- **应用存储区**：应用主存储区域
+- **键盘存储区**：键盘扩展的存储区域
+- **iCloud 存储区**：iCloud 云端同步存储区域
+
+### 文件复制机制
+
+每次部署/同步 RIME 时，文件复制顺序如下：
+
+1. 先从 **iCloud 存储区** 复制文件到 **应用存储区**
+2. 再从 **键盘存储区** 复制文件到 **应用存储区**
+
+因此，直接修改应用存储区的文件可能会被后续复制操作覆盖，导致修改不生效。
+
+## 解决方案
+
+### 情况一：方案文件存储在 iCloud 存储区
+
+如果您的方案文件存储在 iCloud 中，应该直接修改 iCloud 存储区的文件，而不是应用存储区的文件。
+
+<Aside type="danger" title="重要提示">
+  - iCloud 存储区路径：`~/Library/Mobile Documents/iCloud~com~imfuxiao~Hamster3/Documents/RimeUserData/`
+  - 默认情况下，以下文件**不会**从 iCloud 复制到应用存储区：
+    - `installation.yaml` 文件
+    - `userdb` 目录下的所有文件
+</Aside>
+
+#### 排除特定文件的复制
+
+在应用存储区的 `RimeSharedSupport` 目录下，有一个 `exclude_iCloud_rime_files.txt` 配置文件，用于指定哪些文件不从 iCloud 复制到应用存储区。
+
+**默认排除规则：**
+- `.*[.]userdb.*$` - 排除 userdb 目录下的所有文件
+- `.*[/]installation[.]yaml$` - 排除 installation.yaml 文件
+
+您可以在此文件中添加更多正则表达式来排除其他文件。
+
+### 情况二：管理键盘存储区的文件复制
+
+如果您需要控制键盘扩展生成的自造词是否复制到应用存储区，可以使用 `include_keyboard_rime_files.txt` 配置文件。
+
+在应用存储区的 `RimeSharedSupport` 目录下，此文件用于指定哪些文件需要从键盘存储区复制到应用存储区。
+
+**默认包含规则：**
+- `.*[.]userdb$` - 包含 userdb 相关文件
+- `.*[.]txt$` - 包含所有 txt 类型文件
+
+如果您不需要复制键盘存储区的自造词，可以删除或修改此文件中的正则表达式。
+
+## 常见问题
+
+### 问：修改应用存储区的 txt 文件后被覆盖了，怎么办？
+
+这种情况通常由以下两种原因导致：
+
+**原因一：iCloud 存储区文件覆盖**
+
+默认会将 iCloud 存储区的文件复制到应用存储区，导致您的修改被覆盖。
+
+**解决方法：**
+- 方法 1：直接在 iCloud 存储区中修改文件
+- 方法 2：在 `exclude_iCloud_rime_files.txt` 中添加正则表达式，排除该文件的复制
+
+**原因二：键盘存储区文件覆盖**
+
+默认会将键盘存储区的 txt 文件复制到应用存储区，导致您的修改被覆盖。
+
+**解决方法：**
+- 在 `include_keyboard_rime_files.txt` 文件中删除 `.*[.]txt$` 正则表达式，停止复制键盘存储区的 txt 文件
+
+
+<Aside type="tip" title="提示">
+`exclude_iCloud_rime_files.txt` 和 `include_keyboard_rime_files.txt` 文件也可以存放到您的方案目录下，应用会优先读取该目录中的同名文件。这样就不需要修改元书内置的文件配置了。
+</Aside>
+
+
