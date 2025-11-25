@@ -170,11 +170,42 @@ descriptionCollection:
   insets: { left: 4, right: 4, top: 4, bottom: 4 }
   backgroundStyle: systemButtonBackgroundStyle
   cellStyle: collectionCellStyle
+  displaySeparatorLine: false
+  separatorLineColor: '#BAB2B9'
+  maximumRow: 7
+  maximumColumn: 7
+
+collectionCellStyle:
+  backgroundStyle: categoryCollectionCellBackgroundStyle
+  foregroundStyle: descriptionCollectionCellForegroundStyle
+
+descriptionCollectionCellForegroundStyle:
+  buttonStyleType: text
+  fontSize: 8
+  highlightColor: '#4D6357'
+  normalColor: '#271D25'
+  badgeNormalColor: 575757
+  badgeHighlightColor: 575757
+  badgeFontSize: 8
 ```
 
 二级分类列表与一级分类列表和符号列表配置类似，只是 `type` 的值不同，且没有 `dataSource` 属性。
 
 因为二级分类列表的数据是由一级分类列表决定的，所以不需要 `dataSource` 属性。
+
+二级分类有自己一些额外的参数：
+
+- `displaySeparatorLine`：可选，表示是否显示单元格之间的分割线，默认值为 `true`
+- `separatorLineColor`：可选，表示分割线的颜色，默认值为 iOS 默认分割线颜色
+- `maximumRow`：可选，表示二级分类列表的最大行数，默认值为 4
+- `maximumColumn`：可选，表示二级分类列表的最大列数，默认值为 5
+
+同时二级分类的 cellStyle 样式也可以对半角全角符号角标字体大小进行自定义:
+
+- `badgeFontSize`：可选，表示全角符号角标的字体大小，默认为系统最小字体大小。
+    注意位置在示例中的 `descriptionCollectionCellForegroundStyle` 样式中。
+- `badgeNormalColor`：可选，表示全角符号角标的正常颜色，默认为系统默认字体颜色
+- `badgeHighlightColor`：可选，表示全角符号角标的高亮颜色，默认为系统默认字体颜色
 
 ### 横向符号列表
 
