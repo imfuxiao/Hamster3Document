@@ -2,9 +2,146 @@
 title: 配置参数
 ---
 
-## 参数
+## preeditHeight
 
-### buttonStyleType
+类型：`Float | String`
+
+必选项：是
+
+用于定义预编辑区的高度。
+
+- 当为 `Float` 类型时，表示高度值为确切的 point 值。
+
+如：`preeditHeight: 50` 表示预编辑区高度为当前屏幕 50 point。
+
+- 当为 `String` 类型时，表示高度值为当前设备物理高度的百分比，必须使用 `vh` 结尾。
+
+如：`preeditHeight: '10vh'` 表示预编辑区高度为当前屏幕物理高度的 10%。
+
+## toolbarHeight
+
+类型：`Float | String`
+
+必选项：是
+
+用于定义工具栏的高度。
+
+与 preeditHeight 参数的设置方式相同。
+
+## keyboardHeight
+
+类型：`Float | String`
+
+必选项：是
+
+用于定义按键区的高度。
+
+与 preeditHeight 参数的设置方式相同。
+
+## size
+
+类型：`{width: Float | String | {percentage: Float}, height: Float | String | {percentage: Float}}`
+
+必选项：是
+
+用于定义区域的尺寸。常用来设置按键，VStack，HStack 等尺寸。
+
+### width
+
+类型：`Float | String | {percentage: Float}`
+
+必选项：否。
+
+用于定义 size 的宽度。
+
+- 当值为 `Float` 时，表示宽度值为确切的 point 值。
+
+如：`width: 100` 表示宽度为当前屏幕 100 point。
+
+- 当值为 `String` 时，表示宽度值为百分比，必须使用 `/` 表示，它是 `{percentage: Float}` 的简化表达形式。
+
+如：`width: '1/2'` 表示宽度为当前屏幕宽度的 50%。
+
+- 当值为 `{percentage: Float}` 时，表示宽度值为百分比。
+
+如：`width: {percentage: 0.5}` 表示宽度为当前屏幕宽度的 50%。
+
+- 当不设置 width 时，表示宽度为自动适应，系统会根据当前剩余宽度及其他未设置 width 的元素进行计算。
+
+计算公式：width = 剩余宽度 / 未设置 width 的元素数量。
+
+
+### height
+
+类型：`Float | String | {percentage: Float}`
+
+必选项：否。
+
+用于定义 size 的高度。 其设置属性与 width 相同。
+
+## bounds
+
+必选项：否
+
+用于定义按键的可视区域尺寸。即在按键 size 定义的范围内，进一步缩小按键上显示的图片、文本等内容的显示区域。
+
+- `alignment`: 用于定义显示内容在按键区域内的对齐方式，默认值为 `center`。
+- `width`: 用于定义显示区域的宽度，默认值为按键的宽度。
+- `height`: 用于定义显示区域的高度，默认值为按键的高度。
+
+### alignment
+
+类型：`'center' | 'centerTop' | 'centerBottom' | 'left' | 'right' | 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom'`
+
+必选项：否，默认值为 `center`
+
+用于定义显示内容在按键区域内的对齐方式。
+
+配置示例： `alignment: 'left'`
+
+### width
+
+类型：`Float | String | {percentage: Float}`
+
+必选项：否，默认值为按键的宽度
+
+用于定义显示区域的宽度。其设置属性与 size.width 相同。
+
+### height
+
+类型：`Float | String | {percentage: Float}`
+
+必选项：否，默认值为按键的高度
+
+用于定义显示区域的高度。其设置属性与 size.height 相同。
+
+## center
+
+类型：`{x: Float, y: Float}`
+
+必选项：否
+
+用于调整按键显示内容的中心点位置。常用来调整按键上图片、文本等内容的位置。
+
+- `x`: 用于定义按键显示内容的水平位置偏移。可以为空，表示使用默认中心点 x 的位置。
+- `y`: 用于定义按键显示内容的垂直位置偏移。可以为空，表示使用默认中心点 y 的位置。
+
+计算公式：
+
+- 中心点位置.x = 当前按键可视区域宽度 × x + 当前按键可视区域.minX
+- 中心点位置.y = 当前按键可视区域高度 × y + 当前按键可视区域.minY
+
+举个例子：
+
+```yaml
+center:
+  x: 0.7
+  y: 0.8
+```
+
+表示将按键显示内容调整到按键可视区域的 70% 宽度和 80% 高度位置处。
+
+## buttonStyleType
 
 类型：`'geometry' | 'systemImage' | 'assetImage' | 'fileImage' | 'text'`
 
@@ -18,25 +155,25 @@ title: 配置参数
 - `fileImage`：使用皮肤中的图片文件作为样式
 - `text`：使用文本作为样式
 
-### backgroundStyle
+## backgroundStyle
 
 类型：`String | Array<ConditionStyle> | undefined`
 
 用来引用按键的背景样式。
 
-### foregroundStyle
+## foregroundStyle
 
 类型：`String | Array<String> | Array<ConditionStyle> | undefined`
 
 用来引用按键的前景样式。
 
-### notification
+## notification
 
 类型：`String | Array<String>`
 
 为按键绑定通知。此属性只能在按键样式中使用。
 
-### notificationType
+## notificationType
 
 类型：`'rime' | 'keyboardAction' | 'returnKeyType'`
 
@@ -48,7 +185,7 @@ title: 配置参数
 - `keyboardAction`：表示键盘按键动作的通知
 - `returnKeyType`：表示回车键类型的通知
 
-### rimeNotificationType
+## rimeNotificationType
 
 类型：`'optionChanged' | 'schemaChanged'`
 
@@ -59,7 +196,7 @@ title: 配置参数
 - `optionChanged`：表示 option 配置选项变更
 - `schemaChanged`：表示输入方案变更
 
-### rimeOptionName
+## rimeOptionName
 
 类型：`String`
 
@@ -67,7 +204,7 @@ title: 配置参数
 
 用于标识 RIME 输入法的配置选项名称。
 
-### rimeOptionValue
+## rimeOptionValue
 
 类型：`Bool`
 
@@ -75,7 +212,7 @@ title: 配置参数
 
 用于标识 RIME 输入法的配置选项值。
 
-### notificationKeyboardAction
+## notificationKeyboardAction
 
 类型： [`KeyboardAction`]()
 
@@ -85,7 +222,7 @@ title: 配置参数
 
 当键盘通知的 action 与当前设置的 notificationKeyboardAction 类型匹配时，会触发样式变更。当 action 值不匹配时，样式恢复为默认状态。
 
-### returnKeyType
+## returnKeyType
 
 类型：`Int | [Int]`
 
@@ -95,7 +232,7 @@ title: 配置参数
 
 当系统回车键类型与当前设置的 returnKeyType 类型匹配时，会触发样式变更。当回车键类型值不匹配时，样式恢复为默认状态。
 
-### animationType
+## animationType
 
 类型：`'scale' | 'cartoon' | 'physics'`
 
@@ -107,9 +244,7 @@ title: 配置参数
 - `cartoon`：表示卡通动画，用来替代之前版本的 APNG 图片
 - `physics`：表示物理动画，可以用来描述移动、旋转、透明度变化等
 
-## 类型
-
-### ConditionStyle 条件样式
+## ConditionStyle 条件样式
 
 部分按键的样式需要根据条件判断来决定，例如：符号键盘锁定按键的样式，它初始显示时需要根据当前锁定状态来决定显示样式。
 
@@ -131,7 +266,7 @@ foregroundStyle:
     }
 ```
 
-#### conditionKey
+### conditionKey
 
 类型：`'$symbolicKeyboardLockState' | 'rime${optionName}'`
 
