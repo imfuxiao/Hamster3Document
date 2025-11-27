@@ -2,6 +2,9 @@
 title: 按键动作
 ---
 
+import { Aside, Code } from "@astrojs/starlight/components";
+
+
 ## 标准动作
 
 - `space`: 表示空格键
@@ -174,3 +177,19 @@ action: { keyboardType: '自定义键盘名称' }
 ```yaml
 action: { shortcut: '#candidatesBarStateToggle' }
 ```
+
+## 切换 RIME 方案
+
+`switchRimeSchema`: 表示切换到指定 RIME 方案。
+
+配置示例：
+
+```yaml
+action: { switchRimeSchema: '方案ID或方案名称' }
+```
+
+<Aside type="tip" title="注意">
+  建议使用方案 ID 进行切换，因为方案名称可能会发生变化。
+</Aside>
+
+- v1.4.0 及以上版本有效
