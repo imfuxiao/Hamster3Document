@@ -166,3 +166,22 @@ ins={[
 
 如果没有为通知设置按键动作 `action` 参数，则按键会继续使用原始样式中设置的 `action`。
 </Aside>
+
+### 锁定通知结果
+
+可以使用参数 `lockedNotificationMatchState` 来锁定匹配后的状态。
+
+注意：锁定状态后，当通知结果不匹配后，按键也不会发生。
+
+示例：
+
+```yaml
+changeFlypyRimeSchemaNotification:
+  notificationType: keyboardAction
+  notificationKeyboardAction: { switchRimeSchema: 'aaa' }
+  lockedNotificationMatchState: true
+  foregroundStyle:
+    # - rightArrowButtonForegroundStyle
+    - rightArrowButtonSwitchChineseForegroundStyle
+  action: { switchRimeSchema: 'bbb' }
+```
