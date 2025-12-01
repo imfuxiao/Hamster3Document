@@ -2,6 +2,27 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
+## 1.4.0(2025-12-02)
+
+- fix: 修复从键盘复制文件时 userdb 目录下文件异常
+- fix: 修复 repeat 及滑动删除不触发 keyboardAction 通知
+- fix: 修复标签过滤查询语句错误
+- fix: 修复键盘横向滑动符号栏显示异常
+- fix: 修复键盘常用语/剪贴板上屏错误引用符号成对功能
+- fix: 读取系统剪贴板文字内容时会自动删除开头与结尾的空白字符
+- fix: 候选字栏点选候选字与 editor/bindings/+ 中空格键设置冲突
+- feat: 键盘滑动手势优化
+- feat: 新增 lockedNotificationMatchState 通知参数，用于锁定按键通知匹配结果
+  详情请查阅：https://ihsiao.com/apps/hamster/v3/docs/guides/skins/notifications/#%E9%94%81%E5%AE%9A%E9%80%9A%E7%9F%A5%E7%BB%93%E6%9E%9C
+- feat: 键盘常用语标签过滤功能优化
+- feat: 新增"禁止复制键盘文件"选项，功能开关位置：RIME > 禁止复制键盘文件
+- feat: Emoji 键盘优化
+- feat: 新增 RIME 同步及部署捷径指令
+  注意：因捷径指令对程序的运行时间有限制，所以捷径中运行部署或者同步时，都不会从 iCloud 云端中下载文件，如需从 iCloud 云端下载文件，请在应用中执行部署或同步。
+- feat: 新增剪贴板捷径。注意：只能添加文字至剪贴板。
+- feat: 新增 $rimeCandidateComment 文本变量，用于显示候选字 comment 信息
+- feat: 新增 switchRimeSchema 指令，用于切换指定的输入方案。详见：https://ihsiao.com/apps/hamster/v3/docs/guides/skins/action/#%E5%88%87%E6%8D%A2-rime-%E6%96%B9%E6%A1%88
+- feat: 键盘候选字栏优化
 
 ## 1.3.1(2025-11-27)
 
