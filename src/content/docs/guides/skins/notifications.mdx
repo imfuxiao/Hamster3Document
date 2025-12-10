@@ -139,7 +139,7 @@ notificationType: preeditChanged
 
 ## 根据通知调整按键样式及动作
 
-在通知设置中，可以通过 `backgroundStyle`，`foregroundStyle`，`action` 参数改变按键的样式及触发动作。
+在通知设置中，可以通过 `backgroundStyle`，`foregroundStyle`，`action`, `swipeUpAction`, `swipeDownAction` 参数改变按键的样式及触发动作。
 
 export const sample01Code = `
 blueReturnKeyTypeNotification:
@@ -164,7 +164,7 @@ ins={[
 <Aside type="danger" title="注意">
 在通知匹配后，按键会按照通知中设置的样式进行渲染。如果没有设置样式，则按键会显示为空白。
 
-如果没有为通知设置按键动作 `action` 参数，则按键会继续使用原始样式中设置的 `action`。
+如果没有为通知设置按键动作 `action`, `swipeUpAction`, `swipeDownAction` 参数，则按键会继续使用原始样式中设置的 `action`, `swipeUpAction`, `swipeDownAction`。
 </Aside>
 
 ### 锁定通知结果
