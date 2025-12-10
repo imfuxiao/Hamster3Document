@@ -248,7 +248,9 @@ center:
 
 部分按键的样式需要根据条件判断来决定，例如：符号键盘锁定按键的样式，它初始显示时需要根据当前锁定状态来决定显示样式。
 
-类型：`{ conditionKey: String, conditionValue: Bool | Array<Int>, styleName: String }`
+类型：`{ conditionKey: String, conditionValue: Bool | Array<Int>, styleName: String | Array<String> }`
+
+注意：`styleName: Array<String>` 需要 1.5.2 版本及以上才能使用。
 
 配置示例：
 
@@ -256,6 +258,11 @@ center:
 foregroundStyle:
   - {
       styleName: unlockButtonForegroundStyle,
+      # 或者
+      styleName: [
+        unlockButtonForegroundStyle1,
+        unlockButtonForegroundStyle2,
+      ],
       conditionKey: $symbolicKeyboardLockState,
       conditionValue: false,
     }
