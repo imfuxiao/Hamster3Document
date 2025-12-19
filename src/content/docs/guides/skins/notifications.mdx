@@ -130,12 +130,16 @@ RIME 预编辑文本通知类型用于监听 RIME 预编辑文本的变化。
 
 export const rimePreeditNotificationCode = `
 notificationType: preeditChanged
+backgroundStyle: blueSystemButtonBackgroundStyle
+foregroundStyle: enterButtonWhiteForegroundStyle
+action: enter
 `;
 
 <Code lang="yaml"
   code={rimePreeditNotificationCode}
   />
 
+> 注意：这里设置的样式为 rime preedit 存在时的样式，当 preedit 为空时，按键会恢复为原始样式。
 
 ## 根据通知调整按键样式及动作
 
