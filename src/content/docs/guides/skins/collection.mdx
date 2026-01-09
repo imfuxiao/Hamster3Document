@@ -2,8 +2,7 @@
 title: 集合视图
 ---
 
-
-import { Aside, Code } from '@astrojs/starlight/components';
+import { Aside, Code } from "@astrojs/starlight/components";
 
 键盘中除了单独的按键外，还可以使用集合显示一组数据。比如常见的「符号列表」。
 
@@ -17,6 +16,7 @@ import { Aside, Code } from '@astrojs/starlight/components';
 - `verticalCandidates`：纵向显示候选字。仅在 `verticalCandidatesLayout` 纵向候选字栏布局中有效。
 - `numericSymbols`: 数字键盘符号列表，即内置数字键盘中左侧纵向显示的列表。可以在「键盘设置」-「数字键盘符号设定」中配置数据源。(v1.5.0 版本及以上支持)
 - `categorySymbols`: 分类符号列表，布局类似内置的符号键盘的样子，上下结构，上部显示具体的符号信息，下部显示符号的分类。数据源是内置的，不支持修改。（v1.5.0 版本及以上支持）
+- `t9Symbols`: 中文九键（T9）键盘符号列表，即 T9 键盘中左侧纵向显示的列表。可以在「键盘设置」-「中文九键符号设定」中配置数据源。(v1.16.0 版本及以上支持)
 
 配置示例：
 
@@ -26,7 +26,6 @@ categoryCollection:
 ```
 
 ## 集合视图的分类
-
 
 ### 纵向符号列表
 
@@ -94,7 +93,8 @@ collectionCellForegroundStyle:
 - `cellStyle`：必选，表示集合视图中单元格的样式。与按键样式自定义相同
 
 <Aside type="danger" title="注意">
-  `cellStyle` 中的 `foregroundStyle` 样式只能配置字符串样式引用，且只能使用 `text` 类型。
+  `cellStyle` 中的 `foregroundStyle` 样式只能配置字符串样式引用，且只能使用
+  `text` 类型。
 </Aside>
 
 ### 分类符号列表
@@ -107,7 +107,6 @@ collectionCellForegroundStyle:
 注意：两者应该同时使用。
 
 ![kqZN6A](https://obsidian-1304584527.cos.ap-shanghai.myqcloud.com/images/obsidian/2025/10/kqZN6A.png)
-
 
 一级分类列表配置示例：
 
@@ -173,7 +172,7 @@ descriptionCollection:
   backgroundStyle: systemButtonBackgroundStyle
   cellStyle: collectionCellStyle
   displaySeparatorLine: false
-  separatorLineColor: '#BAB2B9'
+  separatorLineColor: "#BAB2B9"
   maximumRow: 7
   maximumColumn: 7
 
@@ -184,8 +183,8 @@ collectionCellStyle:
 descriptionCollectionCellForegroundStyle:
   buttonStyleType: text
   fontSize: 8
-  highlightColor: '#4D6357'
-  normalColor: '#271D25'
+  highlightColor: "#4D6357"
+  normalColor: "#271D25"
   badgeNormalColor: 575757
   badgeHighlightColor: 575757
   badgeFontSize: 8
@@ -205,7 +204,7 @@ descriptionCollectionCellForegroundStyle:
 同时二级分类的 cellStyle 样式也可以对半角全角符号角标字体大小进行自定义:
 
 - `badgeFontSize`：可选，表示全角符号角标的字体大小，默认为系统最小字体大小。
-    注意位置在示例中的 `descriptionCollectionCellForegroundStyle` 样式中。
+  注意位置在示例中的 `descriptionCollectionCellForegroundStyle` 样式中。
 - `badgeNormalColor`：可选，表示全角符号角标的正常颜色，默认为系统默认字体颜色
 - `badgeHighlightColor`：可选，表示全角符号角标的高亮颜色，默认为系统默认字体颜色
 
@@ -346,7 +345,7 @@ candidateStyle:
 verticalCandidates:
   type: verticalCandidates
   maxRows: 4
-  separatorColor: '#33338888'
+  separatorColor: "#33338888"
   backgroundStyle: alphabeticBackgroundStyle
   candidateStyle: verticalCandidateCellStyle
 
@@ -418,7 +417,7 @@ horizontalSymbolsDataSource:
 
 ```yaml
 horizontalSymbolsDataSource:
-  - { label: '1', action: tab, styleName: 'leftArrowButton'}
+  - { label: "1", action: tab, styleName: "leftArrowButton" }
 leftArrowButton:
   backgroundStyle: alphabeticBackgroundStyle
   foregroundStyle:
@@ -428,6 +427,6 @@ leftArrowButton:
 引用样式的定义与按键样式定义相同。
 
 <Aside type="danger" title="注意">
-- `styleName` 属性必须与 `label` 同时使用
-- `styleName` 引用的样式中，只能定义 `backgroundStyle` 和 `foregroundStyle` 两个属性，其余属性无效
+  - `styleName` 属性必须与 `label` 同时使用 - `styleName` 引用的样式中，只能定义
+  `backgroundStyle` 和 `foregroundStyle` 两个属性，其余属性无效
 </Aside>
