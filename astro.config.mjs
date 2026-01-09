@@ -72,6 +72,10 @@ export default defineConfig({
               label: "修改应用中的方案文件后不生效怎么办",
               slug: "guides/faqs/modification-to-scheme-files-not-take-effect",
             },
+            {
+              label: "中文九键方案配置说明",
+              slug: "guides/faqs/chinese-ninekey-scheme-configuration",
+            },
           ],
         },
         {
