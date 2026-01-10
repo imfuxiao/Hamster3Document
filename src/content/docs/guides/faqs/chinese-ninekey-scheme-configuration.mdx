@@ -37,8 +37,8 @@ engine:
 ```yaml
 speller:
   # 注意: 这里添加了 123456789
-  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA123456789
-  initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA123456789
+  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA0123456789
+  initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA0123456789
   algebra:
     # ### 超级简拼(可选)
     - abbrev/^([a-z]).+$/$1/ # 超级简拼
@@ -72,7 +72,7 @@ speller:
 # Rime schema
 # encoding: utf-8
 
-# 适配了仓输入法 [Hamster](https://github.com/imfuxiao/Hamster/) 九宫格布局。
+# 中文九键输入方案配置
 #
 # 可选，支持英文：
 # 1. 解开 `engine/translators` 下的注释
@@ -115,10 +115,21 @@ engine:
     - lua_translator@*date_translator # 时间、日期、星期
     - table_translator@custom_phrase # 自定义短语 custom_phrase_t9.txt
     # - table_translator@melt_eng     # 英文输入
+    - lua_translator@*calc_translator # 计算器
   filters:
     - simplifier@emoji # Emoji
     - simplifier@traditionalize # 简繁切换
     - uniquifier # 去重
+
+calculator:
+  prefix: "=" # 计算器前缀
+  show_prefix: true
+
+# 处理符合特定规则的输入码，如网址、反查
+recognizer:
+  import_preset: default # 从 default.yaml 继承通用的
+  patterns: # 再增加方案专有的：
+    calculator: "^=.*$" # 响应 lua_translator@*calc_translator，计算器。前缀设定项 calculator/prefix
 
 translator:
   prism: t9
@@ -151,8 +162,8 @@ key_binder:
     - { when: has_menu, accept: 1, send: apostrophe }
 
 speller:
-  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA123456789
-  initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA123456789
+  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA0123456789
+  initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA0123456789
   algebra:
     # ### 超级简拼
     - abbrev/^([a-z]).+$/$1/ # 超级简拼
