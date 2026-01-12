@@ -11,19 +11,21 @@ import { Aside } from "@astrojs/starlight/components";
 
 ## 配置步骤
 
-- 在方案文件中添加 t9 配置开关
+- 在方案文件中添加 t9 配置相关参数
 
 ```yaml
 t9:
-  enable: true
+  # 是否显示 rime 中原始的预编辑文本，默认为 true
+  # true: 对 preedit 不做处理，显示 rime 返回的原始 preedit 值。
+  #       如果想通过 lua 自己调整 preedit 的显示，可以设置为 true。
+  # false: 根据候选字 comment 显示转换后的 preedit 内容。
+  #        注意：请务必保证候选字 comment 有效且正确，否则可能导致预编辑文本显示异常。
+  isDisplayOriginalPreedit: false
 ```
 
 - 在方案文件 processors 添加 t9_processor
 
-> 注意：
->
-> - 必须添加在首个位置
-> - t9_processor 目前仅在元书中内置，仓目前还没有添加插件，等功能稳定后，仓会同步更新
+t9_processor 用来处理九键输入的字符，如回车键、删除键等。
 
 ```yaml
 engine:
@@ -32,11 +34,18 @@ engine:
     #其他 processors
 ```
 
+<Aside title="提示" type="tip">
+  - t9_processor 必须添加在首个位置
+  - t9_processor 目前仅在元书中内置，仓目前还没有添加此插件，等功能稳定后，仓会同步更新
+</Aside>
+
 - speller 添加 t9 映射
+
+将词库中的拼音派生为数字，如 "abc" 映射为 "2"等，输入数字可模糊匹配词库，筛选拼音后则精确匹配词库。
 
 ```yaml
 speller:
-  # 注意: 这里添加了 123456789
+  # 注意: 这里添加了 0123456789
   alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA0123456789
   initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA0123456789
   algebra:
@@ -64,7 +73,14 @@ speller:
     - derive/[wxyz]/9/
 ```
 
-## 示例
+- 屏蔽方案中对候选字 comment 的处理
+
+T9 对输入的预编辑字符(preedit)的显示依赖于候选字的 comment 字段。
+
+比如输入数字 2，可以匹配到拼音 "a", "b", "c"，如果候选字的 comment 字段被方案处理掉了，预编辑文本就无法正确显示。
+
+
+## T9 配置示例
 
 以下已雾凇方案 `t9.schema.yaml` 为例，展示完整配置：
 
@@ -154,7 +170,7 @@ punctuator:
     "#": [0, "#", "$", "%", "^", "&", "*", "(", ")"]
 
 t9:
-  enable: true
+  isDisplayOriginalPreedit: false
 
 # 输入时按 1 可以分词
 key_binder:
