@@ -105,6 +105,23 @@ speller:
     - derive/[wxyz]/9/
 ```
 
+上面的『九宫格映射』部分可以进一步优化为：
+
+```yaml
+- derive/^(.*)$/\U$1/
+- xform/[ABC]/2/
+- xform/[DEF]/3/
+- xform/[GHI]/4/
+- xform/[JKL]/5/
+- xform/[MNO]/6/
+- xform/[PQRS]/7/
+- xform/[TUV]/8/
+- xform/[WXYZ]/9/
+```
+
+这样可以生成更少体积的 prism 文件，但在不同的输入方案下，效果不太一样。具体使用那种配置，自己可以都尝试看看效果，哪种效果好用哪个。
+
+
 - 在上一步修改的方案文件中，屏蔽对候选字 comment 处理的 Lua 脚本
 
 <Aside title="提示" type="tip">
