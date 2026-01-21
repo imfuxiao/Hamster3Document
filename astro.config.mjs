@@ -24,6 +24,9 @@ export default defineConfig({
         {
           label: "键盘皮肤",
           items: [
+            { label: "简介", slug: "guides/skins/intro" },
+            { label: "Jsonnet与皮肤的关系", slug: "guides/skins/jsonnet" },
+            { label: "皮肤结构", slug: "guides/skins/structure" },
             { label: "键盘布局", slug: "guides/skins/layout" },
             { label: "预编辑区", slug: "guides/skins/preedit" },
             { label: "工具栏区", slug: "guides/skins/toolbar" },
