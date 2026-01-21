@@ -22,6 +22,14 @@ export default defineConfig({
           slug: "guides/intro",
         },
         {
+          label: "输入方案",
+          slug: "guides/schema",
+        },
+        {
+          label: "中文九键",
+          slug: "guides/chinese-ninekey-configuration",
+        },
+        {
           label: "键盘皮肤",
           items: [
             { label: "简介", slug: "guides/skins/intro" },
@@ -39,10 +47,6 @@ export default defineConfig({
             { label: "配置参数", slug: "guides/skins/parameters" },
             { label: "仓皮肤迁移", slug: "guides/skins/upgrade" },
           ],
-        },
-        {
-          label: "中文九键",
-          slug: "guides/chinese-ninekey-configuration",
         },
         {
           label: "常见问题",
@@ -73,7 +77,7 @@ export default defineConfig({
             },
             {
               label: "如何导入输入方案",
-              slug: "guides/faqs/how-to-import-input-schemes",
+              link: "/guides/schema/#如何导入-rime-的输入方案",
             },
             {
               label: "修改应用中的方案文件后不生效怎么办",
