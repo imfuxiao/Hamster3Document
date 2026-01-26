@@ -22,6 +22,10 @@ export default defineConfig({
           slug: "guides/intro",
         },
         {
+          label: "文件管理",
+          slug: "guides/file-manager",
+        },
+        {
           label: "输入方案",
           slug: "guides/schema",
         },
