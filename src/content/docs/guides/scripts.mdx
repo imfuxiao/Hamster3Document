@@ -1,0 +1,179 @@
+---
+title: 脚本
+---
+
+:::tip[注意]
+脚本功能需要购买元书 Pro 后才能使用。
+:::
+
+元书键盘内置了 JavaScript 模块，允许用户编写脚本来扩展键盘功能。
+
+## 脚本功能
+
+### 脚本的入口：输出函数
+
+在元书的每个脚本中，必须定义一个输出函数，它是脚本的入口点。类似于其他编程语言中的 `main` 函数。
+
+函数签名为：`async function output()`。
+
+返回值为：`Boolean/String/[String]`。
+
+示例：
+
+```javascript
+// 注意：必须包含 `async` 关键字
+async function output() {
+  return true
+}
+
+async function output() {
+  return 'hello, World!'
+}
+
+async function output() {
+  return ['line1', 'line2', 'line3']
+}
+```
+
+### 日志输出
+
+函数名：`$log`，
+
+入参：`Any`
+
+返回值：`void`
+
+示例：`$log("hello, World!")`
+
+> 注意：`$log` 只接收一个参数，且会转为 String 处理。
+
+### 网络同步请求
+
+当需要在脚本中发起网络请求时，请使用内置的 `$http` 函数。
+
+函数名: `$http`
+
+:::tip[注意]
+- 遇到错误会抛出异常，请使用 `await / try...catch` 调用此函数。
+- 因为 `$http` 是异步函数，调用 $http 函数前请添加 `await` 关键字。
+:::
+
+入参：`$http` 只有一个入参，为 `Object` 类型，对象中可以包含以下参数
+
+- `url`, 必选, 类型: String, 表示网络地址
+- `method`, 可选, 默认为 `GET`, 类型: String, `GET/POST/DELETE/PUT/...`
+- `header`, 可选, 默认为空, 类型: Object, key 与 value 均为 String 类型, http 请求头, 注意 header 头的 key 与 value 均为字符串类型
+- `body`, 可选, 默认为空, 类型: Object, key 为 String 类型, Value 可以为 任何 JavaScript 基础类型
+- `timeout`, 可选, 默认 15, 类型: Int, http 请求超时时间，单位为秒
+
+$http 默认会以 `JSON` 格式编码 `body`，并发送请求。
+
+如果您需要发送 `a=b&c=d` 格式，请为 `header` 添加 `Content-Type:application/x-www-form-urlencoded` 参数。
+
+返回值：`$http` 返回 Object 类型，对象中包含以下参数
+
+- `data`, 类型: String, 服务器返回数据，注意，这里始终会解析为字符串，如果需要解析为 json 类型，请使用 `JSON.parse()` 函数转换。
+- `response`, 类型: Object, 对象中包含服务端返回的其他数据
+
+`response` 中的参数
+
+- `url`, 类型: String
+- `mimeType`, 类型: String
+- `statusCode`, 类型: Int
+- `header`, 类型: Object, 说明：服务端响应 header
+
+调用示例:
+
+- Get 请求
+
+```javascript
+async function output() {
+  try {
+    const value = await $http({url: "https://fakestoreapi.com/products/1"})
+    if (value.data) {
+      let json = JSON.parse(value.data)
+      $log(json["id"])
+    }
+    $log(value.response.url)
+    $log(value.response.mimeType)
+    $log(value.response.statusCode)
+
+    let header =  value.response.header
+    for(var key in header){
+      $log(key + ' : ' + header[key])
+    }
+    return true
+  } catch (error) {
+    $log(error)
+    return false
+  }
+}
+```
+
+- POST 请求
+
+```javascript
+async function output() {
+  try {
+    const value = await $http({
+      url: "https://dummyjson.com/todos/add",
+      method: "POST",
+      header: {
+        "Content-Type": "application/json"
+      },
+      body: {
+        todo: "Use DummyJSON in the project",
+        completed: false,
+        userId: 5
+      }
+    })
+    if (value.data) {
+      let json = JSON.parse(value.data)
+      for(var key in json){
+        $log("data " + key + ' : ' + json[key])
+      }
+    }
+    $log(value.response.url)
+    $log(value.response.mimeType)
+    $log(value.response.statusCode)
+
+    let header = value.response.header
+    for(var key in header){
+      $log(key + ' : ' + header[key])
+    }
+    return true
+  } catch (error) {
+    $log(error)
+    return false
+  }
+}
+```
+
+## 全局变量
+
+在应用的脚本模块内，点击右上角 `...` 图标，可以进入「变量」功能页面。
+
+这些变量在脚本运行时会被注入到脚本的运行环境中，作为脚本的全局变量，供脚本使用。
+
+:::tip[注意]
+为了区分变量，所有注入的变量会以 `$` 符号开头。
+比如您在变量功能中定义了变量 `token`，那么注入后的变量名为 `$token`。
+:::
+
+在脚本运行时，应用会注入一些特殊的变量：
+
+* `$pasteboardContent`: 系统剪贴板中字符内容。
+    > 注意：需要为当前执行的脚本打开「允许访问剪贴板」开关。
+* `$searchText`: 键盘脚本页面中输入框中文本值。
+    > 注意：因元书的主程序中没有输入框，您可以使用 `const str = $searchText || "固定值"` 来测试。
+    
+## 常见问题
+
+### 多个脚本切换运行脚本结果是一样的
+
+元书内置的 JavaScript 运行环境不会清除用户在函数外部定义的全局变量。
+
+因此当你定义了 `const let url` 全局变量后，变量会一直保留在运行环境中，导致多个脚本切换时，结果相同。
+
+解决方法：不要使用全局变量，将全局变量定义在函数内部。
+

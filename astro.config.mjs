@@ -51,6 +51,11 @@ export default defineConfig({
             { label: "配置参数", slug: "guides/skins/parameters" },
             { label: "仓皮肤迁移", slug: "guides/skins/upgrade" },
           ],
+          collapsed: true
+        },
+        {
+          label: "脚本",
+          slug: "guides/scripts",
         },
         {
           label: "常见问题",
@@ -88,6 +93,7 @@ export default defineConfig({
               slug: "guides/faqs/modification-to-scheme-files-not-take-effect",
             },
           ],
+          collapsed: true
         },
         {
           label: "更新日志",
