@@ -2,16 +2,38 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
-## 1.6.7(2016-02-21)
+## 1.6.8(2026-03-03)
+
+- fix: 开启键盘自定义字体功能后，键盘内存泄露
+- fix: 候选字分页高亮显示异常
+- fix: 修复内置仓颉「甘」键为「廿」
+  :::tip
+  - 需要在皮肤页面，点击右上角 `…` 菜单下的“重置内置皮肤”后，才能更新内置键盘
+  :::
+- feat: 内嵌模式优化
+- feat: 新增 openSkinsFile URL action
+  :::tip
+  使用示例：`hamster3://com.ihsiao.apps.hamster3/finder?action=openSkinsFile&fileURL=jsonnet/Components/Utils.libsonnet`
+  - `action：openSkinsFile` 表示打开当前使用的皮肤下的文件
+  - `fileURL`：表示皮肤下文件相对路径
+  :::
+- feat: 新增大千注音内置键盘
+  :::tip
+  - 需要在皮肤页面，点击右上角 `…` 菜单下的“重置内置皮肤”后，才能看到该键盘
+  - 大千注音键盘仅供 iOS 端使用，不支持 iPad 端使用 
+  :::
+- feat: Logo 及应用主题色调整
+
+## 1.6.7(2026-02-21)
 
 - fix: 九键拼音候选列表中没有拼音 yo
 - feat: 应用 Banner 及 Loading 页面背景颜色优化
 
-## 1.6.6(2016-02-10)
+## 1.6.6(2026-02-10)
 
 - fix: 候选栏长按 action 引发的键盘 crash
 
-## 1.6.4(2016-02-05)
+## 1.6.4(2026-02-05)
 
 - fix: 候选栏文字长按后高亮显示异常
 - feat: 双击空格功能优化
