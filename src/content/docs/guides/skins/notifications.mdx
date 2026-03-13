@@ -86,12 +86,20 @@ RIME schema 变更通知用于监听 RIME 引擎的输入方案变更事件。
 export const rimeSchemaNotificationCode = `
 notificationType: rime
 rimeNotificationType: schemaChanged
+# rimeSchemaID 与 rimeSchemaName 二选一设置，建议使用 rimeSchemaID，中文在不同编码下判断可能会有问题
+rimeSchemaID: 方案ID
+rimeSchemaName: 方案名称
 `;
 
 <Code lang="yaml"
   code={rimeSchemaNotificationCode}
-  mark={{range: "2-2"}}
+  mark={{range: "2-5"}}
   />
+
+:::tip[注意]
+- rimeSchemaID 与 rimeSchemaName 只需要配置其中任意一个参数即可，建议使用 rimeSchemaID，因为中文在不同编码下可能会有问题。
+- 元书版本要求 1.6.10 及以上。或 TF 313 及以上版本。
+:::
 
 ### 键盘动作类型通知
 
