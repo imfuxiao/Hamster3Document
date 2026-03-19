@@ -2,6 +2,30 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
+## 1.6.10(2026-03-20)
+- feat: 点击 cskin 文件，添加确认对话框
+- feat: 键盘菜单新增导入导出功能
+- fix: text 前景类型不能显示 “\n”，“\t”
+- fix: jsonnet 对 “\\n” 处理异常
+- fix: 备份功能缺失对键盘菜单设置的支持
+- feat: RIME schema 通知调整
+  - 增加了一个新的字段 `rimeSchemaID` `rimeSchemaName`。
+  - 当 RIME schema 发生变更时，只有设置的 `rimeSchemaID` 或 `rimeSchemaName` 与当前 schema 匹配时，通知才会触发。
+  - 示例：
+  ```yaml
+  qButton:
+    ...
+    notification:
+        - schemaChangedNotification
+  schemaChangedNotification:
+    notificationType: rime
+    rimeNotificationType: schemaChanged
+    rimeSchemaID: double_pinyin_flypy
+    # rimeSchemaName: 小鹤双拼
+    backgroundStyle: blueButtonBackgroundStyle
+    foregroundStyle: blueButtonForegroundStyle 
+  ```
+
 ## 1.6.9(2026-03-10)
 
 - fix: URL 类型剪贴板内容在部分 app 下粘贴无响应
