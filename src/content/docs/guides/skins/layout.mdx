@@ -194,7 +194,9 @@ qButton:
 - capsLockedStateForegroundStyle: 用于定义按键大写锁定状态下的前景样式
 - hintStyle: 用于定义按键气泡样式
 - hintSymbolsStyle: 用于定义按键长按显示的符号列表样式
-- action: 用于定义按键的动作
+- action: 用于定义按键的默认动作
+- preeditStateAction: 当键盘处于预编辑状态（有未上屏的输入选项）时，点击的行为。不设置此属性时，使用 action 设置的值。
+- repeatAction: 长按后，重复执行的行为。不设置此属性，无任何操作。
 - uppercasedStateAction: 用于定义按键在大写或大小锁定状态下的动作
 - swipeUpAction： 用于定义按键向上滑动时的动作
 - swipeDownAction： 用于定义按键向下滑动时的动作
