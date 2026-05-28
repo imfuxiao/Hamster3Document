@@ -189,3 +189,24 @@ action: { switchRimeSchema: '方案ID或方案名称' }
 </Aside>
 
 - v1.4.0 及以上版本有效
+
+## 组合 Action(实验)
+
+`combine`：组合 action，用于触发多个 action
+
+配置示例：
+
+- 切换到英文键盘且将输入方案转为 melt_eng
+
+``` yaml
+action:
+  combine:
+    - keyboardType: alphabetic
+    - switchRimeSchema: melt_eng
+```
+
+<Aside type="tip" title="注意">
+  - 实验功能
+  - 需 TF >= 349 版本
+</Aside>
+
