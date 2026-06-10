@@ -1,12 +1,17 @@
 // @ts-check
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
+import mermaid from 'astro-mermaid';
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://ihsiao.com",
   base: "/apps/hamster/v3/docs/",
   integrations: [
+    mermaid({
+      theme: 'forest',
+      autoTheme: true
+    }),
     starlight({
       title: "元书输入法",
       social: [
