@@ -139,9 +139,8 @@ description: 如何设计和布局一个键盘
 
 无论是 `HStack` 还是 `VStack`，都支持以下属性：
 
-- `subviews`: 必选，类型 `[Object]`，用于定义自己的子视图，可以是 `Cell`、`HStack` 或 `VStack`。
-- `style`: 可选，默认为空，类型 `String`，引用样式，用于设置`HStack` 或 `VStack` 所占容器的宽度（或高度）。
-   如果不设置该属性，则默认平均分配行宽度或列的高度。
+- `subviews`：必选，类型 `Object[]`，用于定义自己的子视图，可以是 `Cell`、`HStack` 或 `VStack`。
+- `style`：可选，类型 `String`，引用同级样式节点。通常在该样式节点中通过 `size` 设置 `HStack` 或 `VStack` 在父容器中占用的宽度或高度；不设置时，由同级未设置尺寸的元素平均分配剩余空间。
 
 示例：
 
@@ -186,22 +185,28 @@ qButton:
 
 按键支持以下属性：
 
-- size: 用于定义按键的大小
-- bounds: 用于定义按键的可视区域
-- backgroundStyle: 用于定义按键的背景样式
-- foregroundStyle: 用于定义按键的前景样式
-- uppercasedStateForegroundStyle: 用于定义按键大写状态下的前景样式
-- capsLockedStateForegroundStyle: 用于定义按键大写锁定状态下的前景样式
-- hintStyle: 用于定义按键气泡样式
-- hintSymbolsStyle: 用于定义按键长按显示的符号列表样式
-- action: 用于定义按键的默认动作
-- preeditStateAction: 当键盘处于预编辑状态（有未上屏的输入选项）时，点击的行为。不设置此属性时，使用 action 设置的值。
-- repeatAction: 长按后，重复执行的行为。不设置此属性，无任何操作。
-- uppercasedStateAction: 用于定义按键在大写或大小锁定状态下的动作
-- swipeUpAction： 用于定义按键向上滑动时的动作
-- swipeDownAction： 用于定义按键向下滑动时的动作
-- animation: 用于定义按键的动画效果
-- notification: 用于定义按键接收到匹配的通知时的样式
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `size` | `Size` | 定义按键占用空间。 |
+| `bounds` | `Bounds` | 定义按键内容的可视区域，不改变按键占用空间。 |
+| `backgroundStyle` | `String 或 ConditionStyle[]` | 引用按键背景样式节点。 |
+| `foregroundStyle` | `String、String[] 或 ConditionStyle[]` | 引用按键前景样式节点，可叠加多个前景样式。 |
+| `uppercasedStateForegroundStyle` | `String 或 String[]` | 大写状态下的前景样式。 |
+| `capsLockedStateForegroundStyle` | `String 或 String[]` | 大写锁定状态下的前景样式。 |
+| `hintStyle` | `String` | 引用按键气泡样式节点。 |
+| `hintSymbolsStyle` | `String` | 引用长按符号面板样式节点。 |
+| `action` | `KeyboardAction` | 默认点击动作。 |
+| `preeditStateAction` | `KeyboardAction` | 预编辑状态（有未上屏输入）下的点击动作；未设置时使用 `action`。 |
+| `repeatAction` | `KeyboardAction` | 长按后重复执行的动作；未设置时不重复执行。 |
+| `uppercasedStateAction` | `KeyboardAction` | 大写或大写锁定状态下的点击动作。 |
+| `swipeUpAction` | `KeyboardAction` | 向上滑动动作。 |
+| `swipeDownAction` | `KeyboardAction` | 向下滑动动作。 |
+| `swipeLeftAction` | `KeyboardAction` | 向左滑动动作。 |
+| `swipeRightAction` | `KeyboardAction` | 向右滑动动作。 |
+| `animation` | `String[]` | 引用动画节点，可同时配置多个动画。 |
+| `notification` | `String 或 String[]` | 引用通知节点，通知匹配后可改变样式或动作。 |
+
+> `backgroundStyle`、`foregroundStyle`、`hintStyle`、`hintSymbolsStyle`、`animation`、`notification` 都是通过名称引用同级节点。按键动作参数的具体写法参见[按键动作](/apps/hamster/v3/docs/guides/skins/action/)。
 
 ## 如何布局一个键盘
 

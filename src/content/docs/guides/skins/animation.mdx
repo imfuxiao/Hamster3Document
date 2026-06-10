@@ -3,53 +3,87 @@ title: 按键动画
 description: 如何为按键添加动画效果
 ---
 
-恰当的按键动画可以让键盘交互更加生动和有趣。元书输入法支持多种类型的动画效果，包括缩放、卡通和物理动画。
+按键动画通过按键节点的 `animation` 参数引用动画节点。`animation` 是动画节点名称数组，可以同时引用多个动画。
 
-## 动画类型
+```yaml
+qButton:
+  animation:
+    - scaleAnimation
+    - cartoonAnimation
+    - physicsAnimation
 
-### 缩放动画 (scale)
+scaleAnimation:
+  animationType: scale
+```
 
-缩放动画是在按键被按下时产生缩小效果，释放时恢复原状。
+## animation
+
+类型：`String[]`
+
+必选项：否
+
+配置在按键节点中，用于引用同级动画节点。当按键按下时，引用的动画会被触发。
+
+> 注意：`animation` 只在按键节点中有效。
+
+## animationType
+
+类型：`'scale' | 'cartoon' | 'physics'`
+
+必选项：是
+
+配置在动画节点中，用于标识动画类型。
+
+## 缩放动画 scale
+
+缩放动画用于在按键按下时缩小，释放时恢复。
 
 ```yaml
 scaleAnimation:
   animationType: scale
   isAutoReverse: true
-  scale: 0.95
-  pressDuration: 0.85
-  releaseDuration: 0.1
+  scale: 0.87
+  pressDuration: 0.04
+  releaseDuration: 0.08
 ```
 
-- `isAutoReverse`：是否区分按键状态自动反转动画。默认为 `false`。
-   - 当设置为 `true` 时，按键动画会使用 `pressDuration` 的时间播放缩小动画，随后使用 `releaseDuration` 的时间播放放大动画。动画是连贯的，由按键按下状态触发。
-   - 当设置为 `false` 时：按键按下状态使用 `pressDuration` 的时间播放缩小动画；按键释放状态使用 `releaseDuration` 的时间播放放大动画。动画是不连贯的，按键按下和释放状态分别触发。
-- `scale`：按键缩放比例，默认为 `0.95`，表示按下时按键缩小到原来的 95%。
-- `pressDuration`：按键按下状态时，动画持续时间，单位为毫秒。
-- `releaseDuration`：按键释放状态时，动画持续时间，单位为毫秒。
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `isAutoReverse` | `Bool` | `false` | 是否在按下时自动完成「缩小 -> 恢复」的完整动画。 |
+| `scale` | `Float` | `0.87` | 按下时缩放比例。 |
+| `pressDuration` | `Float` | `0.04` | 按下动画持续时间，单位为秒。 |
+| `releaseDuration` | `Float` | `0.08` | 释放动画持续时间，单位为秒。 |
 
-### 图片播放动画（cartoon）
+`isAutoReverse` 的行为：
 
-图片播放动画通过一系列图片帧来实现动画效果，适用于需要展示复杂动画的场景。
+- `true`：只在按下时触发，连续播放缩小和恢复动画。
+- `false`：按下时播放缩小动画，释放时播放恢复动画。
+
+## 图片播放动画 cartoon
+
+图片播放动画通过一组图片帧实现逐帧动画。
 
 ```yaml
 cartoonAnimation:
   animationType: cartoon
   fps: 30
   targetScale: 0.3
-  zPosition: 'above'
+  zPosition: above
   images:
-    - "frame1.png"
-    - "frame2.png"
+    - frame1.png
+    - frame2.png
 ```
 
-- `fps`：动画播放的帧率，默认为 30 帧每秒。表示一张图片显示的时间为 `1/30` 秒。
-- `targetScale`：图片缩放比例，默认为 `nil`，即不进行缩放，建议按效果设置，图片如果不缩放，会占用较多的内存。
-- `zPosition`：图片的显示层级，默认为 `above`，表示图片显示在按键之上。可选值有 `above`（按键上方）、`below`（按键下方）。
-- `images`：帧图片文件名数组，按顺序列出所有用于动画的图片文件名。
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `fps` | `Int` | `30` | 动画帧率。 |
+| `targetScale` | `Float` | 无 | 图片缩放比例；不设置时不缩放。 |
+| `zPosition` | `'above'、'below' 或 Float` | `above` | 动画图层层级。 |
+| `images` | `String[]` | 无 | 帧图片文件名数组，按播放顺序排列。 |
 
-### 物理动画 (physics)
+## 物理动画 physics
 
-物理动画提供对图片移动、旋转、透明度变化的效果。
+物理动画用于描述图片移动、旋转、透明度变化等效果。
 
 ```yaml
 physicsAnimation:
@@ -58,8 +92,8 @@ physicsAnimation:
   randomImage: true
   targetScale: 0.3
   images:
-    - "01.png"
-    - "02.png"
+    - 01.png
+    - 02.png
   startPosition: { x: 0, y: 0 }
   endPosition: { x: 0, y: -10 }
   randomPosition: { x: 0, y: 0 }
@@ -72,35 +106,24 @@ physicsAnimation:
   randomAngle: 50
 ```
 
-- `duration`：动画持续时间，单位为毫秒。
-- `randomImage`：是否从 `images` 图片列表中随机选择图片，默认为 `false`。
-- `targetScale`：图片缩放比例，默认为 `nil`，即不进行缩放，建议按效果设置，图片如果不缩放，会占用较多的内存。
-- `images`：图片文件名数组，按顺序列出所有用于动画的图片文件名。
-- `startPosition`：图片移动位置的起始点
-    - `x`: 表示起始点的横向位置
-    - `y`: 表示起始点的纵向位置
-- `endPosition`：图片移动位置的结束点
-    - `x`: 表示结束点的横向位置
-    - `y`: 表示结束点的纵向位置
-- `randomPosition`：为动画的起始位置和结束位置添加随机偏移
-    - `x`: 横向随机偏移范围
-    - `y`: 纵向随机偏移范围
-- `useOpacity`：是否启用透明度变化效果，默认为 `false`。
-- `startOpacity`：动画开始时图片的透明度，范围为 0.0 到 1.0，默认为 1.0。仅当 `useOpacity` 设置为 `true` 时生效。
-- `endOpacity`：动画结束时图片的透明度，范围为 0.0 到 1.0，默认为 0.8。仅当 `useOpacity` 设置为 `true` 时生效。
-- `useRotation`: 是否启用旋转效果，默认为 `false`。
-- `startAngle`：图片的开始角度，单位为度。
-- `endAngle`：图片的结束角度，单位为度。
-- `randomAngle`：开始角度的随机偏移范围，单位为度。
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `duration` | `Float` | `0.08` | 动画持续时间，单位为秒。 |
+| `randomImage` | `Bool` | `true` | 是否从 `images` 中随机选择图片。 |
+| `targetScale` | `Float` | 无 | 图片缩放比例；不设置时不缩放。 |
+| `images` | `String[]` | 无 | 动画图片文件名数组。 |
+| `startPosition` | `{ x?: Float, y?: Float }` | `{ x: 0, y: 0 }` | 图片移动起始位置。 |
+| `endPosition` | `{ x?: Float, y?: Float }` | `{ x: 0, y: 0 }` | 图片移动结束位置。 |
+| `randomPosition` | `{ x?: Float, y?: Float }` | `{ x: 0, y: 0 }` | 为起始位置和结束位置添加随机偏移范围。 |
+| `useOpacity` | `Bool` | `false` | 是否启用透明度变化。 |
+| `startOpacity` | `Float` | `1` | 起始透明度，仅 `useOpacity` 为 `true` 时生效。 |
+| `endOpacity` | `Float` | `0.8` | 结束透明度，仅 `useOpacity` 为 `true` 时生效。 |
+| `useRotation` | `Bool` | `false` | 是否启用旋转。 |
+| `startAngle` | `Float` | `0` | 起始角度。 |
+| `endAngle` | `Float` | `360` | 结束角度。 |
+| `randomAngle` | `Float` | `0` | 旋转角度随机偏移范围。 |
 
-
-## 动画的设置
-
-- `animation`: 类型: `[String]`, 用于设置当前按键的动画效果，可以配置多个动画，当按键按下时同时播放。
-
-> 注意：`animation` 属性只能配置在按键的属性配置中有效。
-
-### 配置示例
+## 完整示例
 
 ```yaml
 qButton:
@@ -110,10 +133,6 @@ qButton:
   foregroundStyle:
     - qButtonForegroundStyle
     - qButtonUpForegroundStyle
-  uppercasedStateForegroundStyle:
-    - qButtonUppercasedStateForegroundStyle
-    - qButtonUpForegroundStyle
-  ...
   animation:
     - scaleAnimation
     - cartoonAnimation
@@ -121,15 +140,24 @@ qButton:
 
 scaleAnimation:
   animationType: scale
-  ...
+  isAutoReverse: true
+  scale: 0.87
+  pressDuration: 0.04
+  releaseDuration: 0.08
 
 cartoonAnimation:
   animationType: cartoon
-  ...
+  fps: 30
+  images:
+    - frame1.png
+    - frame2.png
 
 physicsAnimation:
   animationType: physics
-  ...
+  duration: 0.6
+  images:
+    - 01.png
+    - 02.png
+  startPosition: { x: 0, y: 0 }
+  endPosition: { x: 0, y: -10 }
 ```
-
-在上面的例子中，按键 `qButton` 配置了三种动画效果：缩放动画、图片播放动画和物理动画。当用户按下该按键时，这些动画将同时播放，增强用户的交互体验。

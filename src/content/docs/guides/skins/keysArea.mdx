@@ -7,21 +7,25 @@ description: 按键区相关定义
 
 ## 按键区配置属性
 
-- `keyboardHeight`：用于定义按键区的高度，类型 `Int`，单位为点（points）。
-- `keyboardStyle`: 用于定义按键区的样式。类型：`Object`
-    - insets: 可选，用于定义按键区的内边距，类型：`Object`，默认为空，表示无内边距。
-        - top: 可选，类型：`Int`，单位为点（points）。
-        - left: 可选，类型：`Int`，单位为点（points）。
-        - bottom: 可选，类型：`Int`，单位为点（points）。
-        - right: 可选，类型：`Int`，单位为点（points）。
-    - `backgroundStyle`：可选，类型：`String`，引用一个样式，用于定义按键区的背景样式
-- `keyboardLayout`: 用于定义按键区的布局，类型：`Array`，值为一个布局对象数组。
+| 参数 | 类型 | 必选 | 说明 |
+| --- | --- | --- | --- |
+| `keyboardHeight` | `Float 或 String` | 否 | 按键区高度。支持 point 值或 `vh` 百分比写法，参见[高度参数](/apps/hamster/v3/docs/guides/skins/parameters/#高度参数)。 |
+| `keyboardStyle` | `Object` | 否 | 按键区样式节点。 |
+| `keyboardLayout` | `Object[]` | 是 | 按键区布局数组。布局写法参见[布局](/apps/hamster/v3/docs/guides/skins/layout/)。 |
+
+`keyboardStyle` 支持以下属性：
+
+| 参数 | 类型 | 必选 | 说明 |
+| --- | --- | --- | --- |
+| `insets` | `Insets` | 否 | 按键区内边距，用于缩小 `keyboardLayout` 的布局范围。 |
+| `backgroundStyle` | `String` | 否 | 引用按键区背景样式节点。 |
 
 配置示例：
 
 ```yaml
+keyboardHeight: '230'
 keyboardStyle:
-  insets: {left: 2, right: 2, top: 2, bottom: 2}
+  insets: { left: 2, right: 2, top: 2, bottom: 2 }
   backgroundStyle: keyboardBackgroundStyle
 keyboardLayout:
   - HStack:

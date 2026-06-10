@@ -3,116 +3,126 @@ title: 样式
 description: 如何编写样式
 ---
 
-样式可以通过 `backgroundStyle` 和 `foregroundStyle` 参数进行设置。
+样式节点用于描述键盘中可绘制内容的外观。按键、区域、集合视图等节点通常通过 `backgroundStyle` 和 `foregroundStyle` 引用样式节点。
 
-- `backgroundStyle`：设置背景样式，支持纯色、渐变色或图片等多种形式。
-- `foregroundStyle`：设置前景样式，通常用于定义按键上的文本、图标或角标等元素样式。
+## 样式引用关系
+
+- `backgroundStyle`：引用背景样式。通常用于绘制背景色、渐变色、图片背景等。
+- `foregroundStyle`：引用前景样式。通常用于绘制文本、图标或叠加元素；可配置为数组以叠加多个前景样式。
+- `uppercasedStateForegroundStyle` / `capsLockedStateForegroundStyle`：按键在大写/大写锁定状态下使用的前景样式。
+- `hintStyle`：按键气泡样式。
+- `hintSymbolsStyle`：长按符号面板样式。
+
+> 样式节点本身必须通过 `buttonStyleType` 指定类型，但区域样式（如 `keyboardStyle`、`toolbarStyle`）和集合视图的 `cellStyle` 引用节点不一定需要 `buttonStyleType`，它们通常再通过 `backgroundStyle` / `foregroundStyle` 引用真正的绘制样式。
 
 ## 背景样式
 
-通过 `backgroundStyle` 参数进行设置。
+通过 `backgroundStyle` 参数引用。
 
-**类型**：`'String' | [ConditionStyle]`
+**类型**：`String | ConditionStyle[]`
 
-**是否必须**：否。不设置时，按键将使用默认背景样式。
+**是否必须**：否。不设置时，不绘制背景。
 
 > 参见条件样式 [ConditionStyle](/apps/hamster/v3/docs/guides/skins/parameters/#conditionstyle-条件样式)
 
 ## 前景样式
 
-通过 `foregroundStyle` 参数进行设置。
+通过 `foregroundStyle` 参数引用。
 
-**类型**：`'String' | [String] | [ConditionStyle]`
+**类型**：`String | String[] | ConditionStyle[]`
 
-**是否必须**：否。不设置时，按键将使用默认前景样式。
+**是否必须**：否。不设置时，不绘制前景。
 
 > 参见条件样式 [ConditionStyle](/apps/hamster/v3/docs/guides/skins/parameters/#conditionstyle-条件样式)
 
-前景样式与背景样式的不同之处在于，前景样式可以是一个字符串数组，表示按键上可以叠加显示多个前景样式。
+前景样式可以配置为字符串数组，用于在同一个按键上叠加多个文本、图标或图片样式。
+
+## 通用样式参数
+
+以下参数可用于多个样式类型。
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `buttonStyleType` | `'geometry'、'systemImage'、'assetImage'、'fileImage'、'text'` | 无 | 样式类型。 |
+| `insets` | `{ top?: Float, left?: Float, bottom?: Float, right?: Float }` | `{ top: 0, left: 0, bottom: 0, right: 0 }` | 缩小样式绘制区域。 |
+| `bounds` | `Bounds` | 当前按键区域 | 进一步定义样式可视区域。 |
+| `center` | `{ x?: Float, y?: Float }` | 当前区域中心点 | 调整内容中心点位置。 |
+| `zPosition` | `Float、'above' 或 'below'` | 无 | 图层层级；数值表示具体层级，`above` 表示在按键上方，`below` 表示在按键下方。 |
+| `normalColor` | `String 或 String[]` | 无 | 普通状态颜色。`geometry` 支持颜色数组作为渐变色。 |
+| `highlightColor` | `String 或 String[]` | 无 | 按下状态颜色。`geometry` 支持颜色数组作为渐变色。 |
+
+## 字体参数
+
+`systemImage` 和 `text` 都支持字体相关参数。
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `fontSize` | `Float 或 String` | 系统默认字体大小 | 字体大小。字符串可写数字字符串，也可写 `em` 相对单位。 |
+| `fontWeight` | `'ultraLight'、'thin'、'light'、'regular'、'medium'、'semibold'、'bold'、'heavy'、'black'` | `regular` | 字重。 |
+
+`fontSize` 示例：
+
+```yaml
+fontSize: 18
+fontSize: '18'
+fontSize: '1.2em'
+```
+
+其中 `1.2em` 表示系统默认字体大小的 1.2 倍。
+
+## 图片通用参数
+
+`systemImage`、`assetImage`、`fileImage` 支持图片显示模式。
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `contentMode` | `'scaleToFill'、'scaleAspectFit'、'scaleAspectFill'、'center'` | 见各样式类型说明 | 图片显示模式。 |
+
+可选值：
+
+- `scaleToFill`：拉伸填充。
+- `scaleAspectFit`：按比例缩放以适应。
+- `scaleAspectFill`：按比例缩放以填充。
+- `center`：居中显示。
 
 ## 样式类型
 
-无论是背景样式还是前景样式，都必须指定其样式类型。
-
-样式类型通过 `buttonStyleType` 参数进行设置。
-
-**类型**：`'geometry' | 'systemImage' | 'assetImage' | 'fileImage' | 'text'`
-
-各样式类型说明：
-
-- `geometry`：使用 iOS 原生属性绘制样式
-- `systemImage`：使用 SF Symbols 图标作为样式
-- `assetImage`：使用应用内置资源图片作为样式
-- `fileImage`：使用皮肤中的图片文件作为样式
-- `text`：使用文本内容作为样式
-
 ### geometry
 
-通过设置 `buttonStyleType` 参数为 `geometry`，使用 iOS 原生属性绘制样式。
+通过设置 `buttonStyleType: geometry`，使用 iOS 原生属性绘制形状、颜色、边框和阴影。
 
-它包含以下参数：
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `normalColor` | `String 或 String[]` | 无 | 普通状态颜色。数组表示渐变色。 |
+| `highlightColor` | `String 或 String[]` | 无 | 按下状态颜色。数组表示渐变色。 |
+| `colorLocation` | `Double[]` | 无 | 渐变色位置，取值范围 `0.0` 到 `1.0`。 |
+| `colorStartPoint` | `{ x: Double, y: Double }` | 系统默认 | 渐变开始位置。 |
+| `colorEndPoint` | `{ x: Double, y: Double }` | 系统默认 | 渐变结束位置。 |
+| `colorGradientType` | `'axial'、'conic'、'radial'` | `axial` | 渐变类型。 |
+| `cornerRadius` | `Double` | 无 | 圆角半径。 |
+| `borderSize` | `Double` | 无 | 边框宽度。需同时设置边框颜色才会显示边框。 |
+| `normalBorderColor` | `String` | 无 | 普通状态边框颜色。 |
+| `highlightBorderColor` | `String` | 无 | 按下状态边框颜色。 |
+| `normalLowerEdgeColor` | `String` | 无 | 普通状态底部边缘颜色。 |
+| `highlightLowerEdgeColor` | `String` | 无 | 按下状态底部边缘颜色。 |
+| `normalShadowColor` | `String` | 无 | 普通状态阴影颜色。 |
+| `highlightShadowColor` | `String` | 无 | 按下状态阴影颜色。 |
+| `shadowOpacity` | `Double` | 系统默认 | 阴影透明度，取值范围 `0.0` 到 `1.0`。 |
+| `shadowRadius` | `Double` | 系统默认 | 阴影模糊半径。 |
+| `shadowOffset` | `{ x?: Double, y?: Double }` | `{ x: 0, y: 0 }` | 阴影偏移。 |
 
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
-    - 类型：`{ top: Double, left: Double, bottom: Double, right: Double }`
-    - 默认值：`{ top: 0, left: 0, bottom: 0, right: 0 }`
-- `normalColor`：未按下时的颜色
-    - 类型：`String | [String]`
-    - 支持单色或渐变色，使用数组表示渐变色
-- `highlightColor`：按下时的颜色
-    - 类型：`String | [String]`
-    - 支持单色或渐变色，使用数组表示渐变色
-- `colorLocation`：颜色位置，用于渐变色（单色时无效）
-   - 类型：`[Double]`
-   - 取值范围：`0.0` 到 `1.0`
-- `colorStartPoint`：渐变开始位置（单色时无效）
-    - 类型：`{ x: Double, y: Double }`
-    - 取值范围：`0.0` 到 `1.0`
-    - 默认值：`{ x: 0.5, y: 0.0 }`（表示从顶部中间开始渐变）
-- `colorEndPoint`：渐变结束位置（单色时无效）
-    - 类型：`{ x: Double, y: Double }`
-    - 取值范围：`0.0` 到 `1.0`
-    - 默认值：`{ x: 0.5, y: 1.0 }`（表示从底部中间结束渐变）
-- `colorGradientType`：渐变类型，用于定义渐变的方式。
-    - 类型：`枚举`，可选，默认值为 `axial`
-        - `axial`：线性渐变
-        - `conic`: 锥形渐变
-        - `radial`: 辐射状渐变
-- `cornerRadius`：设置圆角半径
-    - 类型：`Double`
-- `borderSize`：设置边框宽度
-    - 类型：`Double`
-- `normalBorderColor`: 未按下时边框颜色。**边框宽度与边框颜色需同时设置才会显示边框**
-    - 类型：`String`
-- `highlightBorderColor`: 按下时边框颜色。**边框宽度与边框颜色需同时设置才会显示边框**
-    - 类型：`String`
-- `normalLowerEdgeColor`：未按下时底部边缘的颜色
-    - 类型：`String`
-- `highlightLowerEdgeColor`：按下时底部边缘的颜色
-    - 类型：`String`
-- `normalShadowColor`：未按下时的阴影颜色
-    - 类型：`String`，默认为空，表示无阴影
-- `highlightShadowColor`：按下时的阴影颜色
-    - 类型：`String`，默认为空，表示无阴影
-- `shadowOpacity`：设置阴影透明度，
-    - 类型：`Double`，取值范围：`0.0` 到 `1.0`，默认为 1，表示不透明
-- `shadowRadius`：设置阴影模糊半径。
-    - 类型：`Double`，默认为 3
-- `shadowOffset`：设置阴影偏移
-    - 类型：`{ x: Double, y: Double }`
-    - 默认值：`{ x: 0, y: 3 }`
-
-**配置示例：**
+配置示例：
 
 ```yaml
 geometryBackground:
   buttonStyleType: geometry
   insets: { top: 6, left: 3, bottom: 6, right: 3 }
   normalColor:
-    - "#9bafd9"
-    - "#103783"
+    - '#9bafd9'
+    - '#103783'
   highlightColor:
-    - "#432371"
-    - "#faae7b"
+    - '#432371'
+    - '#faae7b'
   colorLocation: [0, 1]
   colorStartPoint: { x: 0.5, y: 0 }
   colorEndPoint: { x: 0.5, y: 1 }
@@ -120,6 +130,7 @@ geometryBackground:
   cornerRadius: 6
   borderSize: 3
   normalBorderColor: '#f5d7a1'
+  highlightBorderColor: '#552E5A'
   normalLowerEdgeColor: '#f5d7a1'
   highlightLowerEdgeColor: '#552E5A'
   normalShadowColor: '#e60b09'
@@ -131,86 +142,113 @@ geometryBackground:
 
 ### systemImage
 
-通过设置 `buttonStyleType` 参数为 `systemImage`，使用 SF Symbols 图标作为样式。
+通过设置 `buttonStyleType: systemImage`，使用 SF Symbols 图标作为样式。
 
-它包含以下参数：
-
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
-- `systemImageName`：SF Symbols 图标名称（注意版本要求，部分 SF Symbols 需要在 iOS 高版本中才能使用）。
-- `highlightSystemImageName`: 按下时的 SF Symbols 图标名称（可选，为空时使用 `systemImageName`）。
-- `contentMode`：设置图片的显示模式
-    - 类型：枚举，默认为 `center`
-        - `scaleToFill`：拉伸填充
-        - `scaleAspectFit`：按比例缩放以适应
-        - `scaleAspectFill`：按比例缩放以填充
-        - `center`：居中显示
-- `fontSize`：设置图标的大小。
-    - 类型：`Double`
-- `fontWeight`：设置图标的粗细程度。
-    - 类型：枚举，默认为 `regular`
-        - `ultraLight`
-        - `thin`
-        - `light`
-        - `regular`
-        - `medium`
-        - `semibold`
-        - `bold`
-        - `heavy`
-        - `black`
-- `normalColor`：未按下时图标的颜色。
-- `highlightColor`：按下时图标的颜色。
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `systemImageName` | `String` | 无 | 普通状态 SF Symbols 图标名称。 |
+| `highlightSystemImageName` | `String` | `systemImageName` | 按下状态 SF Symbols 图标名称。 |
+| `contentMode` | `ContentMode` | `center` | 图标显示模式。 |
+| `fontSize` | `Float 或 String` | 系统默认字体大小 | 图标大小。 |
+| `fontWeight` | `FontWeight` | `regular` | 图标粗细。 |
+| `normalColor` | `String` | 无 | 普通状态图标颜色。 |
+| `highlightColor` | `String` | `normalColor` | 按下状态图标颜色。 |
 
 配置示例：
 
 ```yaml
-
+backspaceIcon:
+  buttonStyleType: systemImage
+  systemImageName: delete.left
+  highlightSystemImageName: delete.left.fill
+  fontSize: 20
+  fontWeight: semibold
+  normalColor: '#333333'
+  highlightColor: '#000000'
 ```
 
 ### assetImage
 
-通过设置 `buttonStyleType` 参数为 `assetImage`，使用应用内置资源图片作为样式。
+通过设置 `buttonStyleType: assetImage`，使用 App 内置资源图片作为样式。
 
-它包含以下参数：
-
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
-- `assetImageName`：App 内置资源图片名称。
-- `contentMode`：设置图片的显示模式，默认为 `center`，同 `systemImage` 的 `contentMode`。
-- `normalColor`：未按下时图片的颜色。
-- `highlightColor`：按下时图片的颜色。
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `assetImageName` | `String` | 无 | App 内置资源图片名称。 |
+| `contentMode` | `ContentMode` | `center` | 图片显示模式。 |
+| `normalColor` | `String` | 无 | 普通状态图片着色。 |
+| `highlightColor` | `String` | `normalColor` | 按下状态图片着色。 |
 
 ### fileImage
 
-通过设置 `buttonStyleType` 参数为 `fileImage`，使用皮肤中的图片文件作为样式。
+通过设置 `buttonStyleType: fileImage`，使用皮肤包中的图片文件作为样式。
 
-它包含以下参数：
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `normalImage` | `ImageRef` | 无 | 普通状态图片。 |
+| `highlightImage` | `ImageRef` | `normalImage` | 按下状态图片。 |
+| `contentMode` | `ContentMode` | `scaleToFill` | 图片显示模式。 |
 
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
-- `contentMode`：设置图片的显示模式，默认为 `scaleToFill`，同 `systemImage` 的 `contentMode`。
-- `normalImage`：未按下时的图片
-  - `file`：图片文件名称
-  - `image`：图片描述文件中的图片名称
-- `highlightImage`：按下时的图片
-  - `file`：图片文件名称
-  - `image`：图片描述文件中的图片名称
+`ImageRef` 支持以下字段：
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `file` | `String 或 String[]` | 图片文件名称。引用 `resources` 中的图片描述文件名（不含 `.yaml` 后缀）或图片文件。 |
+| `image` | `String` | 图片描述文件中的子图片名称。 |
+
+示例：
+
+```yaml
+keyBackground:
+  buttonStyleType: fileImage
+  normalImage:
+    file: anjian
+    image: image1
+  highlightImage:
+    file: anjian
+    image: image2
+```
+
+随机图片示例：
+
+```yaml
+randomDecoration:
+  buttonStyleType: fileImage
+  enableRandomImage: true
+  normalImage:
+    file:
+      - deco1
+      - deco2
+      - deco3
+```
 
 ### text
 
-通过设置 `buttonStyleType` 参数为 `text`，使用文本内容作为样式。
+通过设置 `buttonStyleType: text`，使用文本内容作为样式。
 
-它包含以下参数：
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `text` | `String` | 无 | 文本内容。 |
+| `fontSize` | `Float 或 String` | 系统默认字体大小 | 文本大小。 |
+| `fontWeight` | `FontWeight` | `regular` | 文本字重。 |
+| `normalColor` | `String` | 无 | 普通状态文本颜色。 |
+| `highlightColor` | `String` | `normalColor` | 按下状态文本颜色。 |
 
-- `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
-- `text`：设置文本内容。
+特殊文本内容：
 
-  **特殊文本内容：**
+- `$rimePreedit`：Rime 预编辑文本。
+- `$rimeCandidate`：Rime 首个候选字。
+- `$rimeCandidateComment`：Rime 首个候选字 comment 信息。
+- `$rimeSchemaName`：Rime 方案名称。
+- `$returnKeyType`：返回键文本。
 
-  - `$rimePreedit`：Rime 预编辑文本
-  - `$rimeCandidate`：Rime 首个候选字
-  - `$rimeCandidateComment`: Rime 首个首选字的 comment 信息。（v1.4.0 及以上版本有效）
-  - `$rimeSchemaName`：Rime 方案名称
-  - `$returnKeyType`：返回键文本
+配置示例：
 
-- `fontSize`：设置文本大小。
-- `fontWeight`：设置文本粗细程度，同 `systemImage` 的 `fontWeight`。
-- `normalColor`：未按下时文本的颜色。
-- `highlightColor`：按下时文本的颜色。
+```yaml
+qText:
+  buttonStyleType: text
+  text: q
+  fontSize: 18
+  fontWeight: medium
+  normalColor: '#333333'
+  highlightColor: '#000000'
+```

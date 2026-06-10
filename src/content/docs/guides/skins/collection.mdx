@@ -16,7 +16,8 @@ import { Aside, Code } from "@astrojs/starlight/components";
 - `verticalCandidates`：纵向显示候选字。
 - `numericSymbols`: 数字键盘符号列表，即内置数字键盘中左侧纵向显示的列表。可以在「键盘设置」-「数字键盘符号设定」中配置数据源。(v1.5.0 版本及以上支持)
 - `categorySymbols`: 分类符号列表，布局类似内置的符号键盘的样子，上下结构，上部显示具体的符号信息，下部显示符号的分类。数据源是内置的，不支持修改。（v1.5.0 版本及以上支持）
-- `t9Symbols`: 中文九键（T9）键盘符号列表，即 T9 键盘中左侧纵向显示的列表。可以在「键盘设置」-「中文九键符号设定」中配置数据源。(v1.16.0 版本及以上支持)
+- `t9Symbols`：中文九键（T9）键盘符号列表，即 T9 键盘中左侧纵向显示的列表。可以在「键盘设置」-「中文九键符号设定」中配置数据源。(v1.16.0 版本及以上支持)
+- `t9HorizontalSymbols`：中文九键（T9）横向符号列表，用于横向显示 T9 符号数据。
 
 配置示例：
 
@@ -86,11 +87,12 @@ collectionCellForegroundStyle:
   fontWeight: bold
 ```
 
-- `type`：必选，表示集合视图的类型。符号列表使用 `symbols`
-- `size`：必选，表示集合视图的尺寸。与键盘按键尺寸的定义相同
-- `insets`：可选，表示集合视图的内边距。注意：当滚动时，如果出现内容超过背景时，请调整内边距的值来修复此问题
-- `backgroundStyle`：可选，表示集合视图的背景样式。与按键背景样式自定义相同
-- `cellStyle`：必选，表示集合视图中单元格的样式。与按键样式自定义相同
+- `type`：必选，表示集合视图的类型。符号列表使用 `symbols`。
+- `size`：必选，表示集合视图的尺寸。与键盘按键尺寸的定义相同。
+- `insets`：可选，表示集合视图的内边距。注意：当滚动时，如果出现内容超过背景时，请调整内边距的值来修复此问题。
+- `backgroundStyle`：可选，引用集合视图背景样式。
+- `cellStyle`：必选，引用集合视图中单元格的样式节点。
+- `dataSource`：必选，引用数据源节点。
 
 <Aside type="danger" title="注意">
   `cellStyle` 中的 `foregroundStyle` 样式只能配置字符串样式引用，且只能使用
@@ -194,12 +196,12 @@ descriptionCollectionCellForegroundStyle:
 
 因为二级分类列表的数据是由一级分类列表决定的，所以不需要 `dataSource` 属性。
 
-二级分类有自己一些额外的参数：
+分类集合有一些额外参数：
 
-- `displaySeparatorLine`：可选，表示是否显示单元格之间的分割线，默认值为 `true`
-- `separatorLineColor`：可选，表示分割线的颜色，默认值为 iOS 默认分割线颜色
-- `maximumRow`：可选，表示二级分类列表的最大行数，默认值为 4
-- `maximumColumn`：可选，表示二级分类列表的最大列数，默认值为 5
+- `displaySeparatorLine`：可选，表示是否显示单元格之间的分割线，默认值为 `true`。
+- `separatorLineColor`：可选，表示分割线颜色，默认值为系统默认分割线颜色。
+- `maximumRow`：可选，表示二级分类列表的最大行数，默认值为 `4`。
+- `maximumColumn`：可选，表示二级分类列表的最大列数，默认值为 `5`。
 
 同时二级分类的 cellStyle 样式也可以对半角全角符号角标字体大小进行自定义:
 
@@ -259,17 +261,19 @@ horizontalSymbolsDataSource:
   - 0
 ```
 
-- `type`：必选，表示集合视图的类型。横向符号列表使用 `horizontalSymbols`
-- `size`：必选，表示集合视图的尺寸。与键盘按键尺寸的定义相同
-- `maxColumns`：可选，表示集合视图的最大列数，默认值为 5
-  > 注意：只有当数据源中数据超过此数值后，列表才能滑动，少于或等于此数值时，视图无法滑动
-- `contentRightToLeft`：可选，表示集合视图内容是否从右向左显示，默认为 `false`
-- `insets`：可选，表示集合视图的内边距
-  > 注意：当滚动时，如果出现内容超过背景时，请调整内边距的值来修复此问题
-- `backgroundStyle`：可选，表示集合视图的背景样式。与按键背景样式自定义相同
-- `cellStyle`：必选，表示集合视图中单元格的样式。与按键样式自定义相同
-  > 注意：`cellStyle` 中的 `foregroundStyle` 样式只能配置字符串样式引用，且只能使用 `text` 类型
-- `dataSource`：必选，表示集合视图的数据源。数据源是一个数组，数组中的每一项表示集合视图中的一个单元格
+- `type`：必选，表示集合视图类型。横向符号列表使用 `horizontalSymbols`，T9 横向符号列表使用 `t9HorizontalSymbols`。
+- `size`：必选，表示集合视图尺寸。与键盘按键尺寸定义相同。
+- `maxColumns`：可选，表示集合视图最大列数，默认值为 `5`。
+  > 注意：只有当数据源中数据超过此数值后，列表才能滑动，少于或等于此数值时，视图无法滑动。
+- `maxRows`：可选，表示集合视图最大行数。部分横向集合会读取此参数。
+- `contentRightToLeft`：可选，表示集合视图内容是否从右向左显示，默认为 `false`。
+- `insets`：可选，表示集合视图内边距。
+  > 注意：当滚动时，如果出现内容超过背景时，请调整内边距的值来修复此问题。
+- `backgroundStyle`：可选，引用集合视图背景样式。
+- `cellStyle`：必选，引用集合视图中单元格的样式节点。
+  > 注意：`cellStyle` 中的 `foregroundStyle` 样式只能配置字符串样式引用，且只能使用 `text` 类型。
+- `selectedStyle`：可选，引用选中状态下的单元格样式节点。
+- `dataSource`：必选，引用集合视图的数据源节点。数据源是一个数组，数组中的每一项表示集合视图中的一个单元格。
 
 ### 横向候选字列表
 
@@ -364,11 +368,11 @@ verticalCandidateCellStyle:
   bottomRowHeight: 50
 ```
 
-- `type`：必选，表示集合视图的类型。纵向候选字列表使用 `verticalCandidates`
-- `maxRows`：可选，表示集合视图的最大行数，默认值为 5
-- `separatorColor`：可选，表示候选字之间的分割线颜色
-- `backgroundStyle`：可选，表示集合视图的背景样式。与按键背景样式自定义相同
-- `candidateStyle`：必选，表示单个候选字的样式
+- `type`：必选，表示集合视图的类型。纵向候选字列表使用 `verticalCandidates`。
+- `maxRows`：可选，表示集合视图最大行数，默认值为 `5`。
+- `separatorColor`：可选，表示候选字之间的分割线颜色。
+- `backgroundStyle`：可选，引用集合视图背景样式。
+- `candidateStyle`：必选，引用单个候选字的样式节点。
   `candidateStyle` 样式的定义与横向候选字列表的 `candidateStyle` 样式定义相同。
 
 ## 数据源

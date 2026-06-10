@@ -2,92 +2,106 @@
 title: 配置参数
 ---
 
-## preeditHeight
+本页汇总皮肤 YAML 中常用的基础参数。各区域（预编辑区、工具栏、按键区、候选栏）、布局、样式和动画会在各自页面中进一步说明。
+
+## 参数引用关系
+
+皮肤配置中大量参数通过「名称」引用其他节点，理解引用关系有助于排查配置问题：
+
+- 区域样式：`preeditStyle`、`toolbarStyle`、`keyboardStyle`、`horizontalCandidatesStyle`、`verticalCandidatesStyle` 是区域样式节点，内部可通过 `backgroundStyle` / `foregroundStyle` 引用样式节点。
+- 区域布局：`toolbarLayout`、`keyboardLayout`、`horizontalCandidatesLayout`、`verticalCandidatesLayout` 是布局数组，布局中的 `Cell` 值引用同级的按键或集合节点名称。
+- 按键样式：按键节点通过 `backgroundStyle`、`foregroundStyle`、`uppercasedStateForegroundStyle`、`capsLockedStateForegroundStyle`、`hintStyle`、`hintSymbolsStyle` 引用样式节点。
+- 通知：按键节点的 `notification` 引用通知节点。通知匹配后，可在通知节点中覆盖 `backgroundStyle`、`foregroundStyle`、`action`、`swipeUpAction`、`swipeDownAction`。
+- 动画：按键节点的 `animation` 引用动画节点。
+- 集合视图：集合节点的 `cellStyle`、`candidateStyle`、`dataSource` 分别引用单元格样式、候选字样式、数据源节点。
+
+## 高度参数
+
+### preeditHeight
 
 类型：`Float | String`
-
-必选项：是
-
-用于定义预编辑区的高度。
-
-- 当为 `Float` 类型时，表示高度值为确切的 point 值。
-
-如：`preeditHeight: 50` 表示预编辑区高度为当前屏幕 50 point。
-
-- 当为 `String` 类型时，表示高度值为当前设备物理高度的百分比，必须使用 `vh` 结尾。
-
-如：`preeditHeight: '10vh'` 表示预编辑区高度为当前屏幕物理高度的 10%。
-
-## toolbarHeight
-
-类型：`Float | String`
-
-必选项：是
-
-用于定义工具栏的高度。
-
-与 preeditHeight 参数的设置方式相同。
-
-## keyboardHeight
-
-类型：`Float | String`
-
-必选项：是
-
-用于定义按键区的高度。
-
-与 preeditHeight 参数的设置方式相同。
-
-## size
-
-类型：`{width: Float | String | {percentage: Float}, height: Float | String | {percentage: Float}}`
-
-必选项：是
-
-用于定义区域的尺寸。常用来设置按键，VStack，HStack 等尺寸。
-
-### width
-
-类型：`Float | String | {percentage: Float}`
-
-必选项：否。
-
-用于定义 size 的宽度。
-
-- 当值为 `Float` 时，表示宽度值为确切的 point 值。
-
-如：`width: 100` 表示宽度为当前屏幕 100 point。
-
-- 当值为 `String` 时，表示宽度值为百分比，必须使用 `/` 表示，它是 `{percentage: Float}` 的简化表达形式。
-
-如：`width: '1/2'` 表示宽度为当前屏幕宽度的 50%。
-
-- 当值为 `{percentage: Float}` 时，表示宽度值为百分比。
-
-如：`width: {percentage: 0.5}` 表示宽度为当前屏幕宽度的 50%。
-
-- 当不设置 width 时，表示宽度为自动适应，系统会根据当前剩余宽度及其他未设置 width 的元素进行计算。
-
-计算公式：width = 剩余宽度 / 未设置 width 的元素数量。
-
-
-### height
-
-类型：`Float | String | {percentage: Float}`
-
-必选项：否。
-
-用于定义 size 的高度。 其设置属性与 width 相同。
-
-## bounds
 
 必选项：否
 
-用于定义按键的可视区域尺寸。即在按键 size 定义的范围内，进一步缩小按键上显示的图片、文本等内容的显示区域。
+用于定义预编辑区高度。
 
-- `alignment`: 用于定义显示内容在按键区域内的对齐方式，默认值为 `center`。
-- `width`: 用于定义显示区域的宽度，默认值为按键的宽度。
-- `height`: 用于定义显示区域的高度，默认值为按键的高度。
+- 当为 `Float` 或数字字符串时，表示确切 point 值。
+- 当为 `String` 且以 `vh` 结尾时，表示当前设备物理高度的百分比。
+
+示例：
+
+```yaml
+preeditHeight: '25'
+preeditHeight: '10vh'
+```
+
+> 注意：代码按字符串读取高度。建议在 YAML 中使用字符串写法，例如 `'25'`、`'10vh'`。
+
+### toolbarHeight
+
+类型：`Float | String`
+
+必选项：否
+
+用于定义工具栏高度。设置方式同 `preeditHeight`。
+
+### keyboardHeight
+
+类型：`Float | String`
+
+必选项：否
+
+用于定义按键区高度。设置方式同 `preeditHeight`。
+
+## size
+
+类型：`{ width?: Float | String | { percentage: Float | String }, height?: Float | String | { percentage: Float | String } }`
+
+必选项：否
+
+用于定义区域、布局容器、按键、集合视图、气泡等元素的尺寸。
+
+### width
+
+类型：`Float | String | { percentage: Float | String }`
+
+必选项：否
+
+用于定义宽度。
+
+- 当值为 `Float` 时，表示确切 point 值。
+- 当值为 `String` 且为分数格式（如 `'1/2'`）时，表示父容器宽度的比例。
+- 当值为 `{ percentage: Float | String }` 时，表示父容器宽度的比例；`percentage` 可以是小数，也可以是分数字符串。
+- 当不设置 `width` 时，表示使用剩余可用宽度，由同级未设置宽度的元素平均分配。
+
+示例：
+
+```yaml
+size: { width: 100 }
+size: { width: '1/2' }
+size: { width: { percentage: 0.5 } }
+size: { width: { percentage: '1/2' } }
+```
+
+### height
+
+类型：`Float | String | { percentage: Float | String }`
+
+必选项：否
+
+用于定义高度，规则同 `size.width`。
+
+## bounds
+
+类型：`{ alignment?: Alignment, width?: Float | String | { percentage: Float | String }, height?: Float | String | { percentage: Float | String } }`
+
+必选项：否
+
+用于定义按键或样式内容的可视区域。它不会改变按键实际占用空间，只会在按键 `size` 定义的范围内进一步计算显示内容的区域。
+
+- `alignment`：显示内容在按键区域内的对齐方式，默认值为 `center`。
+- `width`：可视区域宽度，默认值为按键宽度。
+- `height`：可视区域高度，默认值为按键高度。
 
 ### alignment
 
@@ -95,43 +109,33 @@ title: 配置参数
 
 必选项：否，默认值为 `center`
 
-用于定义显示内容在按键区域内的对齐方式。
+用于定义可视区域在按键区域内的对齐方式。
 
-配置示例： `alignment: 'left'`
+示例：
 
-### width
-
-类型：`Float | String | {percentage: Float}`
-
-必选项：否，默认值为按键的宽度
-
-用于定义显示区域的宽度。其设置属性与 size.width 相同。
-
-### height
-
-类型：`Float | String | {percentage: Float}`
-
-必选项：否，默认值为按键的高度
-
-用于定义显示区域的高度。其设置属性与 size.height 相同。
+```yaml
+bounds:
+  alignment: left
+  width: '1/2'
+```
 
 ## center
 
-类型：`{x: Float, y: Float}`
+类型：`{ x?: Float, y?: Float }`
 
 必选项：否
 
-用于调整按键显示内容的中心点位置。常用来调整按键上图片、文本等内容的位置。
+用于调整按键显示内容的中心点位置，常用来调整按键上图片、文本等内容的位置。
 
-- `x`: 用于定义按键显示内容的水平位置偏移。可以为空，表示使用默认中心点 x 的位置。
-- `y`: 用于定义按键显示内容的垂直位置偏移。可以为空，表示使用默认中心点 y 的位置。
+- `x`：水平位置比例。为空时使用默认中心点 x。
+- `y`：垂直位置比例。为空时使用默认中心点 y。
 
 计算公式：
 
-- 中心点位置.x = 当前按键可视区域宽度 × x + 当前按键可视区域.minX
-- 中心点位置.y = 当前按键可视区域高度 × y + 当前按键可视区域.minY
+- 中心点位置.x = 当前按键可视区域宽度 × `x` + 当前按键可视区域.minX
+- 中心点位置.y = 当前按键可视区域高度 × `y` + 当前按键可视区域.minY
 
-举个例子：
+示例：
 
 ```yaml
 center:
@@ -139,118 +143,173 @@ center:
   y: 0.8
 ```
 
-表示将按键显示内容调整到按键可视区域的 70% 宽度和 80% 高度位置处。
+表示将按键显示内容调整到按键可视区域 70% 宽度和 80% 高度的位置。
+
+## insets
+
+类型：`{ top?: Float, left?: Float, bottom?: Float, right?: Float }`
+
+必选项：否，默认值为 `{ top: 0, left: 0, bottom: 0, right: 0 }`
+
+用于定义内边距。不同节点中的含义略有不同：
+
+- 区域样式（如 `keyboardStyle`、`toolbarStyle`）：缩小区域内部可布局范围。
+- 样式节点：缩小当前样式实际绘制范围。
+- 集合视图：缩小集合视图内部内容范围。
+- 长按符号样式：作为长按符号面板外围扩展距离。
 
 ## buttonStyleType
 
 类型：`'geometry' | 'systemImage' | 'assetImage' | 'fileImage' | 'text'`
 
-必选项：是
+必选项：是（仅样式节点必选）
 
-用于标识样式的类型，不同类型的样式，所支持解析的配置参数不同。
+用于标识样式节点类型。不同类型支持的参数不同，参见[样式](/apps/hamster/v3/docs/guides/skins/styles/)。
 
-- `geometry`：表示使用 iOS 原生属性绘制样式
-- `systemImage`：使用 SF Symbols 图标
-- `assetImage`：使用 App 内部的图片资源
-- `fileImage`：使用皮肤中的图片文件作为样式
-- `text`：使用文本作为样式
+- `geometry`：使用 iOS 原生属性绘制样式。
+- `systemImage`：使用 SF Symbols 图标。
+- `assetImage`：使用 App 内置图片资源。
+- `fileImage`：使用皮肤中的图片文件。
+- `text`：使用文本内容。
 
 ## backgroundStyle
 
-类型：`String | Array<ConditionStyle> | undefined`
+类型：`String | ConditionStyle[] | undefined`
 
-用来引用按键的背景样式。
+用于引用背景样式节点。
+
+- 在普通按键、集合视图、区域样式中通常使用 `String`。
+- 在按键样式需要随状态变化时，可以使用 `ConditionStyle[]`。
 
 ## foregroundStyle
 
-类型：`String | Array<String> | Array<ConditionStyle> | undefined`
+类型：`String | String[] | ConditionStyle[] | undefined`
 
-用来引用按键的前景样式。
+用于引用前景样式节点。
+
+- `String`：引用一个前景样式。
+- `String[]`：叠加多个前景样式。
+- `ConditionStyle[]`：根据条件选择前景样式。
+
+## selectedBackgroundStyle
+
+类型：`String`
+
+必选项：否
+
+用于 `hintSymbolsStyle` 长按符号面板中，定义当前选中符号背后的高亮背景样式。
 
 ## notification
 
-类型：`String | Array<String>`
+类型：`String | String[]`
 
-为按键绑定通知。此属性只能在按键样式中使用。
+必选项：否
+
+为按键绑定通知节点。此属性配置在按键节点中，值为通知节点名称。
 
 ## notificationType
 
-类型：`'rime' | 'keyboardAction' | 'returnKeyType'`
+类型：`'rime' | 'keyboardAction' | 'returnKeyType' | 'preeditChanged'`
 
-必选项：是
+必选项：是（通知节点必选）
 
-用于标识监听的通知的类型，不同类型的通知，所支持解析的配置参数不同。
+用于标识通知类型。
 
-- `rime`：表示 RIME 输入法的通知
-- `keyboardAction`：表示键盘按键动作的通知
-- `returnKeyType`：表示回车键类型的通知
+- `rime`：监听 RIME 输入法通知。
+- `keyboardAction`：监听键盘按键动作。
+- `returnKeyType`：监听系统回车键类型。
+- `preeditChanged`：监听 RIME 预编辑文本变化。
 
 ## rimeNotificationType
 
 类型：`'optionChanged' | 'schemaChanged'`
 
-必选项：是
+必选项：否，当 `notificationType` 为 `rime` 时必选。
 
-用于标识 RIME 输入法的通知类型，不同类型的通知，所支持解析的配置参数不同。
+用于标识 RIME 通知子类型。
 
-- `optionChanged`：表示 option 配置选项变更
-- `schemaChanged`：表示输入方案变更
+- `optionChanged`：监听 RIME option 变更。
+- `schemaChanged`：监听输入方案变更。
 
 ## rimeOptionName
 
 类型：`String`
 
-必选项：否，当 `rimeNotificationType` 设置为 `'optionChanged'` 时，此项为必选。
+必选项：否，当 `rimeNotificationType` 为 `optionChanged` 时必选。
 
-用于标识 RIME 输入法的配置选项名称。
+用于标识 RIME option 名称，例如 `ascii_mode`。
 
 ## rimeOptionValue
 
 类型：`Bool`
 
-必选项：否，当 `rimeNotificationType` 设置为 `'optionChanged'` 时，此项为必选。
+必选项：否，当 `rimeNotificationType` 为 `optionChanged` 时必选。
 
-用于标识 RIME 输入法的配置选项值。
+用于标识要匹配的 RIME option 值。
+
+## rimeSchemaID
+
+类型：`String`
+
+必选项：否，当 `rimeNotificationType` 为 `schemaChanged` 时与 `rimeSchemaName` 二选一。
+
+用于匹配 RIME 输入方案 ID。建议优先使用 `rimeSchemaID`。
+
+## rimeSchemaName
+
+类型：`String`
+
+必选项：否，当 `rimeNotificationType` 为 `schemaChanged` 时与 `rimeSchemaID` 二选一。
+
+用于匹配 RIME 输入方案名称。
 
 ## notificationKeyboardAction
 
-类型： [`KeyboardAction`]()
+类型：[`KeyboardAction`](/apps/hamster/v3/docs/guides/skins/action/)
 
-必选项：否，当 `notificationType` 设置为 `'keyboardAction'` 时，此项为必选。
+必选项：否，当 `notificationType` 为 `keyboardAction` 时必选。
 
-用于标识监听键盘触发的 KeyboardAction 的类型。
-
-当键盘通知的 action 与当前设置的 notificationKeyboardAction 类型匹配时，会触发样式变更。当 action 值不匹配时，样式恢复为默认状态。
+用于标识要监听的键盘动作。当触发的 action 与 `notificationKeyboardAction` 匹配时，通知样式生效；不匹配时恢复原始样式。
 
 ## returnKeyType
 
-类型：`Int | [Int]`
+类型：`Int[]`
 
-必选项：否，当 `notificationType` 设置为 `'returnKeyType'` 时，此项为必选。
+必选项：否，当 `notificationType` 为 `returnKeyType` 时必选。
 
-用于标识回车键的类型。
+用于匹配系统回车键类型。
 
-当系统回车键类型与当前设置的 returnKeyType 类型匹配时，会触发样式变更。当回车键类型值不匹配时，样式恢复为默认状态。
+示例：
+
+```yaml
+returnKeyType: [1, 4, 7]
+```
+
+## lockedNotificationMatchState
+
+类型：`Bool`
+
+必选项：否，默认值为 `false`
+
+用于锁定通知匹配后的状态。设置为 `true` 后，即使后续通知不再匹配，按键也不会自动恢复为原始样式。
 
 ## animationType
 
 类型：`'scale' | 'cartoon' | 'physics'`
 
-必选项：是
+必选项：是（动画节点必选）
 
-用于标识动画的类型，不同类型的动画，所支持解析的配置参数不同。
+用于标识动画类型。不同类型支持的参数不同，参见[按键动画](/apps/hamster/v3/docs/guides/skins/animation/)。
 
-- `scale`：表示缩放动画
-- `cartoon`：表示卡通动画，用来替代之前版本的 APNG 图片
-- `physics`：表示物理动画，可以用来描述移动、旋转、透明度变化等
+- `scale`：缩放动画。
+- `cartoon`：逐帧图片动画。
+- `physics`：物理动画，可描述移动、旋转、透明度变化。
 
 ## ConditionStyle 条件样式
 
-部分按键的样式需要根据条件判断来决定，例如：符号键盘锁定按键的样式，它初始显示时需要根据当前锁定状态来决定显示样式。
+部分按键样式需要根据条件判断决定，例如符号键盘锁定按键样式、RIME option 状态样式。
 
-类型：`{ conditionKey: String, conditionValue: Bool | Array<Int>, styleName: String | Array<String> }`
-
-注意：`styleName: Array<String>` 需要 1.5.2 版本及以上才能使用。
+类型：`{ conditionKey: String, conditionValue: Bool | Int[], styleName: String | String[] }`
 
 配置示例：
 
@@ -258,16 +317,11 @@ center:
 foregroundStyle:
   - {
       styleName: unlockButtonForegroundStyle,
-      # 或者
-      styleName: [
-        unlockButtonForegroundStyle1,
-        unlockButtonForegroundStyle2,
-      ],
       conditionKey: $symbolicKeyboardLockState,
       conditionValue: false,
     }
   - {
-      styleName: lockButtonForegroundStyle,
+      styleName: [lockButtonForegroundStyle, lockButtonBadgeStyle],
       conditionKey: $symbolicKeyboardLockState,
       conditionValue: true,
     }
@@ -275,23 +329,116 @@ foregroundStyle:
 
 ### conditionKey
 
-类型：`'$symbolicKeyboardLockState' | 'rime${optionName}'`
+类型：`'$symbolicKeyboardLockState' | 'rime$<optionName>'`
 
-- `$symbolicKeyboardLockState`：表示符号键盘的锁定状态
-- `rime${optionName}`：表示 RIME option 状态，比如 `rime$ascii_mode` 表示 `ascii_mode` 选项的状态
+- `$symbolicKeyboardLockState`：符号键盘锁定状态。
+- `rime$<optionName>`：RIME option 状态，例如 `rime$ascii_mode` 表示 `ascii_mode` 选项状态。
+
+### conditionValue
+
+类型：`Bool | Int[]`
+
+用于设置要匹配的条件值。
+
+### styleName
+
+类型：`String | String[]`
+
+用于设置条件匹配时使用的样式节点名称。`String[]` 可叠加多个前景样式。
+
+## 按键动作相关参数
+
+以下参数配置在按键节点或通知节点中，值均为 [`KeyboardAction`](/apps/hamster/v3/docs/guides/skins/action/)：
+
+| 参数 | 说明 |
+| --- | --- |
+| `action` | 默认点击动作。 |
+| `preeditStateAction` | 处于预编辑状态（有未上屏输入）时的点击动作；未设置时使用 `action`。 |
+| `uppercasedStateAction` | 大写或大写锁定状态下的点击动作。 |
+| `repeatAction` | 长按后重复执行的动作；未设置时不重复执行。 |
+| `swipeUpAction` | 向上滑动动作。 |
+| `swipeDownAction` | 向下滑动动作。 |
+| `swipeLeftAction` | 向左滑动动作。 |
+| `swipeRightAction` | 向右滑动动作。 |
+
+## 按键状态样式参数
+
+以下参数配置在按键节点中，用于在不同键盘状态下引用前景样式：
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `uppercasedStateForegroundStyle` | `String 或 String[]` | 大写状态下使用的前景样式。 |
+| `capsLockedStateForegroundStyle` | `String 或 String[]` | 大写锁定状态下使用的前景样式。 |
+| `hintStyle` | `String` | 按键气泡样式节点名称。 |
+| `hintSymbolsStyle` | `String` | 长按符号面板样式节点名称。 |
+
+## hintSymbolsStyle 长按符号参数
+
+`hintSymbolsStyle` 引用的样式节点用于定义长按后弹出的符号面板。
+
+| 参数 | 类型 | 必选 | 说明 |
+| --- | --- | --- | --- |
+| `symbolStyles` | `String[]` | 是 | 每个长按符号的按键样式节点名称。 |
+| `size` | `Size` | 否 | 单个符号的尺寸；不设置时使用原按键可视区域尺寸。 |
+| `insets` | `Insets` | 否 | 面板外围扩展距离，同时影响符号布局起点。 |
+| `backgroundStyle` | `String` | 否 | 面板背景样式。 |
+| `selectedIndex` | `Int` | 否 | 默认选中的符号下标，默认 `0`。 |
+| `selectedBackgroundStyle` | `String` | 否 | 选中符号的背景样式。 |
+
+示例：
+
+```yaml
+qButton:
+  hintSymbolsStyle: qHintSymbolsStyle
+
+qHintSymbolsStyle:
+  size: { width: 42, height: 48 }
+  insets: { top: 4, left: 4, bottom: 4, right: 4 }
+  backgroundStyle: hintSymbolsPanelBackground
+  selectedIndex: 0
+  selectedBackgroundStyle: hintSymbolsSelectedBackground
+  symbolStyles:
+    - qSymbolStyle
+    - 1SymbolStyle
+```
 
 ## 浮动键盘相关参数
+
+以下参数配置在具体键盘文件的根节点。
 
 ### floatKeyboardLockedState
 
 类型：`Bool`
 
-浮动键盘的锁定状态。默认为 `true`，即：点击浮动键盘上的按键后，自动隐藏浮动键盘；当设置为 `false` 时，点击浮动键盘上的按键后，不会自动隐藏浮动键盘。
+必选项：否，默认值为 `false`
+
+浮动键盘锁定状态。
+
+- `false`：点击浮动键盘上的按键后，自动隐藏浮动键盘。
+- `true`：点击浮动键盘上的按键后，保持浮动键盘显示。
 
 ### floatKeyboardAlpha
 
 类型：`Float`
 
-浮动键盘背景透明度。取值范围为 `0.1` 到 `1.0` 之间，默认为 `0.95`。
+必选项：否
 
-> 注意：请勿使用 `0.0` 作为透明度值，否则会导致浮动键盘点击空白区域后，不会关闭当前浮动键盘。
+浮动键盘背景透明度。建议取值范围为 `0.1` 到 `1.0`。
+
+> 注意：请勿使用 `0.0`，否则可能导致浮动键盘点击空白区域后无法关闭。
+
+### floatTargetScale
+
+类型：`Float | { x?: Float, y?: Float }`
+
+必选项：否，默认值为 `{ x: 0.8, y: 0.8 }`
+
+用于设置浮动键盘相对于原键盘区域的缩放比例。
+
+示例：
+
+```yaml
+floatTargetScale: 0.8
+# 或
+floatTargetScale: { x: 0.8, y: 0.75 }
+```
