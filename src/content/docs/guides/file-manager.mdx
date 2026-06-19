@@ -93,6 +93,25 @@ title: 文件管理
 - 您也可以将 `include_keyboard_rime_file.txt` 存放在方案目录下，元书会优先读取该目录中的同名文件。
 :::
 
+## 复制应用文件至 iCloud
+
+RIME 菜单中的「复制文件至 iCloud」功能，可将当前「所选方案目录」下的文件复制到 iCloud。
+
+> 「所选方案目录」：由「输入方案-方案目录切换」功能控制，默认为 RimeUserData 下的 rime-ice 目录。
+
+此功能通过 `include_iCloud_rime_files.txt` 控制复制规则。
+
+需要注意的是：
+
+- `include_iCloud_rime_files.txt` 采用白名单机制：只有文件名匹配其中配置的正则表达式时，才会被复制到 iCloud。
+- 此功能仅复制「所选方案目录」下符合条件的文件
+
+:::tip[提示]
+- 此功能需要升级至 1.6.17 及以上版本，或 TF 370 及以上版本。
+- 如果 `SharedSupport` 中不存在 `include_iCloud_rime_files.txt`，可通过 RIME 菜单中的「重置」功能恢复。
+  注意：RIME 菜单中的「重置」功能会重置 `SharedSupport` 下的全部文件，以及 `RimeUserData/rime-ice` 目录（即内置雾凇方案）下的全部文件。
+:::
+
 ## 常见问题
 
 ### 键盘无法保存自造词
