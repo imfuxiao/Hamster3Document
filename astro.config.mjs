@@ -9,12 +9,35 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "元书输入法",
+      favicon: "/favicon.svg",
+      lastUpdated: true,
+      editLink: {
+        baseUrl: "https://github.com/imfuxiao/Hamster3Document/edit/main/",
+      },
+      customCss: ["./src/styles/custom.css"],
+      head: [
+        {
+          tag: "meta",
+          attrs: { property: "og:title", content: "元书输入法" },
+        },
+        {
+          tag: "meta",
+          attrs: {
+            property: "og:description",
+            content: "基于 RIME 输入法引擎的 iOS 键盘输入法",
+          },
+        },
+        {
+          tag: "meta",
+          attrs: { property: "og:type", content: "website" },
+        },
+      ],
       social: [
-        // {
-        //   icon: "github",
-        //   label: "GitHub",
-        //   href: "https://github.com/withastro/starlight",
-        // },
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/imfuxiao/Hamster",
+        },
       ],
       sidebar: [
         {

@@ -1,0 +1,47 @@
+/* 元书输入法文档自定义主题
+   参考 withastro/docs 的做法：通过 Starlight 的 CSS 变量覆盖强调色与灰阶。
+   颜色可在 https://starlight.astro.build/zh-cn/guides/css-and-tailwind/ 的主题生成器中调整。 */
+
+:root {
+  --sl-color-accent-low: #16204a;
+  --sl-color-accent: #3b5bdb;
+  --sl-color-accent-high: #c2d0ff;
+
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #e9eaef;
+  --sl-color-gray-2: #bcc0cc;
+  --sl-color-gray-3: #818691;
+  --sl-color-gray-4: #4d525b;
+  --sl-color-gray-5: #2a2d35;
+  --sl-color-gray-6: #1b1d24;
+  --sl-color-black: #14161c;
+}
+
+/* 浅色主题 */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #d4dcff;
+  --sl-color-accent: #3346c5;
+  --sl-color-accent-high: #182164;
+
+  --sl-color-white: #14161c;
+  --sl-color-gray-1: #1b1d24;
+  --sl-color-gray-2: #2a2d35;
+  --sl-color-gray-3: #4d525b;
+  --sl-color-gray-4: #818691;
+  --sl-color-gray-5: #bcc0cc;
+  --sl-color-gray-6: #e9eaef;
+  --sl-color-gray-7: #f4f4f9;
+  --sl-color-black: #ffffff;
+}
+
+/* 首页 hero 渐变标题（参考 withastro/docs 的视觉风格） */
+.hero h1 {
+  background: linear-gradient(
+    120deg,
+    var(--sl-color-accent-high),
+    var(--sl-color-white)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
