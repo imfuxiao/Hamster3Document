@@ -1,0 +1,50 @@
+---
+title: 按键音配置
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+键盘皮肤支持按键音配置。
+
+## 配置参数
+
+### `keySound`
+声明自定义按键音配置，将键盘所有按键分为三种类型，可分别为各类型设置不同的按键音：
+
+- **`input`**：表示输入类型按键，如 character、symbol 等
+- **`delete`**：表示删除类型按键，如 backspace
+- **`system`**：表示系统类型按键，如回车键、shift 键、tab 键等
+
+### `actions`
+除了按类型统一配置外，也可根据按键触发的 action 单独指定按键音，优先级高于按类型配置。
+
+此参数为数组类型，如果 action 重复配置，则使用首个 action 配置。
+
+- action: 按键触发的 action，与键盘其他 action 配置相同
+- url: 音频文件名
+
+<Aside type="tip" title="注意">
+- 此功能需要 TF 386 或商店 1.6.20 及以上版本支持
+- 配置需添加到 `config.yaml` 文件中
+- 声音文件需存放在皮肤目录下的 `sound` 目录
+- 音频格式仅支持：aiff、wav 两种
+</Aside>
+
+## 配置示例
+
+```yaml
+# 按键声音文件保存在皮肤根目录下的 sound 目录
+keySound:
+  # 输入型按键音，如 a、b、c
+  input: key.wav
+  # 删除键按键音（backspace）
+  delete: delete.wav
+  # 系统按键音，如 shift、enter 等
+  system: system.wav
+  # 为特定 action 单独配置按键音（优先级高于按类型配置）
+  actions:
+    - action: { character: 'f' }
+      url: key_f.wav
+    - action: { character: 'h' }
+      url: key_h.wav
+```
