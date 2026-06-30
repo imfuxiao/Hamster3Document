@@ -2,6 +2,8 @@
 title: 配置参数
 ---
 
+import { Aside, Code } from "@astrojs/starlight/components";
+
 ## preeditHeight
 
 类型：`Float | String`
@@ -295,3 +297,52 @@ foregroundStyle:
 浮动键盘背景透明度。取值范围为 `0.1` 到 `1.0` 之间，默认为 `0.95`。
 
 > 注意：请勿使用 `0.0` 作为透明度值，否则会导致浮动键盘点击空白区域后，不会关闭当前浮动键盘。
+
+## checkIfOverflowsParentHeight
+
+类型：`Bool`（可选）
+
+默认值：true
+
+用于控制按键短按提示气泡（hintStyle）和长按提示气泡（hintSymbolsStyle）在显示时，是否进行“超出父视图高度”的检测与自动位置调整。
+
+行为说明：
+
+- 当设置为 true（默认值）时，或此参数为空时：
+    系统会检测气泡是否超出当前键盘（父视图）高度，并在必要时自动调整其显示位置，以避免溢出。
+- 当设置为 false 时：
+    关闭该检测逻辑，气泡位置将按原始布局渲染，不进行自动修正。
+
+<Aside type="danger" title="注意">
+- 该参数依赖以下版本支持： 
+  - TF ≥ 397
+  - 商店版本 ≥ 1.6.23
+- 推荐关闭检测的典型场景：
+
+    当气泡样式使用图片资源，且图片上半部分为透明区域时： 此时实际视觉上即使“超出父视图”也不会产生遮挡问题。
+    
+    而系统的自动位置调整反而可能导致视觉偏移、不自然，在此类情况下，建议设置为： `checkIfOverflowsParentHeight: false`
+</Aside>
+
+配置示例：
+
+export const code = `
+qButton:
+  hintStyle: qButtonHintStyle
+  hintSymbolsStyle: qButtonLongPressSymbolsStyle
+qButtonHintStyle:
+
+  checkIfOverflowsParentHeight: false
+  backgroundStyle: alphabeticHintBackgroundStyle
+  foregroundStyle: qButtonHintForegroundStyle
+qButtonLongPressSymbolsStyle:
+
+  checkIfOverflowsParentHeight: false
+  backgroundStyle: alphabeticHintBackgroundStyle
+  foregroundStyle: qButtonHintForegroundStyle
+`;
+
+<Code lang='yaml' ins={[{ range: '5-6', label: '关闭检测气泡位置的行为' }, { range: '10-11', label: '关闭检测气泡位置行为' }]} code={code} />
+
+
+
