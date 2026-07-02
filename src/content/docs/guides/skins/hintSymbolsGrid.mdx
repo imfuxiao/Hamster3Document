@@ -1,0 +1,240 @@
+---
+title: 长按符号网格
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+
+`hintSymbolsGridStyle` 是长按符号功能的网格布局版本。
+
+旧版 `hintSymbolsStyle` 仅支持在按键上方单行显示一列符号，并通过左右滑动切换选中项。
+网格版支持**多行多列自由布局**：符号可以环绕当前按键显示（上下左右各一个），也可以组成任意行列的面板；
+手指移动到某个符号上即高亮该符号，释放手指时执行高亮符号对应的 action。
+
+<Aside type="tip" title="与旧版的关系">
+- `hintSymbolsGridStyle` 是新增的独立参数，与旧版 `hintSymbolsStyle` 可同时配置。
+- 长按触发时，**优先使用 `hintSymbolsGridStyle`**；未配置或配置无效时，自动回落到旧版 `hintSymbolsStyle`。
+- 老版本 App 不识别 `hintSymbolsGridStyle`，会自动忽略并继续使用旧版配置。
+  因此皮肤中同时保留两者，即可同时兼容新老版本。
+</Aside>
+
+## 启用方式
+
+在按键样式中新增 `hintSymbolsGridStyle` 参数，值为网格样式的名称：
+
+export const enableCode = `
+qButton:
+  # 旧版配置（可保留，作为老版本 App 的降级方案）
+  hintSymbolsStyle: qButtonHintSymbolsStyle
+
+  # 新版网格配置，长按时优先生效
+  hintSymbolsGridStyle: qButtonHintSymbolsGridStyle
+`;
+
+<Code lang='yaml' ins={[{ label: '新增网格配置', range: '5-6' }]} code={enableCode} />
+
+## 参数说明
+
+### symbolRows
+
+类型：`Array<Array<String>>`
+
+必选项：是
+
+网格内容。每一行是一个符号样式名列表，`~`（null）表示空单元格。
+
+- 空单元格不渲染、不可选中，用于实现环绕按键等镂空布局。
+- 各行长度可以不同，以最长行的长度作为网格列数，短行末尾视为空单元格。
+- 每个符号样式的写法与键盘按键样式相同（`foregroundStyle` + `action` 等）。
+
+```yaml
+symbolRows:
+  - [ symbol1Style, symbol2Style, symbol3Style ]
+  - [ symbol4Style, ~,            symbol5Style ]
+```
+
+### size
+
+类型：`Object`
+
+必选项：否
+
+单个单元格的尺寸。省略时默认使用当前按键的可视区域尺寸。
+
+```yaml
+size:
+  width: 50
+  height: 50
+```
+
+### spacing
+
+类型：`Object`
+
+必选项：否
+
+单元格之间的间距，默认为 0。
+
+```yaml
+spacing: { horizontal: 4, vertical: 4 }
+```
+
+### insets
+
+类型：`Object`
+
+必选项：否
+
+整个网格面板的内边距，语义与旧版 `hintSymbolsStyle` 的 `insets` 相同。
+
+```yaml
+insets: { top: 4, bottom: 4, left: 4, right: 4 }
+```
+
+### anchor
+
+类型：`Object`
+
+必选项：否
+
+锚点单元格坐标（`row` / `col` 均从 0 开始）。
+指定后，该单元格的**中心**会与当前按键的中心对齐，配合空单元格即可实现环绕按键的布局。
+
+省略时，网格面板整体水平居中显示在按键正上方（与旧版位置一致）。
+
+```yaml
+anchor: { row: 1, col: 1 }
+```
+
+### offset
+
+类型：`Object`
+
+必选项：否
+
+在锚点对齐结果的基础上对面板整体位置做微调，默认为 `{ x: 0, y: 0 }`，y 为正时向下偏移。
+
+```yaml
+offset: { x: 0, y: -10 }
+```
+
+### selected
+
+类型：`Object`
+
+必选项：否
+
+长按弹出时默认高亮的单元格坐标。
+
+省略时弹出后无高亮，手指未移动到任何符号上就释放 = 取消，不执行任何 action。
+
+```yaml
+selected: { row: 0, col: 1 }
+```
+
+### 其他属性
+
+其他属性 `backgroundStyle / selectedBackgroundStyle / checkIfOverflowsParentHeight`
+
+与旧版 `hintSymbolsStyle` 中的同名参数语义完全相同：
+
+- `backgroundStyle`：整个网格面板的背景样式。
+- `selectedBackgroundStyle`：高亮单元格的背景样式。
+- `checkIfOverflowsParentHeight`：是否检测面板超出键盘顶部并自动调整位置，默认 `true`。
+
+<Aside type="tip" title="单元格自带背景">
+单元格的符号样式可以配置自己的 `backgroundStyle`（如与键盘按键相同的背景）。
+高亮背景渲染在单元格背景之上、前景（文字/图标）之下，因此单元格配置了不透明背景时高亮依然可见。
+</Aside>
+
+## 交互行为
+
+1. 长按按键达到长按触发时间后，弹出网格面板。
+2. 手指移动时按位置命中检测：
+   - 移动到某个非空单元格上：高亮该单元格，高亮变化时触发一次震动反馈。
+   - 落在单元格间隙或空单元格上：保持当前高亮不变。
+   - 移出面板边界超过一个单元格的距离：清除高亮，此时释放手指即取消，不执行任何 action；手指移回面板内可重新选择。
+3. 释放手指：执行当前高亮单元格的 action；无高亮时不执行任何 action。
+4. 当按键位于键盘左右边缘时，面板会自动调整位置保证完整显示在键盘范围内。
+
+注意：与原长按交互不同，手指必须移动到长按弹出的面板上才能选择某个选项。
+
+## 典型示例
+
+### 示例一：上下左右环绕当前按键
+
+3×3 网格，中心单元格留空，锚点设置为中心格。
+面板会正好"包住"当前按键，四个方向各显示一个符号：
+
+export const surroundCode = `
+qButton:
+  hintSymbolsGridStyle: qButtonSurroundGridStyle
+
+qButtonSurroundGridStyle:
+  size: { width: 44, height: 44 }
+  # 中心格（1,1）与按键中心对齐，中心格为空，按键本体可见
+  anchor: { row: 1, col: 1 }
+  # 注意环绕模式最好不要配置整体的背景样式，除非你用透明的图片可以把中间的按键暴露出来
+  # backgroundStyle: surroundGridBackgroundStyle
+  selectedBackgroundStyle: surroundGridSelectedStyle
+  symbolRows:
+    - [ ~,                upSymbolStyle,   ~                ]
+    - [ leftSymbolStyle,  ~,               rightSymbolStyle ]
+    - [ ~,                downSymbolStyle, ~                ]
+
+# 单个符号样式与键盘按键样式写法相同
+upSymbolStyle:
+  foregroundStyle: upSymbolForegroundStyle
+  action: { symbol: "↑" }
+`;
+
+<Code lang='yaml' title={'环绕布局'} code={surroundCode} />
+
+长按后手指向上滑即高亮上方符号，向左滑即高亮左侧符号，释放执行对应 action。
+
+### 示例二：按键上方弹出多行多列面板
+
+2 行 3 列的符号面板，显示在按键正上方，弹出时默认高亮第二行中间的符号：
+
+export const gridPanelCode = `
+qButton:
+  hintSymbolsGridStyle: qButtonGridPanelStyle
+
+qButtonGridPanelStyle:
+  size: { width: 40, height: 40 }
+  spacing: { horizontal: 2, vertical: 2 }
+  insets: { top: 4, bottom: 4, left: 4, right: 4 }
+  # 不配置 anchor：面板水平居中显示在按键上方
+  selected: { row: 1, col: 1 }
+  backgroundStyle: gridPanelBackgroundStyle
+  selectedBackgroundStyle: gridPanelSelectedStyle
+  symbolRows:
+    - [ symbol1Style, symbol2Style, symbol3Style ]
+    - [ symbol4Style, symbol5Style, symbol6Style ]
+`;
+
+<Code lang='yaml' title={'多行多列面板'} code={gridPanelCode} />
+
+### 示例三：模拟旧版单行效果
+
+网格版同样可以写出旧版的单行布局，方便皮肤统一迁移到新写法：
+
+export const singleRowCode = `
+qButtonSingleRowGridStyle:
+  size: { width: 50, height: 50 }
+  selected: { row: 0, col: 0 }
+  backgroundStyle: hintSymbolsBackgroundStyle
+  selectedBackgroundStyle: hintSymbolsSelectedStyle
+  symbolRows:
+    - [ symbol1Style, symbol2Style, symbol3Style ]
+`;
+
+<Code lang='yaml' title={'单行布局'} code={singleRowCode} />
+
+<Aside type="danger" title="版本要求">
+`hintSymbolsGridStyle` 依赖以下版本支持：
+
+- TF ≥ 404
+- 商店版本 ≥ 1.6.24
+
+低于此版本的 App 会忽略该参数，使用旧版 `hintSymbolsStyle`。
+</Aside>

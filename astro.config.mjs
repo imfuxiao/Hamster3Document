@@ -69,6 +69,7 @@ export default defineConfig({
             { label: "样式", slug: "guides/skins/styles" },
             { label: "集合视图", slug: "guides/skins/collection" },
             { label: "按键动作", slug: "guides/skins/action" },
+            { label: "长按符号网格", slug: "guides/skins/hintsymbolsgrid" },
             { label: "事件通知", slug: "guides/skins/notifications" },
             { label: "按键动画", slug: "guides/skins/animation" },
             { label: "按键音", slug: "guides/skins/sound" },
