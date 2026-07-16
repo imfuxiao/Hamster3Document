@@ -16,8 +16,8 @@ scaleAnimation:
   animationType: scale
   isAutoReverse: true
   scale: 0.95
-  pressDuration: 0.85
-  releaseDuration: 0.1
+  pressDuration: 850
+  releaseDuration: 100
 ```
 
 - `isAutoReverse`：是否区分按键状态自动反转动画。默认为 `false`。
@@ -54,14 +54,17 @@ cartoonAnimation:
 ```yaml
 physicsAnimation:
   animationType: physics
-  duration: 0.6
+  duration: 600
   randomImage: true
   targetScale: 0.3
   images:
     - "01.png"
     - "02.png"
   startPosition: { x: 0, y: 0 }
+  startRandomPosition: { x: 0, y: 0 }
   endPosition: { x: 0, y: -10 }
+  endRandomPosition: { x: 100, y: 0 }
+  # randomPosition 已删除
   randomPosition: { x: 0, y: 0 }
   useOpacity: true
   startOpacity: 1.0
@@ -77,14 +80,23 @@ physicsAnimation:
 - `targetScale`：图片缩放比例，默认为 `nil`，即不进行缩放，建议按效果设置，图片如果不缩放，会占用较多的内存。
 - `images`：图片文件名数组，按顺序列出所有用于动画的图片文件名。
 - `startPosition`：图片移动位置的起始点
-    - `x`: 表示起始点的横向位置
-    - `y`: 表示起始点的纵向位置
+    - `x`: 表示起始点的横向位置，默认为当前按键横向中间点。
+    - `y`: 表示起始点的纵向位置，默认为当前按键纵向最低点。
+- `startRandomPosition`：为 `startPosition` 添加一个随机变量
+    - `x`: 表示为起始点的横向位置添加一个随机值，随机值在 [-x，x] 之间，即 x = startPosition.x + random(-x, x)，
+    - `y`: 表示为起始点的纵向位置添加一个随机值，随机值在 [-y，y] 之间，即 y = startPosition.y + random(-y, y)，
+    - 注意：需 tf >= 428，商店 >= 1.6.27
 - `endPosition`：图片移动位置的结束点
-    - `x`: 表示结束点的横向位置
-    - `y`: 表示结束点的纵向位置
+    - `x`: 表示结束点的横向位置，默认为当前按键横向中间点。
+    - `y`: 表示结束点的纵向位置，默认为当前按键纵向最高点。
+- `endRandomPosition`: 为 `endPosition` 添加一个随机变量
+    - `x`: 表示为结束点的横向位置添加一个随机值，随机值在 [-x，x] 之间，即 x = startPosition.x + random(-x, x)，
+    - `y`: 表示为结束点的纵向位置添加一个随机值，随机值在 [-y，y] 之间，即 y = startPosition.y + random(-y, y)，
+    - 注意：需 tf >= 428，商店 >= 1.6.27
 - `randomPosition`：为动画的起始位置和结束位置添加随机偏移
     - `x`: 横向随机偏移范围
     - `y`: 纵向随机偏移范围
+    - 注意：tf >= 428，商店 >= 1.6.27 删除了这个属性，请使用 `startRandomPosition`，`endRandomPosition` 代替
 - `useOpacity`：是否启用透明度变化效果，默认为 `false`。
 - `startOpacity`：动画开始时图片的透明度，范围为 0.0 到 1.0，默认为 1.0。仅当 `useOpacity` 设置为 `true` 时生效。
 - `endOpacity`：动画结束时图片的透明度，范围为 0.0 到 1.0，默认为 0.8。仅当 `useOpacity` 设置为 `true` 时生效。
