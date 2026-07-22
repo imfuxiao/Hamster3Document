@@ -74,6 +74,7 @@ export default defineConfig({
             { label: "按键动画", slug: "guides/skins/animation" },
             { label: "按键音", slug: "guides/skins/sound" },
             { label: "配置参数", slug: "guides/skins/parameters" },
+            { label: "配置项索引（全部 Key）", slug: "guides/skins/keys-reference" },
             { label: "仓皮肤迁移", slug: "guides/skins/upgrade" },
           ],
           collapsed: true
