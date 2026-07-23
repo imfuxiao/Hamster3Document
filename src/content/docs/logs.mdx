@@ -2,6 +2,21 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
+## 1.6.27(2026-07-24)
+
+- fix: 剪贴板监听打开后的一些问题
+- fix: 备份恢复功能的一些问题
+- fix: RIME 重置功能的一些问题
+- feat: 新增 predictCloseButton 样式，用于调整预测状态下关闭按键样式
+- feat: physics 动画优化，详情见[文档说明](/apps/hamster/v3/docs/guides/skins/animation/#物理动画-physics)
+- feat: 优化应用日志中错误信息的输出
+- feat: 划动手势默认阈值调整，减少误触
+    - 按键滑动最小距离阈值(单位: pt)，由 20 调整为 40
+    - 按键滑动最小速度阈值(单位: pt/s)，由 200 调整为 150
+- feat: 网格符号划动判断，由必须划动到 cell 上方改为相对位移划动判断并支持灵敏度配置
+    - 具体内容请查阅：[长按符号网格](/apps/hamster/v3/docs/guides/skins/hintsymbolsgrid/) 下的 `moveStep` 和 `moveThreshold`
+- feat: 应用工具栏 Action 选项中新增粘贴指令
+
 ## 1.6.26(2026-07-17)
 
 - fix: 粘贴指令在内置文本编辑器下行为异常
