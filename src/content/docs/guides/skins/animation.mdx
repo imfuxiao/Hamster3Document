@@ -105,6 +105,230 @@ physicsAnimation:
 - `endAngle`：图片的结束角度，单位为度。
 - `randomAngle`：开始角度的随机偏移范围，单位为度。
 
+### 变换动画 (transform)
+
+:::tip[注意]
+版本要求：TF >= 442，商店 >= 1.6.28
+:::
+
+
+`scale` 只能整键缩小，`physics` 只能新建图层播放图片。若想让按键**已有的某一层**
+（键帽、字形、角标）位移、绕指定锚点缩放或旋转，用 `transform`。
+
+```yaml
+badgeFloatUp:
+  animationType: transform
+  target: qButtonBadgeForegroundStyle   # 只动这一层；不写则整个按键一起动
+  trigger: press
+  duration: 200
+  delay: 0
+  timing: easeOut
+  repeatCount: 1
+  autoreverses: false
+  restoreOnFinish: true
+  holdUntilRelease: false
+  releaseDuration: 120
+  anchorPoint: { x: 0.5, y: 1.0 }
+  positionUnit: point
+  startPosition: { x: 0, y: 0 }
+  endPosition: { x: 0, y: -9 }
+  startScale: 1.0
+  endScale: 1.2
+  useRotation: false
+  startAngle: 0
+  endAngle: 0
+  useOpacity: true
+  startOpacity: 1.0
+  endOpacity: 0.0
+```
+
+- `target`：要作用的图层，取值为该按键 `backgroundStyle` / `foregroundStyle` 里用到的**样式名**。
+  不设置时作用于整个按键。样式名在当前按键中不存在时，本次动画跳过。
+- `trigger`：由哪个按键状态触发。`press` 按下（默认）、`release` 抬起、`both` 两者都触发。
+  开启 `holdUntilRelease` 后本属性失效。
+- `duration`：动画时长，单位为毫秒，默认 200。
+- `delay`：起播延迟，单位为毫秒，默认 0。
+- `timing`：缓动曲线。可选 `linear`、`easeIn`、`easeOut`、`easeInEaseOut`（默认）、`default`。
+  也可以直接写四个数，表示自定义三次贝塞尔控制点 `[c1x, c1y, c2x, c2y]`，
+  例如 `timing: [0.34, 1.56, 0.64, 1]` 是一条带回弹的曲线。
+- `repeatCount`：播放次数，最少 1 次。
+- `autoreverses`：播完后是否反向播回起点，默认 `false`。
+  开启后 `duration` 是**单程**时间，一个来回共 `duration × 2`，终点回到起点状态。
+- `restoreOnFinish`：播完是否恢复原状，默认 `true`。设为 `false` 时停在终点状态。
+- `holdUntilRelease`：按下播到终点后**停住**，抬起时再反向播回起点，默认 `false`。
+  详见下方「按住保持」。
+- `releaseDuration`：`holdUntilRelease` 抬起回程的时长，单位为毫秒。不写则与 `duration` 相同。
+- `anchorPoint`：缩放与旋转围绕的锚点，**单位坐标**。`{ x: 0.5, y: 0.5 }` 为图层中心（默认），
+  `{ x: 0, y: 0 }` 为左上角，`{ x: 0.5, y: 1 }` 为底边中点。
+  取值可以超出 `0~1`，例如 `{ x: 0.05, y: 1.15 }` 表示绕图层左下角外侧的一个点缩放，
+  缩小时图层会朝那个方向"收"过去。
+  该属性只决定本次变换绕哪个点发生，**不会改动图层自身的 anchorPoint，因此不影响布局**。
+- `positionUnit`：位移的单位。
+  - `point`（默认）：单位为点。
+  - `layer`：按**目标图层自身**宽 / 高的倍数取值。
+  - `button`：按**整个按键**宽 / 高的倍数取值。
+  皮肤里的尺寸本来就都是相对值，位移写死点值换个机型、换个键盘高度就会偏。
+  装饰图浮出键帽这类效果，视觉参照的是键帽，用 `button`；
+  图层自己抖动、缩进这类效果用 `layer`。
+- `startPosition` / `endPosition`：位移的起止值，相对图层原位置，单位由 `positionUnit` 决定。y 负方向朝上。
+- `startScale` / `endScale`：缩放的起止倍率，默认均为 `1`。
+  写标量表示等比缩放；写 `{ x: 0.85, y: 0.9 }` 表示 x / y 分别缩放。
+- `useRotation`：是否启用旋转，默认 `false`。
+- `startAngle` / `endAngle`：旋转的起止角度，单位为度。仅当 `useRotation` 为 `true` 时生效。
+- `useOpacity`：是否启用透明度变化，默认 `false`。
+- `startOpacity` / `endOpacity`：透明度的起止值。仅当 `useOpacity` 为 `true` 时生效。
+- `detached`：是否**脱离按键播放**，默认 `false`。为 `true` 时把目标图层复制一份浮到
+  键盘之上，动画挂在副本上，播完自动删除，原图层在此期间隐藏。
+
+:::tip[脉冲还是保持？先想清楚这个]
+按下时的效果有两种完全不同的形态，别混：
+
+**脉冲**（`autoreverses: true`）——播到终点再原路返回，`duration` 是单程时间，
+播完回到原状，按住不放也不会停在终点。**大多数按压效果都是这一种**：
+键帽缩一下弹回、装饰图弹出来再落回去。
+
+**保持**（`holdUntilRelease: true`）——按下播到终点就停住，手指按住期间一直维持，
+抬起才反向播回起点。整键 `scale` 一直是这个行为。
+适合「按住期间必须一直看得出来被按着」的场合。
+
+```yaml
+# 保持：按下缩到 85% 并停住，松手用 120ms 弹回
+capHold:
+  animationType: transform
+  target: mButtonBackgroundStyle
+  holdUntilRelease: true
+  duration: 80
+  releaseDuration: 120
+  endScale: 0.85
+```
+
+开启 `holdUntilRelease` 后 `trigger`、`detached`、`autoreverses` 均不再生效。
+:::
+
+:::tip[什么时候需要 detached]
+按键抬起时，图层会按抬起状态重绘——只写了 `highlightImage` 的图层内容会被清空。
+于是「按下弹出一个小东西、飘一下再收回」这种动画，手指一松就断了，只播了个开头。
+
+`detached: true` 让动画在按键之外的副本上跑完，不受按下 / 抬起状态影响，
+也不会被按键自身的 `scale` 动画连带缩放。仅对有图片内容的图层有效
+（`fileImage` / `assetImage`），其他情况会自动退回不脱离。
+
+**连击时**：同一按键的同一条动画只会有**一份**副本。上一次还没播完就又按下，
+副本会被**从头重放**（硬切回起点），而不是再叠一份出来。
+连打速度快于 `duration` 时，动画每次都放不完，观感就是持续停在前半程——
+这与原生输入法的表现一致。
+:::
+
+:::caution
+不设 `target` 的 `transform` 会写入整个按键图层的 `transform` 属性，
+与同样修改该属性的 `scale` 动画冲突，两者不要同时挂在同一个按键上。
+需要「整键缩放 + 某一层单独上浮」时，让 `transform` 带上 `target` 指向那一层即可。
+
+:::
+
+#### 常见用法
+
+```yaml
+# 1. 绕底边缩放，模拟按键被"压下去"
+pressDown:
+  animationType: transform
+  duration: 80
+  anchorPoint: { x: 0.5, y: 1.0 }
+  startScale: 1.0
+  endScale: 0.9
+  autoreverses: true
+
+# 2. 只让字形轻微下沉，键帽不动
+glyphSink:
+  animationType: transform
+  target: qButtonForegroundStyle
+  duration: 60
+  endPosition: { x: 0, y: 2 }
+  autoreverses: true
+
+# 3. 抬起时角标闪一下
+badgeBlink:
+  animationType: transform
+  target: qButtonBadgeForegroundStyle
+  trigger: release
+  duration: 150
+  useOpacity: true
+  startOpacity: 0.2
+  endOpacity: 1.0
+```
+
+#### 分层按压：一个按键挂多条 transform
+
+商业皮肤里「按一下键」往往不是整键缩一下，而是键帽、字形、角标、装饰图
+各自绕不同的锚点做不同的动作。做法是给同一个按键挂多条 `transform`，
+每条用 `target` 指向自己那一层。
+
+下面这组还原的是一类常见效果：键帽整体缩小，字形绕偏上的点收缩，
+角标朝左下角收，同时一个只在按下时出现的装饰图往上浮并放大。
+
+四条都是**一个来回的脉冲**——`autoreverses: true` 让动画播到终点后原路返回，
+`duration` 是**单程**时间，所以键帽那条总共 160ms。
+按住不放也不会停在终点，播完就回到原状；装饰图则一直留在键上，直到抬起才消失。
+
+```yaml
+mButton:
+  backgroundStyle: mButtonBackgroundStyle
+  foregroundStyle:
+    - mButtonForegroundStyle       # 字形 m
+    - mButtonUpForegroundStyle     # 角标 ？
+    - keyDecorationStyle           # 只写了 highlightImage 的装饰图
+  animation:
+    - capPress
+    - glyphPress
+    - badgePress
+    - decorationPop
+
+# 键帽：绕中心缩到 85% 再弹回，单程 80ms
+capPress:
+  animationType: transform
+  target: mButtonBackgroundStyle
+  duration: 80
+  autoreverses: true
+  endScale: 0.85
+
+# 字形：绕偏上的点缩到 85% 再弹回
+glyphPress:
+  animationType: transform
+  target: mButtonForegroundStyle
+  duration: 80
+  autoreverses: true
+  anchorPoint: { x: 0.5, y: 0.4 }
+  endScale: 0.85
+
+# 角标：绕左下角外侧的点收缩再弹回
+badgePress:
+  animationType: transform
+  target: mButtonUpForegroundStyle
+  duration: 80
+  autoreverses: true
+  anchorPoint: { x: 0.05, y: 1.15 }
+  endScale: 0.85
+
+# 装饰图：上浮键高的 16% 并放大到 120%，再原路回到原位原大小，单程 200ms 线性
+decorationPop:
+  animationType: transform
+  target: keyDecorationStyle
+  duration: 200
+  timing: linear
+  autoreverses: true
+  positionUnit: button
+  endPosition: { x: 0, y: -0.16 }
+  endScale: 1.2
+```
+
+这里几个属性各自解决一个问题：
+`target` 让四条动画互不干扰；`anchorPoint` 决定每层往哪个方向收；
+`autoreverses` 让效果播一个来回后回到原状；
+`positionUnit: button` 让上浮距离随键盘尺寸缩放，而不是写死点值。
+
+装饰图那一层通常只配 `highlightImage`，按下才出现、抬起即消失，
+它的「留在键上」靠的是按键的高亮状态，不是动画停在终点——
+所以这类效果**不要**用 `holdUntilRelease`，否则会停在放大后的样子不回来。
 
 ## 动画的设置
 
