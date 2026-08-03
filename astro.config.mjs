@@ -1,5 +1,6 @@
 // @ts-check
 import starlight from "@astrojs/starlight";
+import mermaid from "astro-mermaid";
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
@@ -7,6 +8,10 @@ export default defineConfig({
   site: "https://ihsiao.com",
   base: "/apps/hamster/v3/docs/",
   integrations: [
+    mermaid({
+      autoTheme: true,
+      enableLog: false,
+    }),
     starlight({
       title: "元书输入法",
       favicon: "/favicon.svg",
