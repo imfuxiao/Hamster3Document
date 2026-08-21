@@ -123,6 +123,10 @@ export default defineConfig({
               label: "修改应用中的方案文件后不生效怎么办",
               slug: "guides/faqs/modification-to-scheme-files-not-take-effect",
             },
+            {
+              label: "为什么键盘启动时，$rimeSchemaName 文本内容不显示",
+              slug: "guides/faqs/why-rime-schema-name-not-display"
+            },
           ],
           collapsed: true
         },
