@@ -151,13 +151,31 @@ async function output() {
 
 ### 写入系统剪贴板
 
-可将文本内容写入系统剪贴板
+通过 JS 将文本写入系统剪贴板
 
 函数名: `$setClipboard(txt)`
 
 ```javascript
 async function output() {
   $setClipboard("这是一条写入系统剪贴板的内容")
+}
+```
+
+:::tip[注意]
+- 需 TF >= 490，商店 >= 2.7.3
+:::
+
+### 打开链接
+
+通过 JS 打开连接
+
+函数名: `$openURL(txt)`
+
+> txt 必须为 URL 格式
+
+```javascript
+async function output() {
+  $openURL("https://www.bilibili.com/")
 }
 ```
 
