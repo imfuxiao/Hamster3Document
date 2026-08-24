@@ -149,6 +149,23 @@ async function output() {
 }
 ```
 
+### 写入系统剪贴板
+
+可将文本内容写入系统剪贴板
+
+函数名: `$setClipboard(txt)`
+
+```javascript
+async function output() {
+  $setClipboard("这是一条写入系统剪贴板的内容")
+}
+```
+
+:::tip[注意]
+- 需 TF >= 490，商店 >= 2.7.3
+:::
+
+
 ## 全局变量
 
 在应用的脚本模块内，点击右上角 `...` 图标，可以进入「变量」功能页面。
