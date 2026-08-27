@@ -183,6 +183,24 @@ async function output() {
 - 需 TF >= 491，商店 >= 2.7.3
 :::
 
+### 写入文本
+
+通过 JS 在宿主应用中写入文本
+
+> 宿主应用指键盘打开时所在的应用
+
+函数名: `$insertText(txt)`
+
+```javascript
+async function output() {
+  $insertText("这是即将被写入的一段文本")
+}
+```
+
+:::tip[注意]
+- 需 TF >= 494，商店 >= 2.7.3
+:::
+
 
 ## 全局变量
 
