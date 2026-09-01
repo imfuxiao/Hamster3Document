@@ -61,6 +61,22 @@ action: { sendKeys: 'Shift+a' }
 action: { sendKeys: 'nihao' }
 ```
 
+## 切换 RIME Option 选项状态
+
+`rimeOption`: 调整 RIME Option 选项状态。此选项对应的值为方案配置中 Option 的名称。
+
+配置示例：
+
+```yaml
+action: { rimeOption: 'ascii_mode' }
+```
+
+<Aside type="tip" title="注意">
+  - 需 TF >= 504 版本
+  - 如果 option 选项存在三个及三个以上，无法使用此方法进行切换。
+  - RIME 不会记忆通过此方法切换的 option 状态，如需记忆 option 状态，请使用 `rimeSwither` 切换。
+</Aside>
+
 ## 打开链接
 
 `openURL`: 表示打开一个链接。
@@ -207,7 +223,6 @@ action:
 ```
 
 <Aside type="tip" title="注意">
-  - 实验功能
   - 需 TF >= 349 版本
 </Aside>
 
