@@ -89,6 +89,10 @@ export default defineConfig({
           slug: "guides/scripts",
         },
         {
+          label: "命令模式",
+          slug: "guides/command-mode",
+        },
+        {
           label: "常见问题",
           items: [
             {
