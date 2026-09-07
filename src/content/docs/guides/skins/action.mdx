@@ -127,6 +127,22 @@ action: { phrase: '常用语 title' }
   - 需要为常用语添加一个 title
 </Aside>
 
+## Snippet
+
+`snippet`: 表示一个模板片段，它的功能与常用语是完全相同的。它省略了常用语创建的步骤，可以将常用语的内容，直接放到这个条指令中。
+
+配置示例：
+
+```yaml
+action: { snippet: '这是一个日期：{{date:yyyy-MM-dd}}' }
+```
+
+注意：常用语下的内置变量与自定义变量在这里都可以使用，具体请查阅 [常用语](/apps/hamster/v3/docs/guides/phrase/#时间格式中预定义的字符串含义)
+  
+<Aside type="tip" title="注意">
+  - 需 TF >= 514，商店 >= 1.8.0 版本
+</Aside>
+
 ## 打开链接
 
 `openURL`: 表示打开一个链接。
@@ -257,7 +273,7 @@ action: { switchRimeSchema: '方案ID或方案名称' }
 
 - v1.4.0 及以上版本有效
 
-## 组合 Action(实验)
+## 组合 Action
 
 `combine`：组合 action，用于触发多个 action
 
@@ -274,5 +290,25 @@ action:
 
 <Aside type="tip" title="注意">
   - 需 TF >= 349 版本
+</Aside>
+
+## 延迟 Action
+
+在使用组合指令时，某两个指令之间可能需要强制延迟一段时间，此时可以使用延迟指令。
+
+延迟指令中的参数为整数类型，单位毫秒（1秒=1000毫秒），表示将下一条指令延迟指定时间后执行。
+
+此指令只能在 combine 指令下使用，其他地方使用无效。
+
+```yaml
+action:
+  combine:
+    - keyboardType: alphabetic
+    - delay: 1000
+    - switchRimeSchema: melt_eng
+```
+
+<Aside type="tip" title="注意">
+  - 需 TF >= 510 版本，商店 >= 1.8.0
 </Aside>
 

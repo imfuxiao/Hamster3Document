@@ -50,12 +50,16 @@ export default defineConfig({
           slug: "guides/intro",
         },
         {
-          label: "文件管理",
-          slug: "guides/file-manager",
+          label: "开启元书键盘",
+          slug: "guides/enable-keyboard",
         },
         {
           label: "输入方案",
           slug: "guides/schema",
+        },
+        {
+          label: "文件管理",
+          slug: "guides/file-manager",
         },
         {
           label: "中文九键",
@@ -83,6 +87,10 @@ export default defineConfig({
             { label: "仓皮肤迁移", slug: "guides/skins/upgrade" },
           ],
           collapsed: true
+        },
+        {
+          label: "常用语",
+          slug: "guides/phrase",
         },
         {
           label: "脚本",
