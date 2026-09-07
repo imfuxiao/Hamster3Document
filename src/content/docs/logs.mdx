@@ -2,6 +2,29 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
+## 1.8.0(2026-09-08)
+- fix: 偶发应用设置页面丢失返回菜单
+- fix: 因文件权限导致的无法删除某些文件
+- fix: 应用切后台后，在重新切前台，编辑脚本或常用语，保存会失败
+- fix: #cut 指令行为异常
+- fix: 调整长按符号列表溢出屏幕逻辑
+- fix: 横屏纵屏模式下键盘高度计算的问题
+- fix: 浮动键盘的一些问题
+- feat: 内嵌模式优化
+- feat: 皮肤功能优化：
+  - 新增皮肤分享功能
+  - 新增三款内置皮肤：胭云、莫吉托、彩虹，可通过皮肤页面右上角菜单，选择「重置内置皮肤」选项更新
+- feat: 新增命令面板功能，提供 LLM 语言调用能力
+  - 新增 ai 指令，可通过 `action: { ai: 'AI指令名称'}` 调用（[ai 指令文档](/apps/hamster/v3/docs/guides/skins/action/#执行-ai-指令)）
+- feat: WiFi 传输文件功能增强，支持在网页端调用 RIME 部署和同步功能，支持设置某个目录为RIME用户目录
+- feat: 文件管新功能增强：新建文件/文件夹，复制，移动，分享，导入文件/压缩文件
+- feat: 脚本功能优化：支持网络下载/更新脚本；新增导入脚本文件功能；内置脚本新增：roll，Base64解码，Base64编码
+- feat: 常用语功能优化：
+  - 新增 `selectedText`，`pasteboardContent` 内置变量，
+  - 新增 `phrase` 指令，可通过 `action: {phrase: '常用语title'}` 调用。[指令文档](/apps/hamster/v3/docs/guides/skins/action/#常用语)
+  - 新增 `snippet` 指令，可通过 `action: {snippet: '模板内容'}` 调用。[指令文档](/apps/hamster/v3/docs/guides/skins/action/#snippet)
+- feat: 新增 runScriptSilently 指令，可静默执行一个脚本。[指令文档](/apps/hamster/v3/docs/guides/skins/action/#静默执行-javascript-脚本)
+
 ## 1.7.3(2026-08-31)
 
 - fix: 剪贴板快捷指令添加重复内容校验

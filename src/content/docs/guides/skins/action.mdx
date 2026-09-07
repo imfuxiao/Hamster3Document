@@ -77,24 +77,6 @@ action: { rimeOption: 'ascii_mode' }
   - RIME 不会记忆通过此方法切换的 option 状态，如需记忆 option 状态，请使用 `rimeSwither` 切换。
 </Aside>
 
-## 静默执行 JavaScript 脚本
-
-`runScriptSilently`: 表示静默执行一个 JavaScript 脚本。此脚本会在后台执行，不会弹出脚本页面。
-
-配置示例：
-
-```yaml
-action: { runScriptSilently: '脚本名称' }
-```
-
-<Aside type="tip" title="注意">
-  - 需 TF >= 505，商店 >= 1.8.0 版本
-  - 脚本名称对应脚本页面中维护的脚本名称
-  - 指令中的 $searchText 变量使用「光标前文字+选中文字+光标后文字」替换，若没有选中任何文字，则只使用光标前文字+光标后文字替换。
-  - 脚本执行期间无法执行其他 shortcut 指令
-</Aside>
-
-
 ## 执行 AI 指令
 
 `ai`: 表示执行一个 AI 指令。此指令会在后台执行，不会弹出命令页面。
@@ -188,6 +170,25 @@ action: { openURL: '#pasteboardContent#selectText' }
 ```yaml
 action: { runScript: 'myScript' }
 ```
+
+## 静默执行 JavaScript 脚本
+
+`runScriptSilently`: 表示静默执行一个 JavaScript 脚本。此脚本会在后台执行，不会弹出脚本页面。
+
+配置示例：
+
+```yaml
+action: { runScriptSilently: '脚本名称' }
+```
+
+<Aside type="tip" title="注意">
+  - 需 TF >= 505，商店 >= 1.8.0 版本
+  - 脚本名称对应脚本页面中维护的脚本名称
+  - 指令中的 $searchText 变量使用「光标前文字+选中文字+光标后文字」替换，若没有选中任何文字，则只使用光标前文字+光标后文字替换。
+  - 脚本执行期间无法执行其他 shortcut 指令
+</Aside>
+
+
 
 ## 键盘切换
 
