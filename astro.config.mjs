@@ -101,6 +101,10 @@ export default defineConfig({
           slug: "guides/command-mode",
         },
         {
+          label: "符号栏",
+          slug: "guides/symbol-bar",
+        },
+        {
           label: "常见问题",
           items: [
             {
