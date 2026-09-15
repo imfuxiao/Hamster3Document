@@ -62,6 +62,10 @@ export default defineConfig({
           slug: "guides/file-manager",
         },
         {
+          label: "网络存储",
+          slug: "guides/remote-storage",
+        },
+        {
           label: "中文九键",
           slug: "guides/chinese-ninekey-configuration",
         },
