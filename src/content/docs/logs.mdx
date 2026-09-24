@@ -2,6 +2,30 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
+## 1.11.0(2026-09-25)
+- fix: 备份文件夹根目录删除后无法创建备份文件
+- fix: 输入方案管理部署无 iCloud 超时提示
+- feat: 新增键盘音量调节功能
+- feat: 新增自动从 iCloud 复制文件行为开关
+- feat: 新增键盘分体功能。配合新增 action 指令 `#toggleSplitState` 切换键盘分体状态。
+
+  ```yaml
+  qKey:
+    size: { width: '112.5/1125' }
+    normalColor: '#FFFFFF'
+    split:
+      size: { width: '180/1125' }   # 仅 Split 状态下生效
+  ```
+
+
+  在皮肤中使用 `split` 配置项对应键盘分体状态下的配置。具体内容请查阅：[键盘分体配置]([元书输入法](https://ihsiao.com/apps/hamster/v3/docs/guides/skins/keysarea/#%E5%88%86%E4%BD%93%E9%94%AE%E7%9B%98split))
+ 
+
+  内置皮肤除：中文九键，声笔46键，注音外，其余皮肤已增加 `split` 配置的支持。
+  内置皮肤请通过皮肤页面菜单「重置内置皮肤」更新，此功能仅更新内置皮肤，非内置皮肤不受影响。
+
+- feat: iPhone Duo 适配
+
 ## 1.10.2(2026-09-19)
 
 - fix: 黑白名单过滤功能会创建空的文件夹
