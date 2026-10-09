@@ -201,6 +201,37 @@ async function output() {
 - 需 TF >= 494，商店 >= 2.7.3
 :::
 
+### 发送系统通知
+
+通过 JS 由键盘发送一条系统通知，与按键动作 [`userNotification`](/apps/hamster/v3/docs/guides/skins/action/#发送系统通知) 功能相同。
+
+函数名: `$userNotification(title, shortcutName, content)`
+
+- `title`：通知标题，传空字符串时使用默认标题「元书输入法」。
+- `shortcutName`：快捷指令名称，必填，为空时不发送通知。
+- `content`：通知携带的内容，可省略。
+
+函数返回 `true` 表示已提交发送，返回 `false` 表示参数无效（如 `shortcutName` 为空）。
+
+通知正文为 JSON 格式，例如：
+
+```json
+{"notifyTitle":"翻译","shortcutName":"Translate","content":"hello"}
+```
+
+```javascript
+async function output() {
+  $userNotification("翻译", "Translate", $selectedText)
+}
+```
+
+:::tip[注意]
+- TF >= 564，商店 >= 1.12.0
+- 需开启键盘「完全访问」权限。
+- 需先打开一次主应用并允许通知权限，未授权时键盘会提示「通知未授权」。
+- 返回 `true` 只表示通知已提交，不代表系统一定会展示。
+:::
+
 
 ## 全局变量
 
@@ -231,4 +262,3 @@ async function output() {
 因此当你定义了 `const let url` 全局变量后，变量会一直保留在运行环境中，导致多个脚本切换时，结果相同。
 
 解决方法：不要使用全局变量，将全局变量定义在函数内部。
-
