@@ -12,6 +12,7 @@ import { Aside, Code } from "@astrojs/starlight/components";
 - `tab`: 表示 Tab 键
 - `shift`: 表示 Shift 键
 - `backspace`: 表示删除键
+- `deleteForward`: 表示向右删除键，即物理键盘的 Delete 键，删除光标右侧的一个字符。详见下方 [向右删除 deleteForward](#向右删除-deleteforward)。
 - `dismissKeyboard`: 表示收起键盘
 - `moveCursorBackward`: 表示光标左移
 - `moveCursorForward`: 表示光标右移
@@ -26,6 +27,29 @@ import { Aside, Code } from "@astrojs/starlight/components";
 ```yaml
 action: space
 ```
+
+## 向右删除 deleteForward
+
+`deleteForward`: 与 `backspace` 方向相反，删除光标右侧的内容。
+
+- 点击一次，删除光标右侧的一个字符（emoji 按整体删除）。
+- 有选中文字时，删除选中的文字。
+- 输入中（有编码）时，删除编码中光标右侧的部分，不会删除已上屏的文字。
+- 光标右侧没有内容时，不做任何操作。
+
+长按连续删除需要同时配置 `repeatAction`；长按时始终逐字删除，不会像 `backspace` 那样加速成按词、按句删除。
+
+配置示例：
+
+```yaml
+action: deleteForward
+repeatAction: deleteForward
+```
+
+<Aside type="tip" title="注意">
+  - 需 TF >= 578，商店 >= 1.12.1 版本
+</Aside>
+
 
 ## 字符输入 character
 
