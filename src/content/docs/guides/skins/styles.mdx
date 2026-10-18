@@ -135,10 +135,14 @@ geometryBackground:
 
 通过设置 `buttonStyleType` 参数为 `systemImage`，使用 SF Symbols 图标作为样式。
 
+在 Android 平台可使用 `material:` 前缀使用 Material Icon，如：`meterial:add`。
+
 它包含以下参数：
 
 - `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
-- `systemImageName`：SF Symbols 图标名称（注意版本要求，部分 SF Symbols 需要在 iOS 高版本中才能使用）。
+- `systemImageName`：
+  - SF Symbols 图标名称（注意版本要求，部分 SF Symbols 需要在 iOS 高版本中才能使用）。
+  - 在 Android 平台，添加 `material:` 前缀可调用 Android Material Icon
 - `highlightSystemImageName`: 按下时的 SF Symbols 图标名称（可选，为空时使用 `systemImageName`）。
 - `contentMode`：设置图片的显示模式
     - 类型：枚举，默认为 `center`
@@ -229,4 +233,3 @@ geometryBackground:
 - `fontWeight`：设置文本粗细程度，同 `systemImage` 的 `fontWeight`。
 - `normalColor`：未按下时文本的颜色。
 - `highlightColor`：按下时文本的颜色。
-
