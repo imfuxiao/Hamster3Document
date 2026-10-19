@@ -3,7 +3,7 @@ title: 配置项索引（全部 Key）
 description: 元书键盘皮肤 YAML 文件中全部可用 Key、值类型与枚举值速查表
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Badge } from "@astrojs/starlight/components";
 
 本页是一份**速查索引**，按“文件 → 节点 → Key”的层级，列出键盘扩展在解析皮肤 YAML 时实际读取的**全部 Key**、
 它们的值类型、默认值以及枚举类型的全部取值。
@@ -551,6 +551,7 @@ import { Aside } from "@astrojs/starlight/components";
 | `shortcut` | `String` | `shortcutCommand` 的别名，`shortcutCommand` 优先。 |
 | `floatKeyboardType` | `String` | 显示指定名称的浮动键盘（名称需在 `config.yaml` 中定义）。 |
 | `sendKeys` | `String` | 向 RIME 发送按键序列。 |
+| `sendKeyEvent` <Badge text="Android" variant="success" size="small" /> | `String` | 模拟实体键盘按下一个组合键（如 `Ctrl+Home`），不经 RIME 直接发给当前应用；仅 Android 支持，iOS 解析为无动作。详见 [模拟实体键盘按键 sendKeyEvent](../action/#模拟实体键盘按键-sendkeyevent)。 |
 | `openURL` | `String` | 打开 URL。 |
 | `runScript` | `String` | 运行指定脚本。 |
 | `openScript` | `String` | 打开指定脚本页面。 |

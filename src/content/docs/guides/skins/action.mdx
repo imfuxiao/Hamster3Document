@@ -2,7 +2,7 @@
 title: 按键动作
 ---
 
-import { Aside, Code } from "@astrojs/starlight/components";
+import { Aside, Badge, Code } from "@astrojs/starlight/components";
 
 
 ## 标准动作
@@ -73,7 +73,11 @@ action: { symbol: '!' }
 
 ## 发送组合符号
 
-`sendKeys`: 表示发送一组符号给输入法引擎 rime。
+`sendKeys`: 表示发送一组符号给输入法引擎 RIME。
+
+<Aside type="caution" >
+此动作仅对 RIME 引擎起作用，并不能产生类似物理键盘中的 Ctrl+a 全选的效果。
+</Aside>
 
 - 当需要辅助键（如 Shift、Ctrl、Alt）时，可以在辅助键后加上 `+` 号，表示按下该辅助键。
 - 多个字符之间无需用 `+` 号连接，直接写在一起即可。
@@ -84,6 +88,74 @@ action: { symbol: '!' }
 action: { sendKeys: 'Shift+a' }
 action: { sendKeys: 'nihao' }
 ```
+
+## 模拟实体键盘按键 sendKeyEvent
+
+<Badge text="Android" variant="success" size="medium" />
+
+`sendKeyEvent`: 模拟在实体键盘上按下一个组合键。按键**不经过**输入法引擎 rime，直接发送给当前应用的输入框，效果和用外接键盘按下这个组合键相同。
+
+与 `sendKeys` 的区别：`sendKeys` 把按键发给 rime，由 rime 决定如何处理；`sendKeyEvent` 跳过 rime，由当前应用处理，适合光标移动、选择文字、应用内快捷键等操作。
+
+写法：
+
+- 用 `+` 连接键名，前面是修饰键，最后一个是主键，例如 `Ctrl+Shift+Left`。
+- 键名不区分大小写。
+- 一个动作只发送一个组合键。需要依次发送多个组合键时，请使用 [组合 Action](#组合-action)。
+
+修饰键：`Ctrl`（或 `Control`）、`Alt`（或 `Option`）、`Shift`、`Meta`（或 `Cmd`、`Command`、`Super`、`Win`）。
+
+主键：
+
+| 类别 | 键名 |
+| --- | --- |
+| 字母、数字 | `a` ~ `z`、`0` ~ `9` |
+| 标点 | `` ` `` `-` `=` `[` `]` `\` `;` `'` `,` `.` `/` |
+| 功能键 | `F1` ~ `F12` |
+| 方向与翻页 | `Left`、`Right`、`Up`、`Down`、`Home`、`End`、`PageUp`、`PageDown` |
+| 编辑 | `Tab`、`Enter`、`Esc`、`Backspace`、`Delete`（向右删除）、`Insert`、`Space` |
+
+也兼容 rime 的键名，例如 `Return`、`Escape`、`BackSpace`、`Page_Up`、`Page_Down`、`comma`、`period`。
+
+行为说明：
+
+- 输入中（有编码）时，先清空编码（编码不上屏），再发送按键。
+- 显示联想候选时，先关闭联想，再发送按键。
+- 输入焦点在键盘内的输入框（如 AI、搜索面板的输入框）时，不做任何操作。
+- 键名写错时，不做任何操作。
+- 最终效果由当前应用决定。例如单行输入框不处理 `Up` / `Down`；终端类应用会把 `Up` / `Down` 当作翻阅历史命令。
+
+配置示例：
+
+```yaml
+# 光标移到上一行 / 下一行
+action: { sendKeyEvent: 'Up' }
+action: { sendKeyEvent: 'Down' }
+
+# 光标移到全文开头 / 末尾
+action: { sendKeyEvent: 'Ctrl+Home' }
+action: { sendKeyEvent: 'Ctrl+End' }
+
+# 从光标处向上选中一行文字（按住 Shift 再按 ↑）
+action: { sendKeyEvent: 'Shift+Up' }
+
+# 应用内快捷键：全选、撤销
+action: { sendKeyEvent: 'Ctrl+A' }
+action: { sendKeyEvent: 'Ctrl+Z' }
+```
+
+长按连续发送需要同时配置 `repeatAction`：
+
+```yaml
+action: { sendKeyEvent: 'Down' }
+repeatAction: { sendKeyEvent: 'Down' }
+```
+
+<Aside type="caution" title="仅 Android">
+  - 此动作仅元书 Android 版支持。
+  - iOS 版无法识别此动作，使用此动作的按键在 iOS 上不会生效。跨平台共享的皮肤请避免使用。
+  - 需要 Shift 才能输入的符号需显式写出 Shift，例如 `!` 写作 `Shift+1`。
+</Aside>
 
 ## 切换 RIME Option 选项状态
 
