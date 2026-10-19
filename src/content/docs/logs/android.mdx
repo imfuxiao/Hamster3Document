@@ -2,6 +2,19 @@
 title: 元书 for Android 更新日志
 description: 元书输入法 Android 版版本更新历史记录
 ---
+## 0.1.0(13)
+
+- 修复：候选栏展开后触摸空白候选区域会误触底部按键
+- 修复：内置文本编辑器偶发触摸无响应
+- 修复：切换为手动分页方式后，键盘不生效
+- feat：自定义键盘底部安全区域。
+  - 功能：键盘设置-键盘底部安全区域
+  - 点击重置，可恢复为根据系统自动计算底部安全区域
+- feat: 新增 sendKeyEvent action（Android 独有）
+  - [功能文档](https://ihsiao.com/apps/hamster/v3/docs/guides/skins/action/#%E6%A8%A1%E6%8B%9F%E5%AE%9E%E4%BD%93%E9%94%AE%E7%9B%98%E6%8C%89%E9%94%AE-sendkeyevent)
+- feat: 新增 deleteForward action，删除光标右侧内容
+ - [功能文档](https://ihsiao.com/apps/hamster/v3/docs/guides/skins/action/#%E5%90%91%E5%8F%B3%E5%88%A0%E9%99%A4-deleteforward)
+
 ## 0.1.0(12)
 
 - feat：输入行为新增「密码框默认英文输入」开关。默认开，表示密码框下输入内容直接上屏，关闭后，输入内容会发送 RIME 引擎。
