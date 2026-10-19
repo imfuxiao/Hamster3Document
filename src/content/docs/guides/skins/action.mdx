@@ -185,6 +185,51 @@ action: { openURL: '#selectText' }
 action: { openURL: '#pasteboardContent#selectText' }
 ```
 
+### 打开元书内的文件或目录
+
+`openURL` 也可以打开元书主应用的 URL Scheme。通过 `finder` 页面配合 `action` 参数，可以直接跳转到「文件管理」中的指定目录或文件，方便在键盘上一键编辑皮肤、方案等配置文件。
+
+URL 格式：
+
+```
+hamster3://com.ihsiao.apps.hamster3/finder?action=<动作>&<参数>=<值>
+```
+
+支持以下三种动作：
+
+- `openSkinsFolder`：打开指定皮肤的目录。
+  - `name`：皮肤目录名称，即 `Skins` 目录下的子目录名。
+
+配置示例：
+
+```yaml
+action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openSkinsFolder&name=我的皮肤' }
+```
+
+- `openSkinsFile`：打开**当前使用的皮肤**下的文件，并直接进入文本编辑页面。
+  - `fileURL`：文件相对于当前皮肤目录的路径。
+
+配置示例：
+
+```yaml
+action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openSkinsFile&fileURL=jsonnet/Components/Utils.libsonnet' }
+```
+
+- `openAppFile`：打开应用目录下的任意文件，并直接进入文本编辑页面。
+  - `fileURL`：文件相对于应用根目录（即「文件管理」中的应用文件根目录，包含 `Rime`、`Skins` 等目录）的路径。
+
+配置示例：
+
+```yaml
+action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openAppFile&fileURL=Rime/default.custom.yaml' }
+```
+
+<Aside type="tip" title="注意">
+  - `openSkinsFolder`、`openAppFile` 需商店 >= 1.5.5 版本；`openSkinsFile` 需商店 >= 1.6.8 版本
+  - 打开文件时，会先进入文件所在目录，再打开文本编辑页面，编辑完成返回后停留在该目录。
+  - 路径以 `/` 分隔，不要以 `/` 开头。路径中包含中文、空格等特殊字符时，建议先进行 URL 编码（如空格写为 `%20`）。
+</Aside>
+
 ## 运行指定脚本
 
 `runScript`: 表示运行指定脚本。
