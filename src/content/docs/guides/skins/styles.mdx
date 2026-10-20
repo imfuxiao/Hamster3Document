@@ -135,15 +135,45 @@ geometryBackground:
 
 通过设置 `buttonStyleType` 参数为 `systemImage`，使用 SF Symbols 图标作为样式。
 
-在 Android 平台可使用 `material:` 前缀使用 Material Icon，如：`meterial:add`。
+在 Android 平台，SF Symbols 名称会自动映射为对应的 Material Icon；也可使用 `material:` 前缀直接指定 Material Icon，如：`material:add`。
 
 它包含以下参数：
 
 - `insets`：设置样式的内边距，在按键可视区域内进一步缩小样式的显示区域。
-- `systemImageName`：
-  - SF Symbols 图标名称（注意版本要求，部分 SF Symbols 需要在 iOS 高版本中才能使用）。
-  - 在 Android 平台，添加 `material:` 前缀可调用 Android Material Icon
-- `highlightSystemImageName`: 按下时的 SF Symbols 图标名称（可选，为空时使用 `systemImageName`）。
+- `systemImageName`：图标名称
+    - 类型：`String | { ios: String, android: String }`
+      - 字符串：SF Symbols 图标名称（注意版本要求，部分 SF Symbols 需要在 iOS 高版本中才能使用）。在 Android 平台，添加 `material:` 前缀可直接使用 Material Icon。
+      - 平台映射：按平台分别指定图标名称，键名必须为小写的 `ios`、`android`。
+        - `ios`：iOS 平台使用的 SF Symbols 图标名称
+        - `android`：Android 平台使用的 Material Icon 名称，无需添加 `material:` 前缀
+        - 映射中缺少当前平台的键，或其值为空时，视为未设置
+    - 示例：
+
+      ```yaml
+      # 字符串：iOS 使用 SF Symbols 的 globe；Android 自动映射为 Material Icon 的 language
+      systemImageName: globe
+
+      # 字符串 + material: 前缀：Android 直接使用 Material Icon 的 add（iOS 上无此图标）
+      systemImageName: material:add
+
+      # 平台映射：iOS 使用 delete.left，Android 使用 backspace
+      systemImageName: { ios: delete.left, android: backspace }
+
+      # 平台映射也可以写成多行
+      systemImageName:
+        ios: delete.left
+        android: backspace
+      ```
+- `highlightSystemImageName`: 按下时的图标名称（可选，未设置时使用 `systemImageName`）。
+    - 类型：同 `systemImageName`
+    - 示例：
+
+      ```yaml
+      systemImageName: { ios: shift, android: shift }
+      # iOS 按下时显示 shift.fill；
+      # Android 映射中没有 android 键，视为未设置，按下时回退使用 systemImageName 的 shift
+      highlightSystemImageName: { ios: shift.fill }
+      ```
 - `contentMode`：设置图片的显示模式
     - 类型：枚举，默认为 `center`
         - `scaleToFill`：拉伸填充
@@ -166,10 +196,25 @@ geometryBackground:
 - `normalColor`：未按下时图标的颜色。
 - `highlightColor`：按下时图标的颜色。
 
-配置示例：
+**配置示例：**
 
 ```yaml
+# 两个平台使用同一个名称（Android 自动映射为对应的 Material Icon）
+spaceForegroundStyle:
+  buttonStyleType: systemImage
+  systemImageName: space
+  fontSize: 16
+  normalColor: "#000000"
 
+# 按平台分别指定图标
+backspaceForegroundStyle:
+  buttonStyleType: systemImage
+  systemImageName: { ios: delete.left, android: backspace }
+  highlightSystemImageName: { ios: delete.left.fill, android: backspace }
+  fontSize: 18
+  fontWeight: medium
+  normalColor: "#000000"
+  highlightColor: "#ffffff"
 ```
 
 ### assetImage
