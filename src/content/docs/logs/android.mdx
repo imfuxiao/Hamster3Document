@@ -2,6 +2,21 @@
 title: 元书 for Android 更新日志
 description: 元书输入法 Android 版版本更新历史记录
 ---
+## 0.1.0(17)
+
+- 修复：文件提供器根目录图标显示为系统默认图标，改用元书 Logo
+- 修复：导出应用设置、导出日志改为保存到外部存储
+- 修复：脚本面板上方透出宿主内容，背景少一截
+- 修复：Rime 皮肤条件样式，通知功能在工具栏等区域显示异常
+- feat: 内嵌模式浮动候选窗
+  - 功能：开启内嵌模式后，「显示候选字栏」选项选择「浮动倒序」或者「浮动顺序」
+- feat: 新增 Android 独有快捷指令 `#rimeDeploy` / `#rimeSync`
+  - [功能文档](/apps/hamster/v3/docs/guides/skins/action/#rime-部署与同步)
+- feat: openAppFile 支持打开指定目录
+  - 打开目录示例：`action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openAppFile&fileURL=RimeUserData/flypy/build' }`
+  - [功能文档](/apps/hamster/v3/docs/guides/skins/action/#打开元书内的文件或目录)
+
+
 ## 0.1.0(16)
 
 - 修复：键盘剪贴板内容变化后列表不刷新，需重新打开页面或切换 Tab 后才显示新的内容
