@@ -287,18 +287,22 @@ action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openSkinsF
 action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openSkinsFile&fileURL=jsonnet/Components/Utils.libsonnet' }
 ```
 
-- `openAppFile`：打开应用目录下的任意文件，并直接进入文本编辑页面。
-  - `fileURL`：文件相对于应用根目录（即「文件管理」中的应用文件根目录，包含 `Rime`、`Skins` 等目录）的路径。
+- `openAppFile`：打开应用目录下的任意文件或目录。指向文件时直接进入文本编辑页面；指向目录时只打开该目录。
+  - `fileURL`：文件或目录相对于应用根目录（即「文件管理」中的应用文件根目录，包含 `Rime`、`Skins` 等目录）的路径。
 
 配置示例：
 
 ```yaml
+# 打开文件
 action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openAppFile&fileURL=Rime/default.custom.yaml' }
+# 打开目录
+action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openAppFile&fileURL=Rime/lua' }
 ```
 
 <Aside type="tip" title="注意">
   - `openSkinsFolder`、`openAppFile` 需商店 >= 1.5.5 版本；`openSkinsFile` 需商店 >= 1.6.8 版本
   - 打开文件时，会先进入文件所在目录，再打开文本编辑页面，编辑完成返回后停留在该目录。
+  - `openAppFile` 打开目录时，该目录必须已存在，否则按文件处理。
   - 路径以 `/` 分隔，不要以 `/` 开头。路径中包含中文、空格等特殊字符时，建议先进行 URL 编码（如空格写为 `%20`）。
 </Aside>
 
@@ -399,6 +403,34 @@ action: { keyboardType: '自定义键盘名称' }
 ```yaml
 action: { shortcut: '#candidatesBarStateToggle' }
 ```
+
+### RIME 部署与同步
+
+<Badge text="Android" variant="success" size="medium" />
+
+以下快捷指令仅元书 Android 版支持，用于在键盘内直接发起 RIME 部署或同步，无需切换到元书 App：
+
+- `#rimeDeploy`：RIME 部署。执行一次 RIME 全量部署，效果与在元书 App 中点击「部署」相同。
+- `#rimeSync`：RIME 同步。先执行一次全量部署，再同步 RIME 用户数据，效果与在元书 App 中点击「同步」相同。
+
+行为说明：
+
+- 开始时会丢弃正在输入的编码（编码不上屏），键盘显示「RIME 部署中…」或「RIME 同步中…」，期间软键盘不可输入；外接实体键盘的按键直接交给当前应用。
+- 已有部署、同步等任务正在进行时，再次触发会被忽略。
+- 成功时不提示；失败时键盘会提示「RIME 部署失败」或「RIME 同步失败」及原因。
+- 任务开始后，即使收起键盘也会继续执行直到完成。
+
+配置示例：
+
+```yaml
+action: { shortcut: '#rimeDeploy' }
+action: { shortcut: '#rimeSync' }
+```
+
+<Aside type="caution" title="仅 Android">
+  - 这两个快捷指令仅元书 Android 版支持。
+  - iOS 版无法识别，使用它们的按键在 iOS 上不会生效。跨平台共享的皮肤请避免使用。
+</Aside>
 
 ## 切换 RIME 方案
 
