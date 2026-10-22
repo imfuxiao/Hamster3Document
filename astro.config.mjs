@@ -154,6 +154,7 @@ export default defineConfig({
           label: "更新日志",
           items: [
             { label: "元书 for iOS", slug: "logs" },
+            { label: "元书 for iOS (TestFlight)", slug: "logs/ios-testflight" },
             { label: "元书 for Android", slug: "logs/android" },
             { label: "元书 for macOS", slug: "logs/macos" },
           ],
