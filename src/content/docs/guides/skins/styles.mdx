@@ -131,6 +131,90 @@ geometryBackground:
   shadowOpacity: 0.8
 ```
 
+#### 渐变色示例
+
+以下示例以键盘背景样式 `keyboardBackgroundStyle` 为例，按键背景样式的写法相同。
+
+`colorStartPoint` 与 `colorEndPoint` 使用单位坐标：左上角为 `{ x: 0, y: 0 }`，右下角为 `{ x: 1, y: 1 }`。
+
+各示例下方为在 Android 上的实际效果（基于默认皮肤，仅截取按键区域）。
+
+**线性渐变（`axial`）：从上到下**
+
+```yaml
+keyboardBackgroundStyle:
+  buttonStyleType: geometry
+  normalColor:          # 两个及以上颜色为渐变色，单个字符串为纯色
+    - "#4A90E2"
+    - "#9013FE"
+  colorLocation: [0, 1] # 可省略，省略时颜色均匀分布
+  colorStartPoint: { x: 0.5, y: 0 } # 顶部中间
+  colorEndPoint: { x: 0.5, y: 1 }   # 底部中间
+  colorGradientType: axial
+```
+
+![线性渐变：从上到下](../images/skins/gradient-axial.png)
+
+**线性渐变（`axial`）：左上到右下，三色**
+
+```yaml
+keyboardBackgroundStyle:
+  buttonStyleType: geometry
+  normalColor:
+    - "#FF9A9E"
+    - "#FAD0C4"
+    - "#A1C4FD"
+  colorLocation: [0, 0.4, 1] # 中间色位于 40% 处
+  colorStartPoint: { x: 0, y: 0 }
+  colorEndPoint: { x: 1, y: 1 }
+  colorGradientType: axial
+```
+
+![线性渐变：左上到右下](../images/skins/gradient-axial-diagonal.png)
+
+**辐射状渐变（`radial`）：从中心向四周**
+
+```yaml
+keyboardBackgroundStyle:
+  buttonStyleType: geometry
+  normalColor:
+    - "#FFFFFFCC" # 8 位颜色为 RRGGBBAA，CC 约为 80% 不透明
+    - "#2C3E50"
+  colorLocation: [0, 1]
+  colorStartPoint: { x: 0.5, y: 0.5 } # 圆心
+  colorEndPoint: { x: 1, y: 1 }       # 决定横向与纵向半径
+  colorGradientType: radial
+```
+
+![辐射状渐变](../images/skins/gradient-radial.png)
+
+**锥形渐变（`conic`）：绕中心旋转一周**
+
+```yaml
+keyboardBackgroundStyle:
+  buttonStyleType: geometry
+  normalColor:          # 首尾颜色相同，接缝处过渡更自然
+    - "#FF5F6D"
+    - "#FFC371"
+    - "#47E891"
+    - "#FF5F6D"
+  colorLocation: [0, 0.33, 0.66, 1]
+  colorStartPoint: { x: 0.5, y: 0.5 } # 旋转中心
+  colorEndPoint: { x: 1, y: 0.5 }     # 起始方向：指向右侧
+  colorGradientType: conic
+```
+
+![锥形渐变](../images/skins/gradient-conic.png)
+
+<Aside>
+- `colorLocation` 的元素个数必须与颜色个数相同才会生效，否则颜色均匀分布。
+- 不同渐变类型中，起止点的含义不同：
+    - `axial`：从起点到终点为渐变方向。
+    - `radial`：起点为圆心；终点与圆心在 x、y 方向上的距离分别为横向、纵向半径，因此可以形成椭圆。终点的 x 或 y 不要与圆心相同，否则该方向的半径接近 0。
+    - `conic`：起点为旋转中心，终点只决定起始方向。
+- `highlightColor` 同样支持数组形式，与 `normalColor` 共用 `colorLocation`、起止点与渐变类型。
+</Aside>
+
 ### systemImage
 
 通过设置 `buttonStyleType` 参数为 `systemImage`，使用 SF Symbols 图标作为样式。
