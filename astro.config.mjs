@@ -50,6 +50,10 @@ export default defineConfig({
           slug: "guides/intro",
         },
         {
+          label: "元书劝退指南",
+          slug: "guides/do-not-use-hamster",
+        },
+        {
           label: "开启元书键盘",
           slug: "guides/enable-keyboard",
         },
