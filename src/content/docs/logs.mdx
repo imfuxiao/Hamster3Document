@@ -12,8 +12,9 @@ description: 元书输入法版本更新历史记录
 - feat: 「键盘高度设置功能」调整。键盘总高度=设置高度+皮肤中工具栏高度+皮肤中预编辑区高度（关闭内嵌模式）
 - feat: openAppFile 支持打开指定目录
   - 打开目录示例：`action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openAppFile&fileURL=RimeUserData/flypy/build'}`
-  - [功能文档](/apps/hamster/v3/docs/guides/skins/action/#打开元书内的文件或目录)
-- feat: 皮肤 systemImageName/highlightSystemImageName 支持 { ios, android } 平台映射
+- feat: 皮肤图标名支持平台映射 `{ ios, android }`
+  - 示例：`systemImageName: { ios: delete.left, android: backspace }`
+  - [相关文档](/apps/hamster/v3/docs/guides/skins/styles/#systemimage)
 - feat: 文件管理长按菜单新增压缩/解压缩选项
 - feat: 清除 rime 联想词模式由 Escape 键改为 Backspace 键
 - feat: 内嵌功能优化
