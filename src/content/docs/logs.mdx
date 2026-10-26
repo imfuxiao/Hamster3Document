@@ -2,6 +2,29 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
+## 1.12.2(2026-10-27)
+
+- fix: 修复符号栏关闭按键图标被压缩变形
+- fix: 皮肤在自定义字体下按键文字位置垂直偏下
+- fix: 常用语多选滚动后勾选状态丢失
+- feat: 「手动分页」功能支持隐藏候选栏展开按键
+- feat: 「内嵌模式」显示预编辑内容为「首个候选项」时支持隐藏候选栏中首个候选项
+- feat: 「键盘高度设置功能」调整。键盘总高度=设置高度+皮肤中工具栏高度+皮肤中预编辑区高度（关闭内嵌模式）
+- feat: openAppFile 支持打开指定目录
+  - 打开目录示例：`action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder?action=openAppFile&fileURL=RimeUserData/flypy/build' }`
+  - [功能文档](/apps/hamster/v3/docs/guides/skins/action/#打开元书内的文件或目录)
+- feat: 皮肤 systemImageName/highlightSystemImageName 支持 { ios, android } 平台映射
+- feat: 文件管理长按菜单新增压缩/解压缩选项
+- feat: 清除 rime 联想词模式由 Escape 键改为 Backspace 键
+- feat: 内嵌功能优化
+- feat: 「划动调整预编辑光标位置」功能优化
+- feat: 新增「剪贴板提示条」「提取验证码」功能
+  - 系统剪贴板变化后，可以在工具栏上显示最新一条的剪贴板中内容，或者显示内容中提取到的验证码。
+  - 功能位置：剪贴板页面，设置，必须开启键盘监视系统剪贴板选项，开启后可打开「剪贴板提示条」，「自动提取验证」选项。
+- feat: 常用语、剪贴板新增「自动排序」开关，通过此选项可固定常用语、剪贴板中顺序
+  - 常用语中选项位置：常用语页面右侧菜单，排序方式：选择固定顺序
+  - 剪贴板中选项位置：剪贴板页面，设置，自动排序开关，关闭后有效
+
 ## 1.12.1(2026-10-20)
 
 - fix: iPad 下预测关闭安键不显示
