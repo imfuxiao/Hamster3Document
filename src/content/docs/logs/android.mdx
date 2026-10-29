@@ -2,6 +2,23 @@
 title: 元书 for Android 更新日志
 description: 元书输入法 Android 版版本更新历史记录
 ---
+## 0.1.0(39)
+
+- fix: 键盘性能面板「发送」上屏到宿主并关闭面板
+- feat: emoji 键盘类型提供自定义功能
+  - 功能说明：
+    - 当 config.yaml 中为 emojis 键盘类型设置自定义的 emoji 键盘时，则使用自定义的键盘，而非内置的 emoji 键盘。
+    - 新增 `action: emojiKeyboardLockStateToggle` 用于切换 emoji 键盘锁定状态，注意：锁定状态对于内置 emoji 键盘与自定义 emoji 键盘是共用的。
+      <br />
+      [相关文档](http://localhost:4321/apps/hamster/v3/docs/guides/skins/action/#%E6%A0%87%E5%87%86%E5%8A%A8%E4%BD%9C)
+    - 新增条件样式 key: `$emojiKeyboardLockState`。
+      <br />
+      [相关文档](/apps/hamster/v3/docs/guides/skins/parameters/#conditionkey)
+- feat: 新增悬浮键盘窗口功能
+  - 功能说明
+    - 仅 Android 平台支持
+    - 开启方式：通过新增指令 `#floatingKeyboardWindowStateToggle` 切换悬浮状态
+
 ## 0.1.0(36)
 
 - 优化

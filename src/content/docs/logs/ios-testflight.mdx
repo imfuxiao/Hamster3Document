@@ -1,6 +1,23 @@
 ---
 title: 元书 for iOS TestFlight 更新日志
 ---
+## 4.0.0 (602)
+
+- fix: 剪贴板监听读取「文件」App 复制的文件夹时键盘卡顿
+- fix: 使用键盘内置调整键盘高度后，内置符号页比主键盘矮
+  - 注意：如果皮肤中自制 symbolic 类型符号键盘比主键盘矮，请检查 keyboardHeight 的值。
+    <br />
+    键盘总高度 = keyboardHeight + toolbarHeight + preeditHeight（关闭内嵌）
+- feat: emoji 键盘类型提供自定义功能
+  - 功能说明：
+    - 当 config.yaml 中为 emojis 键盘类型设置自定义的 emoji 键盘时，则使用自定义的键盘，而非内置的 emoji 键盘。
+    - 新增 `action: emojiKeyboardLockStateToggle` 用于切换 emoji 键盘锁定状态，注意：锁定状态对于内置 emoji 键盘与自定义 emoji 键盘是共用的。
+      <br />
+      [相关文档](http://localhost:4321/apps/hamster/v3/docs/guides/skins/action/#%E6%A0%87%E5%87%86%E5%8A%A8%E4%BD%9C)
+    - 新增条件样式 key: `$emojiKeyboardLockState`。
+      <br />
+      [相关文档](/apps/hamster/v3/docs/guides/skins/parameters/#conditionkey)
+
 ## 4.0.0 (599)
 
 - 优化：「键盘性能」功能优化（部分指标与 Android 平台对齐）

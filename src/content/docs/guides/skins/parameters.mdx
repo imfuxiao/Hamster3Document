@@ -277,9 +277,10 @@ foregroundStyle:
 
 ### conditionKey
 
-类型：`'$symbolicKeyboardLockState' | 'rime${optionName}'`
+类型：`'$symbolicKeyboardLockState' | '$emojiKeyboardLockState' | 'rime${optionName}'`
 
 - `$symbolicKeyboardLockState`：表示符号键盘的锁定状态
+- `$emojiKeyboardLockState`：表示 Emoji 键盘的锁定状态，可配合 `emojiKeyboardLockStateToggle` 动作，在自定义 `emojis` 键盘的锁定键上显示锁定 / 解锁图标
 - `rime${optionName}`：表示 RIME option 状态，比如 `rime$ascii_mode` 表示 `ascii_mode` 选项的状态
 
 ## 浮动键盘相关参数

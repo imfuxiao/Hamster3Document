@@ -19,6 +19,7 @@ import { Aside, Badge, Code } from "@astrojs/starlight/components";
 - `returnPrimaryKeyboard`: 表示返回主键盘。主键盘指 `pinyin` 中文键盘或者 `alphabetic` 英文键盘类型。
 - `returnLastKeyboard`: 表示返回上一个键盘。功能会按键盘切换顺序的逆序，返回上一个使用过的键盘类型。注意：当键盘切换到中文键盘 `pinyin` 时，会清空键盘切换栈，此时再触发返回上一个键盘动作无效。
 - `symbolicKeyboardLockStateToggle`: 表示符号键盘锁定状态切换。锁定状态下，点击符号键盘中的符号键不会切换回主键盘。符号键盘指类型为 `symbolic` 的键盘。
+- `emojiKeyboardLockStateToggle`: 表示 Emoji 键盘锁定状态切换。锁定状态下，点击 Emoji 键盘中的按键不会切换回主键盘。与内置 Emoji 键盘菜单中的「锁定 / 解锁」是同一个状态，皮肤自定义的 `emojis` 键盘与内置 Emoji 键盘都受它控制。
 - `settings`: 表示打开主应用界面。
 - `nextKeyboard`：表示切换到 iOS 系统键盘列表中的下一个键盘。
 
@@ -345,7 +346,7 @@ action: { runScriptSilently: '脚本名称' }
 - `alphabetic`: 英文键盘
 - `symbolic`: 符号键盘
 - `numeric`: 数字键盘
-- `emojis`: Emoji 键盘
+- `emojis`: Emoji 键盘。皮肤 `config.yaml` 中定义了 `emojis` 键盘时使用皮肤的键盘，否则使用内置 Emoji 键盘，参见[皮肤结构](/apps/hamster/v3/docs/guides/skins/structure/)。
 
 配置示例：
 

@@ -63,6 +63,8 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 <Aside type="caution">
 `numberPad` 与 `numeric` 两种键盘类型在查找配置文件时都会读取 `numeric` 这一项。
 
+`emojis` 未声明（或当前设备 / 方向取不到、键盘文件不可用）时使用内置 Emoji 键盘；声明后作为普通键盘加载，按键后是否返回主键盘由 Emoji 锁定状态决定（`emojiKeyboardLockStateToggle` / `$emojiKeyboardLockState`）。
+
 最终加载的文件路径为 `<皮肤名>/<light|dark>/<文件名>.yaml`，深浅色由系统外观决定。
 </Aside>
 
@@ -536,7 +538,7 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 `backspace`、`command`、`control`、`dictation`、`dismissKeyboard`、`escape`、`function`、
 `moveCursorBackward`、`moveCursorForward`、`nextKeyboard`、`option`、`settings`、`space`、
 `systemSettings`、`tab`、`shift`、`enter`、`returnPrimaryKeyboard`、`returnLastKeyboard`、
-`symbolicKeyboardLockStateToggle`、`none`
+`symbolicKeyboardLockStateToggle`、`emojiKeyboardLockStateToggle`、`none`
 
 ### 6.2 对象形式
 
@@ -613,7 +615,7 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 | `rimeNotificationType` | `optionChanged`、`schemaChanged` | 无 |
 | `animationType` | `scale`、`cartoon`、`physics` | 无（必填） |
 | `zPosition`（cartoon 动画） | `above`、`below` | `above` |
-| `conditionKey` | `$symbolicKeyboardLockState`、`$returnKeyType`、`rime$<optionName>` | 无（必填） |
+| `conditionKey` | `$symbolicKeyboardLockState`、`$emojiKeyboardLockState`、`$returnKeyType`、`rime$<optionName>` | 无（必填） |
 | `text` 特殊变量 | `$rimePreedit`、`$rimeCandidate`、`$rimeCandidateComment`、`$rimeSchemaName`、`$returnKeyType` | 无 |
 | 键盘类型名 | `alphabetic`、`pinyin`、`emojis`、`images`、`numeric`、`numberPad`、`symbolic`、自定义名称 | 无 |
 
