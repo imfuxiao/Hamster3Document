@@ -52,15 +52,16 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 | `<键盘类型>` | `{ phone: DeviceEntry, pad: DeviceEntry }` | 键盘类型名见下表；也可使用自定义名称（供浮动键盘 / `floatKeyboardType` 引用）。 |
 | `<键盘类型>.phone.portrait` | `String` | 手机竖屏使用的键盘文件名（不含 `.yaml` 后缀）。 |
 | `<键盘类型>.phone.landscape` | `String` | 手机横屏使用的键盘文件名。 |
-| `<键盘类型>.phone.floating` | `String` | 手机悬浮键盘窗口使用的键盘文件名（仅 Android）。 |
+| `<键盘类型>.phone.floating` | `String` | 手机悬浮键盘窗口使用的键盘文件名（仅 Android）；未声明时使用 `phone.portrait`。 |
 | `<键盘类型>.pad.portrait` | `String` | 平板（iPad）竖屏使用的键盘文件名。 |
 | `<键盘类型>.pad.landscape` | `String` | 平板横屏使用的键盘文件名。 |
-| `<键盘类型>.pad.floating` | `String` | 平板浮动键盘（iPad 浮动键盘 / Android 悬浮键盘窗口）使用的键盘文件名。 |
+| `<键盘类型>.pad.floating` | `String` | 平板浮动键盘（iPad 浮动键盘 / Android 悬浮键盘窗口）使用的键盘文件名；未声明时使用 `phone.portrait`。 |
 
 设备键 `phone` / `pad` 由 iOS 与 Android 共用（严格小写）。选取规则：
 
-- 设备键存在时只在其中查找当前方向，缺失的方向显示空白；
-- 平板上没有 `pad` 时改用 `phone` 的配置（浮动时取 `phone.portrait`）；
+- 设备键存在时只在其中查找当前方向（竖屏 / 横屏），缺失的方向显示空白；
+- 平板上没有 `pad` 时改用 `phone` 的配置；
+- 浮动时缺 `floating` 不会显示空白：平板改用 `phone.portrait`，手机（仅 Android）改用 `phone.portrait`；
 - 旧键 `iPhone` / `iPad` 仍然兼容但不再推荐；同时写了新旧两个键时只读新键（只有写成映射 `{ … }` 的才算数），不会按方向回退到旧键。
 
 详见[键盘皮肤结构 · 设备与方向](/apps/hamster/v3/docs/guides/skins/structure/#设备与方向)。

@@ -85,9 +85,10 @@ pinyin:
 
 选取规则：
 
-1. 平板优先读取 `pad`；`pad` 存在时只在 `pad` 中查找当前方向，找不到即为缺失。
-2. 平板上没有 `pad`（以及旧键 `iPad`）时，改用 `phone` 的配置；处于浮动状态时使用 `phone` 的 `portrait`。
-3. 手机读取 `phone`，处于悬浮键盘窗口（仅 Android）时读取 `floating`。
+1. 平板优先读取 `pad`；`pad` 存在时只在 `pad` 中查找当前方向（竖屏 / 横屏），找不到即为缺失。
+2. 平板上没有 `pad`（以及旧键 `iPad`）时，改用 `phone` 的配置。
+3. 平板处于浮动状态时读取 `pad` 的 `floating`；没有声明时使用 `phone` 的 `portrait`（浮动键盘与手机竖屏同宽）。
+4. 手机读取 `phone`，处于悬浮键盘窗口（仅 Android）时读取 `floating`；没有声明时使用 `portrait`。
 
 :::note[旧写法 `iPhone` / `iPad`]
 早期皮肤使用的 `iPhone` / `iPad` 仍然兼容，分别等同于 `phone` / `pad`，但不再推荐使用：
@@ -109,7 +110,8 @@ pinyin:
 如果皮肤没有提供某种设备下、某种情况下的键盘文件，则键盘会显示空白内容（`emojis` 除外，见上文）。
 
 举例：如上面示例中，假设没有提供 `phone.landscape` 配置，那么在手机横屏时，键盘会变为空白；
-假设整个 `pad` 都没有提供，那么在平板上会使用 `phone` 的配置。
+假设整个 `pad` 都没有提供，那么在平板上会使用 `phone` 的配置；
+假设没有提供 `pad.floating`，那么在平板浮动时会使用 `phone.portrait`。
 
 除了上面的键盘类型外，`config.yaml`还有以下属性：
 
