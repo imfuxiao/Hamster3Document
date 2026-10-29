@@ -44,7 +44,9 @@ import { FileTree, Icon } from '@astrojs/starlight/components';
 ## config.yaml
 
 `config.yaml` 文件是一款皮肤的基础配置文件，此文件用来描述皮肤中包含了哪些键盘，
-并描述了在不同情况下（如横屏，纵屏）、不同设备下（如 iPhone，iPad）使用那些具体的配置文件。
+并描述了在不同情况下（如横屏，纵屏）、不同设备下（如手机，平板）使用那些具体的配置文件。
+
+同一份 `config.yaml` 在 iOS 与 Android 上通用。
 
 键盘类型分为几种：
 
@@ -58,19 +60,42 @@ import { FileTree, Icon } from '@astrojs/starlight/components';
 
 ```yaml
 pinyin:
-  iPad:
+  pad:
     floating: "pinyinPortrait"
     landscape: "iPadPinyinLandscape"
     portrait: "iPadPinyinPortrait"
-  iPhone:
+  phone:
     landscape: "pinyinLandscape"
     portrait: "pinyinPortrait"
 ```
 
-在上面示例中，如果当前设备为 iOS 并处于纵屏模式下：
+在上面示例中，如果当前设备为手机并处于纵屏模式下：
 
 - 当设备为浅色模式时，使用 `light/pinyinPortrait.yaml`的内容，
 - 反之，使用 `dark/pinyinPortrait.yaml` 的内容。
+
+### 设备与方向
+
+每种键盘类型下按设备分组，每个设备下按方向指定键盘文件名（不含 `.yaml` 后缀）：
+
+| 设备键 | 适用设备 | 方向键 |
+| --- | --- | --- |
+| `phone` | iPhone、Android 手机 | `portrait`（竖屏）、`landscape`（横屏）、`floating`（悬浮键盘窗口，仅 Android） |
+| `pad` | iPad、Android 平板 / 折叠屏展开 | `portrait`（竖屏）、`landscape`（横屏）、`floating`（iPad 浮动键盘 / Android 悬浮键盘窗口） |
+
+选取规则：
+
+1. 平板优先读取 `pad`；`pad` 存在时只在 `pad` 中查找当前方向，找不到即为缺失。
+2. 平板上没有 `pad`（以及旧键 `iPad`）时，改用 `phone` 的配置；处于浮动状态时使用 `phone` 的 `portrait`。
+3. 手机读取 `phone`，处于悬浮键盘窗口（仅 Android）时读取 `floating`。
+
+:::note[旧写法 `iPhone` / `iPad`]
+早期皮肤使用的 `iPhone` / `iPad` 仍然兼容，分别等同于 `phone` / `pad`，但不再推荐使用：
+
+- 同一键盘类型下同时写了 `phone` 与 `iPhone`（或 `pad` 与 `iPad`）时，只读取新键，不读旧键；
+- 设备键必须是映射（`{ portrait: …, landscape: … }`）才有效，写成其他值时视为未提供；
+- 设备键区分大小写，`Phone`、`PAD` 等写法无效。
+:::
 
 在一款皮肤中，拼音键盘是必须提供的，其余键盘是可选的：
 
@@ -83,7 +108,8 @@ pinyin:
 
 如果皮肤没有提供某种设备下、某种情况下的键盘文件，则键盘会显示空白内容（`emojis` 除外，见上文）。
 
-举例：如上面示中中，假设没有提供 `iPhone/landscape` 配置，那么在 iPhone 横屏时，键盘会变为空白。
+举例：如上面示例中，假设没有提供 `phone.landscape` 配置，那么在手机横屏时，键盘会变为空白；
+假设整个 `pad` 都没有提供，那么在平板上会使用 `phone` 的配置。
 
 除了上面的键盘类型外，`config.yaml`还有以下属性：
 
@@ -210,4 +236,3 @@ IMG2:
 | bottom | 浮点 | 距离底部边框的距离，默认为0。 |
 | left | 浮点 | 距离左侧边框的距离，默认为0。 |
 | right | 浮点 | 距离右侧边框的距离，默认为0。 |
-
