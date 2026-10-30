@@ -57,6 +57,27 @@ export default defineConfig({
           label: "开启元书键盘",
           slug: "guides/enable-keyboard",
         },
+        // 应用设置指南：需要在侧栏展示时，取消下面整段的注释。
+        /*
+        {
+          label: "应用设置指南",
+          items: [
+            { label: "从问题找设置", slug: "guides/settings/overview" },
+            { label: "键盘、候选栏与预编辑", slug: "guides/settings/keyboard" },
+            { label: "输入行为与符号", slug: "guides/settings/input-behavior" },
+            { label: "按键音与震动", slug: "guides/settings/sound-haptics" },
+            { label: "皮肤与字体", slug: "guides/settings/skins-fonts" },
+            { label: "工具栏、菜单与符号栏", slug: "guides/settings/toolbar-menu" },
+            { label: "剪贴板与验证码", slug: "guides/settings/clipboard" },
+            { label: "输入方案与 RIME", slug: "guides/settings/rime" },
+            { label: "文件传输与同步", slug: "guides/settings/files-sync" },
+            { label: "备份、恢复与重置", slug: "guides/settings/backup-reset" },
+            { label: "常用语、脚本与 AI", slug: "guides/settings/extensions" },
+            { label: "常见设置问题", slug: "guides/settings/faq" },
+          ],
+          collapsed: false,
+        },
+        */
         {
           label: "输入方案",
           slug: "guides/schema",
