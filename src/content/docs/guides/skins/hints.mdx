@@ -1,0 +1,435 @@
+---
+title: 按键提示的尺寸与对齐
+description: 想把提示变大、留出空白、上下移动或让底部对齐？从效果出发，找到该改的配置。
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+调整按键提示时，先分清三件事：
+
+- **改大小**：用 `size`。
+- **加留白**：用 `insets`；写在不同位置，影响的内容不同。
+- **移动整个长按面板**：用 Grid 的 `offset`。
+
+**变大、留白和移动不是一回事。** 例如，把提示加高，默认只会让它向上长高，不会改变它的底部位置。
+
+## 你用的是哪种提示？
+
+| 类型 | 你看到的效果 | 按键上要配置的字段 |
+| --- | --- | --- |
+| 普通 hint | 按下 Q 时，弹出一个较大的 Q | `hintStyle` |
+| 单行 HintSymbols | 长按后，出现一排可选符号 | `hintSymbolsStyle` |
+| HintSymbolsGrid，简称 Grid | 长按后，出现一行或多行可选符号 | `hintSymbolsGridStyle` |
+
+Grid **不一定是多行**。只配置一行时，它也能做成横向符号条。
+
+普通 hint 受应用的「按键提示」开关控制。长按面板出现后，普通 hint 会收起。
+如果同时配置两种长按样式，**有效的 Grid 优先显示**；Grid 未配置或无效时，才使用旧版单行 HintSymbols。
+
+## 想调整什么？先查这张表
+
+| 想要的效果 | 应该改哪里 | 注意 |
+| --- | --- | --- |
+| 普通 hint 更宽、更高 | hint 样式的 `size` | 控制整个提示的大小 |
+| 长按面板里的每个符号格更大 | HintSymbols / Grid 的 `size` | 控制每一格，不是整块面板 |
+| 符号四周多留一点空白 | HintSymbols / Grid 的 `insets` | 面板会随之变大，底部默认不动 |
+| 格子之间更疏一些 | Grid 的 `spacing` | 旧版 HintSymbols 不支持 |
+| 整块长按面板向上或向下移 | Grid 的 `offset.y` | 负数向上，正数向下 |
+| 只把文字或高亮背景收小一点 | 对应文字 / 高亮背景样式的 `insets` | 不改变整个面板的大小和位置 |
+| 普通 hint 与长按面板底部对齐 | Grid 不设 `anchor`，`offset.y` 设为 `0` | 不需要把两者的高度设成一样 |
+| 长按时默认选中某个符号 | `selectedIndex` 或 Grid 的 `selected` | 不要为了选中某一格而设置 `anchor` |
+
+## 底部对齐：记住一条规则
+
+**默认情况下，三种提示的底部都贴着按键「布局区域」的上沿。**
+
+这里的「布局区域」是布局系统分给按键的整块空间，不一定等于肉眼看到的键帽。
+按键样式的 `bounds` 可以把键帽画得更窄、更矮，但不会因此改变提示底部的对齐位置。
+
+举个例子：普通 hint 高 60，长按面板高 52。它们都放在同一个按键上方时：
+
+- **底部在同一位置**。
+- 普通 hint 更高，所以它的顶部比长按面板高 8 点。
+- 把 hint 高度改成 80，它会继续向上长高，底部仍然不动。
+
+<Aside type="note" title="这里说的是正常显示位置">
+这条规则适用于已统一底部定位的应用版本，且提示尚未上滑跟随、顶部空间充足。
+Grid 的显式 `anchor`、非零 `offset.y` 会主动改变位置；顶部空间不足时，应用也可能把提示向下挪。
+这些例外不影响正常状态下的默认规则。
+</Aside>
+
+### “底部对齐”指的是整个提示的边界
+
+提示内部还会绘制背景、文字、图标和阴影。
+
+因此，即使两个提示的**外层边界**对齐，图片的透明留白、背景内缩或阴影也可能让它们**看起来**不齐。
+下文会区分「面板内边距」与「图层内边距」；排查时先确认你比较的是哪一层。
+
+## 1. 普通 hint：调整一个大字符气泡
+
+普通 hint 的 `size` 就是**整个提示**的宽高：
+
+```yaml
+qButton:
+  action: { character: q }
+  hintStyle: qHint
+
+qHint:
+  size: { width: 50, height: 60 }
+  backgroundStyle: hintBackground
+  foregroundStyle: qLabel
+```
+
+这里得到宽 50、高 60 的提示。`hintBackground` 和 `qLabel` 是背景、文字样式名，文末有完整定义。
+
+### 不写 size 会怎样？
+
+使用按键的**可视区域尺寸**。例如，按键布局高 54，但通过 `bounds` 把可视区域设成高 44，hint 默认也高 44。
+
+注意：它只是借用这个**大小**，底部仍然贴着按键**布局区域**的上沿。
+
+### 想让文字离边缘远一点？
+
+把 `insets` 写在文字样式上：
+
+```yaml
+qLabel:
+  buttonStyleType: text
+  text: Q
+  fontSize: 28
+  normalColor: "#222222"
+  insets: { top: 4, bottom: 4, left: 6, right: 6 }
+```
+
+这会收小文字的绘制区域，提示外框不变。
+
+普通 hint 有两个限制：
+
+- 在 `qHint` 顶层写 `insets`，**不会像长按面板那样自动增加四周留白、撑大外框**。
+- 在 `qHint` 顶层写 `offset`，**不能移动整个提示**；这个定位参数只由 Grid 支持。
+
+如果只是想让背景看起来小一点，可以在背景样式上设置 `insets`，但这仍然不是移动整个提示。
+
+## 2. 单行 HintSymbols：调整一排符号
+
+单行 HintSymbols 的 `size` 是**每一个符号格**的大小：
+
+```yaml
+qButton:
+  hintSymbolsStyle: qSymbols
+
+qSymbols:
+  symbolStyles: [symbol1, symbol2, symbol3]
+  size: { width: 36, height: 42 }
+  insets: { top: 5, bottom: 5, left: 5, right: 5 }
+  selectedIndex: 0
+  backgroundStyle: hintBackground
+  selectedBackgroundStyle: selectedBackground
+```
+
+可以把这块面板理解成：**先排好 3 个格子，再给四周各加 5 点留白**。
+
+- 宽度：`3 × 36 + 5 + 5 = 118`。
+- 高度：`42 + 5 + 5 = 52`。
+- 最后把这块 `118 × 52` 的面板放到按键上方，底部贴齐按键布局上沿。
+
+### 增加底部内边距，不会把整个面板往下推
+
+例如将 `insets.bottom` 从 5 改为 10：
+
+- 面板高度从 52 变为 57。
+- **面板底部不动**，顶部向上扩展 5 点。
+- 符号内容与面板底部之间，多了 5 点空白。
+
+增加 `insets.top` 则是在内容上方增加空白，同样不改变面板底部。
+
+旧版 HintSymbols 没有独立的 `spacing`、`anchor` 和整体 `offset`。
+如果需要格间距或上下移动面板，请使用**只有一行的 Grid**。两者外观可以相似，但 Grid 使用相对位移选择，交互不完全相同。
+
+## 3. Grid：一行、多行都能用
+
+Grid 的 `size` 也表示**每一格**的大小。再用 `spacing` 控制格间距，用 `insets` 控制面板四周留白：
+
+```yaml
+qButton:
+  hintSymbolsGridStyle: qGrid
+
+qGrid:
+  symbolRows:
+    - [symbol1, symbol2, symbol3]
+    - [symbol4, symbol5, symbol6]
+  size: { width: 36, height: 42 }
+  spacing: { horizontal: 3, vertical: 3 }
+  insets: { top: 5, bottom: 5, left: 5, right: 5 }
+  offset: { x: 0, y: 0 }
+  selected: { row: 0, col: 0 }
+  backgroundStyle: hintBackground
+```
+
+这块两行三列面板：
+
+- 宽度：3 个格子、2 条列间距、左右留白，共 `3 × 36 + 2 × 3 + 5 + 5 = 124`。
+- 高度：2 个格子、1 条行间距、上下留白，共 `2 × 42 + 3 + 5 + 5 = 97`。
+
+如果只保留第一行，高度就变成 `42 + 5 + 5 = 52`。**一行和多行的底部定位完全一样**，增加行数只是让面板向上长高。
+
+### 想让它与普通 hint 底部对齐
+
+保持下面的设置即可：
+
+```yaml
+qGrid:
+  # 其他配置省略
+  offset: { x: 0, y: 0 }
+  # 不设置 anchor
+```
+
+`offset` 不写时也默认为 0。**不必统一 size、行数或 insets**。
+
+### 想让它离按键远一点：用 offset
+
+```yaml
+qGrid:
+  # 其他配置省略
+  offset: { x: 0, y: -6 }
+```
+
+这会把**整块面板，包括背景、文字和选中状态**一起向上移 6 点。
+
+| `offset.y` | 面板会怎样 |
+| --- | --- |
+| `0` | 保持默认位置，底部与普通 hint 对齐 |
+| `-6` | 向上移动 6 点，和按键布局上沿之间留出 6 点间隔 |
+| `6` | 向下移动 6 点，可能覆盖按键 |
+
+以上假设未设置有效 `anchor`，也未触发顶部避让。`offset.x` 同理：正数向右，负数向左；左右越界时仍会做位置修正。
+
+**`insets.bottom: 6` 是在面板里面留空白；`offset.y: -6` 是把整块面板向上移。两者不能互相替代。**
+
+### 想让符号围绕按键排列：用 anchor
+
+```yaml
+anchor: { row: 1, col: 1 }
+```
+
+这表示：把第 2 行、第 2 列那个格子的**中心**，放到当前按键的**中心**上。行、列都从 0 开始计数。
+
+此时定位方式已经换了，**不再保证整块面板在按键上方，也不再保证底部对齐**。
+若同时设置 `offset`，会在锚点对齐之后再移动面板。超出行列范围的 anchor 按未设置处理。
+
+<Aside type="tip" title="默认选中某一格，不需要 anchor">
+`anchor` 决定面板放在哪里；`selected` 决定长按时先高亮哪一格，并作为相对选择的起点。
+例如 `selected: { row: 0, col: 1 }` 会默认选中第一行第二格，**不会移动面板**。
+</Aside>
+
+更多选中、移动和取消规则，见[长按符号网格](../hintsymbolsgrid/)。
+
+## 同样叫 insets，写在哪里很重要
+
+| 写的位置 | 实际作用 | 整个提示会变大吗？ |
+| --- | --- | --- |
+| `qSymbols.insets` / `qGrid.insets` | 给面板四周增加留白 | 会，但默认底部不动 |
+| `hintBackground.insets` | 把背景绘制区域往里收 | 不会 |
+| `qLabel.insets` | 把文字绘制区域往里收 | 不会 |
+| `selectedBackground.insets` | 把选中背景往格子里面收 | 不会 |
+
+例如，下面两种写法虽然都有 `bottom: 6`，效果却不同：
+
+```yaml
+# 写在 Grid 上：符号内容与面板底部之间，留出 6 点空白
+qGrid:
+  # 其他配置省略
+  insets: { bottom: 6 }
+
+# 写在背景上：背景少画底部 6 点，容器和其他图层不动
+hintBackground:
+  buttonStyleType: geometry
+  normalColor: "#FFFFFF"
+  insets: { bottom: 6 }
+```
+
+第二种写法会让背景的**下边缘看起来更靠上**，但也会缩短背景的绘制高度，文字不会自动跟着移动。
+因此，看到背景边缘不齐时，不一定是提示定位出了问题。
+
+## size 可以怎么写？
+
+第一次调整时，建议先用固定尺寸，最容易观察效果。以下三种写法任选其一：
+
+```yaml
+# 固定宽 50、高 60
+size: { width: 50, height: 60 }
+```
+
+```yaml
+# 宽取承载视图的 1/10，高取承载视图的 1/4
+size: { width: "1/10", height: "1/4" }
+```
+
+```yaml
+# 与上面的分数写法相同
+size:
+  width: { percentage: 0.1 }
+  height: { percentage: 0.25 }
+```
+
+这里的「承载视图」指放置按键的触摸视图，主键盘通常就是按键区，**不是当前单个按键，也不是整个屏幕**。
+如果它的尺寸是 `400 × 240`，上面的百分比就得到 `40 × 60`，小数结果分别向上取整。
+
+记住两点：
+
+1. 对普通 hint，这是整个提示的大小；对两种长按面板，这是每一格的大小，面板还会加上格数、内边距和 Grid 的格间距。
+2. **宽、高都要填写有效值。** 只写 `height` 或只写 `width`，不会只改一个方向，而是整体回退到按键可视区域的尺寸。
+
+iOS 的尺寸单位为 pt，Android 按 1pt = 1dp 换算，不是物理像素。
+`insets`、`spacing`、`offset` 填数值点值，不支持上述百分比写法。
+
+## 完整示例：三种提示底部对齐
+
+<details>
+<summary>展开查看可复制的样式配置</summary>
+
+这是样式片段，可以合入已有键盘布局，**不是完整的皮肤文件**。
+按下时显示 `qHint`，长按优先显示 `qGrid`；想试旧版单行面板，删除 `qButton` 上的 `hintSymbolsGridStyle` 引用即可。
+
+```yaml
+qButton:
+  action: { character: q }
+  hintStyle: qHint
+  hintSymbolsStyle: qSymbols
+  hintSymbolsGridStyle: qGrid
+
+qHint:
+  # 普通 hint：整个提示的大小
+  size: { width: 50, height: 60 }
+  backgroundStyle: hintBackground
+  foregroundStyle: qLabel
+
+qSymbols:
+  symbolStyles: [symbol1, symbol2, symbol3]
+  # 长按面板：每一格的大小
+  size: { width: 36, height: 42 }
+  insets: { top: 5, bottom: 5, left: 5, right: 5 }
+  backgroundStyle: hintBackground
+  selectedBackgroundStyle: selectedBackground
+  selectedIndex: 0
+
+qGrid:
+  symbolRows: [[symbol1, symbol2, symbol3]]
+  size: { width: 36, height: 42 }
+  spacing: { horizontal: 3, vertical: 3 }
+  insets: { top: 5, bottom: 5, left: 5, right: 5 }
+  # 不额外移动，也不设置 anchor，底部就保持对齐
+  offset: { x: 0, y: 0 }
+  selected: { row: 0, col: 0 }
+  backgroundStyle: hintBackground
+  selectedBackgroundStyle: selectedBackground
+
+hintBackground:
+  buttonStyleType: geometry
+  normalColor: "#FFFFFF"
+  cornerRadius: 10
+
+selectedBackground:
+  buttonStyleType: geometry
+  normalColor: "#DDE8FF"
+  highlightColor: "#DDE8FF"
+  cornerRadius: 6
+  # 只让选中背景缩进格子里，不改变面板尺寸
+  insets: { top: 3, bottom: 3, left: 3, right: 3 }
+
+qLabel:
+  buttonStyleType: text
+  text: Q
+  fontSize: 28
+  normalColor: "#222222"
+
+symbol1: { action: { character: "1" }, foregroundStyle: symbol1Label }
+symbol2: { action: { character: "2" }, foregroundStyle: symbol2Label }
+symbol3: { action: { character: "3" }, foregroundStyle: symbol3Label }
+symbol1Label: { buttonStyleType: text, text: "1", fontSize: 24, normalColor: "#222222" }
+symbol2Label: { buttonStyleType: text, text: "2", fontSize: 24, normalColor: "#222222" }
+symbol3Label: { buttonStyleType: text, text: "3", fontSize: 24, normalColor: "#222222" }
+```
+
+</details>
+
+## 仍然不齐？按这个顺序检查
+
+1. **先看 Grid 的 `offset.y`。** 如果是 `-6`，它本来就会比默认 hint 高 6 点；改成 `0` 再比较。
+2. **再看有没有 `anchor`。** 要底部对齐就不设置它；只想默认选中某格，应改 `selected`。
+3. **检查背景和图片。** 背景 `insets`、提示或单元格 `bounds`、图片透明留白、阴影都可能改变可见边缘。
+4. **确认是不是正常显示状态。** 顶部空间不足或手指已上滑时，提示位置可能已经发生变化。
+5. **确认修改已生效。** Jsonnet 源码需要重新生成 light/dark 配置并打包；设备上也要使用更新后的应用和皮肤。
+
+Gboard、胭云、彩虹、莫吉托、hamster 曾统一设置 Grid 的 `offset.y: -6`，因此即使应用的默认定位已经对齐，它们仍会额外上移。
+将皮肤里的这个值改为 `0` 后，正常状态下才会与普通 hint 的底部一致。
+
+## 进阶：坐标、公式和平台差异
+
+<details>
+<summary>需要精确计算位置时，再看这一节</summary>
+
+### 坐标与默认位置
+
+UIKit / Android View 通常以左上角为原点，y 向下增加：`minY` 是上边缘，`maxY` 是下边缘。
+如果你以屏幕左下角为原点观察，下边缘对应的是那个坐标系的 `minY`，不要混用。
+
+设按键布局上边缘为 `K`，提示完整高度为 `H`，默认位置为：
+
+```text
+提示上边缘 = K - H
+提示下边缘 = K
+```
+
+无有效 anchor 的 Grid 应用偏移后：
+
+```text
+Grid 下边缘 = K + offset.y
+```
+
+有效 anchor 则改为：
+
+```text
+面板上边缘 = 按键中心 y - 锚点单元格在面板内的中心 y + offset.y
+```
+
+水平方向上，普通 hint 对齐按键**可视区域**的中心；两种长按面板默认对齐按键**布局区域**的中心，左右超界时再修正位置。
+
+### 面板总尺寸
+
+单行 HintSymbols：
+
+```text
+面板宽度 = 符号数量 × 格子宽度 + left + right
+面板高度 = 格子高度 + top + bottom
+```
+
+Grid 的列数取最长一行的长度；空单元格仍占据布局位置：
+
+```text
+面板宽度 = 列数 × 格子宽度 + (列数 - 1) × horizontal + left + right
+面板高度 = 行数 × 格子高度 + (行数 - 1) × vertical + top + bottom
+```
+
+其中 `horizontal / vertical` 来自 `spacing`，四个方向的留白来自面板的 `insets`。
+
+### 顶部避让
+
+各提示样式的 `checkIfOverflowsParentHeight` 默认 `true`。
+应用先算尺寸和位置，应用 Grid 的 anchor/offset，再检查顶部；空间不足时，**把整个提示向下移动，而不是缩小高度**。
+因此不同高度的提示在这种情况下不一定仍然底部对齐。通常应保留这个保护，不要为了正常状态的对齐而关闭它。
+
+- iOS 的允许顶部是键盘扩展宿主根视图顶部加 2pt，不是设备屏幕顶部，也不是单个按键区顶部。
+- Android 初始显示对应宿主覆盖区顶部加 2dp。
+- 设置为 `false` 只跳过这项初始顶部修正，不保证越界内容可见。
+
+### 上滑跟随
+
+普通 hint 进入跟随手势后，不再固定在初始位置：
+
+- iOS 以提示实际高度计算初始位置，再按上滑位移更新。
+- Android 等手指到达气泡底边后再 1:1 跟随；跟随时有独立顶部限制，不受 `checkIfOverflowsParentHeight` 控制。
+
+本页介绍的是已统一底部定位的实现。旧版应用可能仍采用旧公式，只更新皮肤包不能替代应用更新。
+
+</details>

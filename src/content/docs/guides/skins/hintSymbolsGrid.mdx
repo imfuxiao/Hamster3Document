@@ -6,7 +6,7 @@ import { Aside, Code } from "@astrojs/starlight/components";
 
 `hintSymbolsGridStyle` 是长按符号功能的网格布局版本。
 
-旧版 `hintSymbolsStyle` 仅支持在按键上方单行显示一列符号，并通过左右滑动切换选中项。
+旧版 `hintSymbolsStyle` 仅支持在按键上方单行显示一排符号，并通过左右滑动切换选中项。
 网格版支持**多行多列自由布局**：符号可以环绕当前按键显示（上下左右各一个），也可以组成任意行列的面板；
 选择方式为**相对位移**——以手指按下的位置为原点，按位移方向与距离换算出目标单元格，
 手指**无需移动到符号上方**，释放手指时执行高亮符号对应的 action。
@@ -17,6 +17,8 @@ import { Aside, Code } from "@astrojs/starlight/components";
 - 老版本 App 不识别 `hintSymbolsGridStyle`，会自动忽略并继续使用旧版配置。
   因此皮肤中同时保留两者，即可同时兼容新老版本。
 </Aside>
+
+尺寸、内边距以及与普通 hint / 旧版单行符号的底部对齐关系，见[按键提示的尺寸与对齐](../hints/)。
 
 ## 启用方式
 
@@ -59,7 +61,7 @@ symbolRows:
 
 必选项：否
 
-单个单元格的尺寸。省略时默认使用当前按键的可视区域尺寸。
+单个单元格的尺寸，不是面板总尺寸。宽、高必须同时有效；否则整体使用当前按键的可视区域尺寸。百分比相对当前按键触摸视图宽高并向上取整，不是相对当前按键。
 
 ```yaml
 size:
@@ -85,7 +87,7 @@ spacing: { horizontal: 4, vertical: 4 }
 
 必选项：否
 
-整个网格面板的内边距，语义与旧版 `hintSymbolsStyle` 的 `insets` 相同。
+整个网格面板的内边距，默认各方向为 0。它计入面板总尺寸，内容从 left/top 开始排列；默认底部仍贴着按键布局上沿，增加 bottom 不会让容器底部额外向下伸出。背景图层或选中背景自身的 `insets` 只收缩绘制区域，不增加面板尺寸。
 
 ```yaml
 insets: { top: 4, bottom: 4, left: 4, right: 4 }
@@ -100,7 +102,9 @@ insets: { top: 4, bottom: 4, left: 4, right: 4 }
 锚点单元格坐标（`row` / `col` 均从 0 开始）。
 指定后，该单元格的**中心**会与当前按键的中心对齐，配合空单元格即可实现环绕按键的布局。
 
-省略时，网格面板整体水平居中显示在按键正上方（与旧版位置一致）。
+省略或行列越界时，网格面板水平居中显示在按键正上方；未施加 offset 和顶部避让前，完整面板底部对齐按键布局区域的上沿。单行和多行采用相同规则。
+
+`selected` 只设置初始高亮，不参与面板定位；不要为了默认选中某一格而设置 anchor。
 
 ```yaml
 anchor: { row: 1, col: 1 }
@@ -112,7 +116,9 @@ anchor: { row: 1, col: 1 }
 
 必选项：否
 
-在锚点对齐结果的基础上对面板整体位置做微调，默认为 `{ x: 0, y: 0 }`，y 为正时向下偏移。
+在默认放置于按键上方或 anchor 中心对齐结果的基础上，移动整个面板，默认为 `{ x: 0, y: 0 }`。x 正数向右，y 正数向下，负数反向。
+
+要与普通 hint 底部对齐，应省略 anchor 并将 `offset.y` 设为 0。下面示例会主动上移 10 点，使底部不再对齐；增减 size/insets 只改尺寸，不能代替这个位移。随后仍会执行左右边界及顶部避让。
 
 ```yaml
 offset: { x: 0, y: -10 }
@@ -172,7 +178,7 @@ moveThreshold: 8
 
 - `backgroundStyle`：整个网格面板的背景样式。
 - `selectedBackgroundStyle`：高亮单元格的背景样式。
-- `checkIfOverflowsParentHeight`：是否检测面板超出键盘顶部并自动调整位置，默认 `true`。
+- `checkIfOverflowsParentHeight`：是否检测面板超出宿主可绘制区域顶部并自动下移，默认 `true`。顶部避让优先于默认底部对齐，空间不足时仍可能使底部不一致。
 
 <Aside type="tip" title="单元格自带背景">
 单元格的符号样式可以配置自己的 `backgroundStyle`（如与键盘按键相同的背景）。
