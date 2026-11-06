@@ -91,6 +91,12 @@ import { Aside } from "@astrojs/starlight/components";
     - 类型：`String`
 - `highlightLowerEdgeColor`：按下时底部边缘的颜色
     - 类型：`String`
+- `lowerEdgeHeight`：底部边缘高度
+  - 类型: `Double`
+  - 非必选项，默认为 `1 pt`
+  - 注意：
+    - 只有设置 `LowerEdgeColor` 颜色时，此参数才生效
+    - 此参数需 TF > 625, 商店 >= 1.13.2
 - `normalShadowColor`：未按下时的阴影颜色
     - 类型：`String`，默认为空，表示无阴影
 - `highlightShadowColor`：按下时的阴影颜色
