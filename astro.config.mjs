@@ -57,6 +57,11 @@ export default defineConfig({
           label: "开启元书键盘",
           slug: "guides/enable-keyboard",
         },
+        {
+          label: "纠错功能",
+          slug: "guides/correction",
+          badge: { text: "实验", variant: "caution" },
+        },
         // 应用设置指南：需要在侧栏展示时，取消下面整段的注释。
         /*
         {

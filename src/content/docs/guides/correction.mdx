@@ -1,0 +1,348 @@
+---
+title: 按键纠错配置（实验）
+description: librime-correction 的全拼、双拼与码表配置、完整进阶参数、正常输入保护、升级迁移及排查指南。
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+<Aside type="danger">
+实验功能：表示此功能会调整，或删除。
+
+此功能需：TF >= 626，商店版本还未上线（不一定会上线）。
+</Aside>
+
+元书利用 RIME 引擎的插件功能，编写了 `librime-correction` 插件，已实现纠错功能。
+
+- 纠错功能目前支持**邻键误按**和**相邻换位**。
+- 纠错功能不会直接改写输入的字母，而是沿用原词典尝试提供候选；最终上屏仍由选词或原方案的自动上屏逻辑决定。
+
+## 配置前先确认三件事
+
+### 1. 修改哪个文件
+
+在当前使用的方案目录中，新建或编辑与方案 ID 对应的 `.custom.yaml` 文件，例如：
+
+| 正在使用的方案 ID | 对应的自定义配置文件 |
+| --- | --- |
+| `rime_ice` | `rime_ice.custom.yaml` |
+| `double_pinyin` | `double_pinyin.custom.yaml` |
+| `double_pinyin_flypy` | `double_pinyin_flypy.custom.yaml` |
+| `txjx` | `txjx.custom.yaml` |
+
+方案 ID 可以在对应 `.schema.yaml` 文件的 `schema/schema_id` 中查看。不要直接修改 `build` 目录里的部署产物，重新部署时它们会被重新生成。
+
+<Aside type="caution" title="合并配置，不要覆盖原文件">
+- 先备份已有配置。
+- 文件里已有 `patch:` 时，将示例中的配置项合并到它下面，不要再添加第二个 `patch:`。
+- 已有 `"switches/+"` 时，把纠错开关追加到它的列表中；已有同名参数时，不要重复添加。
+- YAML 使用空格缩进，不要使用 Tab。
+</Aside>
+
+### 2. 替换列表中的哪一项
+
+在方案的 `engine/translators` 中，找到负责普通字词输入的 `script_translator` 或 `table_translator`。
+
+> 注意：已有自定义配置（*.custom.yaml 文件）是否也调整过这个（`engine/translators`）列表。
+
+例如，下面这个列表的主翻译器是第二项：
+
+```yaml
+engine:
+  translators:
+    - punct_translator         # @0：标点，保留
+    - script_translator        # @1：主翻译器，替换这一项
+    - lua_translator@other     # @2：其他功能，保留
+```
+
+**列表（指 `translators` 下面的参数）下标从 `0` 开始。以下示例统一假定主翻译器位于 `@1`，它不是所有方案通用的位置。** 如果你的主翻译器位于第一项，应将示例中的 `@1` 改为 `@0`。
+
+只替换目标项，保留其他翻译器、处理器、过滤器和词典设置。
+
+不要把插件翻译器与原翻译器并列添加，也不要为了纠错把 `table_translator` 改成 script 类型。
+
+### 3. 使用哪个入口
+
+| 原翻译器 | 全拼方案使用 | 双拼方案使用 |
+| --- | --- | --- |
+| `script_translator` | `pinyin_correction_translator@translator` | `double_pinyin_correction_translator@translator` |
+| `table_translator` | `pinyin_correction_table_translator@translator` | `double_pinyin_correction_table_translator@translator` |
+
+原项没有 `@` 后缀时，使用上表中的 `@translator`。原项有自定义后缀时，需要保留，例如 `script_translator@pinyin` 应替换成 `pinyin_correction_translator@pinyin`，不能改成 `@translator`。
+
+音形码表的普通字词若由 `table_translator` 查询，可以按下方的码表示例接入，但 Lua 顶功、自造词等外围功能仍需单独测试。（目前只测试过小鹤音形）
+
+## 示例一：全拼方案且使用 script_translator
+
+适用于主翻译器为 `script_translator` 的全拼方案。以 `rime_ice` 为例，配置文件为 `rime_ice.custom.yaml`；主翻译器位置仍需自行核对。
+
+```yaml
+patch:
+  # 假定主翻译器是第二项；请按实际列表位置修改。
+  "engine/translators/@1": pinyin_correction_translator@translator
+
+  "switches/+":
+    - name: pinyin_correction_enabled
+      reset: 1
+      states: [全拼纠错关, 全拼纠错开]
+```
+
+这个示例在方案初始化时开启纠错，默认只启用**邻键误按**，例如尝试将 `nihso` 按 `nihao` 查词。
+
+如果希望默认关闭，手动打开后才使用，将这条开关的 `reset: 1` 改成 `reset: 0`。
+
+## 示例二：双拼方案且使用 script_translator
+
+适用于主翻译器为 `script_translator` 的双拼方案。自然码、小鹤等方案使用相同的插件入口，保留各自原来的双拼编码规则即可，不需要另配键位表。
+
+例如自然码通常修改 `double_pinyin.custom.yaml`，小鹤双拼通常修改 `double_pinyin_flypy.custom.yaml`，以实际方案 ID 为准。
+
+```yaml
+patch:
+  # 假定主翻译器是第二项；请按实际列表位置修改。
+  "engine/translators/@1": double_pinyin_correction_translator@translator
+
+  "switches/+":
+    - name: double_pinyin_correction_enabled
+      reset: 1
+      states: [双拼纠错关, 双拼纠错开]
+```
+
+双拼纠错使用当前方案实际的按键编码。例如，只有当当前方案把“好”编码为 `hk` 时，`jk → hk` 才是对应的邻键纠错例子；开启换位后，还可以尝试 `kh → hk`。
+
+
+<Aside type="tip" title="两个开关各管各的">
+- 全拼入口只读取 `pinyin_correction_enabled`，双拼入口只读取 `double_pinyin_correction_enabled`。普通方案只需配置与所选入口匹配的一个开关，不需要两个都加。
+- 开关按全拼／双拼入口区分，不按 script／table 区分。它们不是切换双拼布局的开关
+- 不要同时添加同一词典的 script 和 table 入口，否则可能造成候选和学习重复。
+</Aside>
+
+## 示例三：原来使用 table_translator 的码表方案
+
+### 全拼码表入口
+
+```yaml
+patch:
+  # 只替换原来的 table_translator，不要替换 script 或 Lua 翻译器。
+  # @1 仍是示例下标。
+  "engine/translators/@1": pinyin_correction_table_translator@translator
+
+  "switches/+":
+    - name: pinyin_correction_enabled
+      reset: 1
+      states: [全拼纠错关, 全拼纠错开]
+```
+
+### 双拼或音形码表入口
+
+```yaml
+patch:
+  # 只替换原来的 table_translator；@1 仍是示例下标。
+  "engine/translators/@1": double_pinyin_correction_table_translator@translator
+
+  "switches/+":
+    - name: double_pinyin_correction_enabled
+      reset: 1
+      states: [按键纠错关, 按键纠错开]
+```
+
+音形码表也使用词典中的实际编码；入口名字里虽然有 `double_pinyin`，并不意味着会把音形码转换成双拼。
+
+`states` 中的中文只是显示名称，可以改成“按键纠错关 / 按键纠错开”，但 `name` 必须保留为入口对应的固定开关名。
+
+注意：目前音形方案仅测试过小鹤音形，别的方案没有测试过，不保证可用。
+
+## 示例四：原翻译器带自定义命名空间
+
+假设原来是 `script_translator@pinyin`，并且位于第二项。`@pinyin` 表示它读取 `pinyin` 这一组设置；替换时保留这个后缀，纠错参数也要写在 `pinyin/` 下。
+
+```yaml
+patch:
+  "engine/translators/@1": pinyin_correction_translator@pinyin
+
+  "switches/+":
+    - name: pinyin_correction_enabled
+      reset: 1
+      states: [全拼纠错关, 全拼纠错开]
+
+  # 命名空间是 pinyin，因此这里不是 translator/key_correction。
+  "pinyin/key_correction/transpose": true
+```
+
+这个示例同时开启邻键纠错和相邻换位。自定义命名空间不会改变开关名，仍然使用 `pinyin_correction_enabled`。
+
+## 可选进阶设置
+
+全拼和双拼的 script／table 四种入口使用相同的一组进阶参数。**所有参数都可以省略，未填写的参数采用默认值**；通常先使用默认配置，只有需要调整纠错类型、容错程度或搜索开销时再修改。
+
+这些参数放在对应 translator 的 `<命名空间>/key_correction` 下。以下以 `@translator` 为例；如果使用的是 `@pinyin`，就将路径中的 `translator/` 改为 `pinyin/`。**这些参数不能代替翻译器替换和开关配置**；修改参数不会自动打开纠错，仍需开启前文所述的对应开关。
+
+### 完整配置示例
+
+下面列出了全部 8 个进阶参数，数值均为当前默认值，包括默认关闭的 `transpose`。如需保留前面示例开启的换位功能，请继续使用 `transpose: true`，不要用此默认值覆盖它。实际使用时只需保留想修改的条目，并合并到已有的 `patch:` 下，不要重复创建 `patch:`。
+
+```yaml
+patch:
+  # 允许纠正哪些按键错误
+  "translator/key_correction/neighbour": true
+  "translator/key_correction/transpose": false
+
+  # 是否假定当前待转换输入的首键正确（默认不作此假定）
+  "translator/key_correction/trust_first_key": false
+
+  # 每个拼写最多允许几次编辑
+  "translator/key_correction/max_edits": 1
+
+  # 多长的输入仍参与插件纠错，单位为字节
+  "translator/key_correction/max_input_bytes": 64
+
+  # 搜索工作量：单个起点上限、一次查询的总上限
+  "translator/key_correction/max_states": 1024
+  "translator/key_correction/max_query_states": 8192
+
+  # 每个搜索起点最多保留多少个拼写修正假设
+  "translator/key_correction/max_results": 64
+```
+
+### 两类按键纠错
+
+以下两项接受 `true`（开启）或 `false`（关闭）：`neighbour` 默认 true，`transpose` 默认 false。示例表示目标编码，不保证在所有方案出现特定词或排名。
+
+| 参数 | 默认值 | 含义 | 示例 |
+|---|---|---|---|
+| `neighbour` | true | QWERTY 邻键替换，不任意替换字母 | `hso → hao` |
+| `transpose` | false | 同一拼写内相邻两键交换，需显式开启 | `hoa → hao` |
+
+邻键关系采用固定的 QWERTY 键位模型，不会随皮肤布局自动改变，不能视为九键或任意自定义布局的通用纠错。换位以同一拼写为范围，跨音节换位不保证按一次编辑恢复。
+
+双拼按当前编码工作，例如 `hao` 编为 `hk` 时，`jk → hk` 是邻键，`kh → hk` 是换位（需要开启 transpose）。
+
+需要换位时，在已有 `patch:` 下添加以下配置并重新部署/加载方案；自定义命名空间应替换 `translator`：
+
+```yaml
+"translator/key_correction/transpose": true
+```
+
+已有显式 `transpose: true` 的配置仍会开启换位，不受默认值变更影响。
+
+漏键、多键、重复键功能已删除。升级时必须删除旧 `missing_key`、`extra_key`、`repeated_key` 字段，包括值为 false 的字段；残留字段报 `correction.invalid_config` 并回退原生流程，不会静默忽略。
+
+同时关闭两类规则时，插件直接使用原生翻译流程，table 的完整正常多音节词条补充也会关闭。原方案已有 algebra、简拼和原生旧纠错仍按原配置工作，不受功能删除影响。
+
+#### 首键可信：`trust_first_key`
+
+默认 `false`，保留原先允许首键纠错的行为。若希望假定当前待转换输入的第一个按键正确，在已有 `patch:` 中添加：
+
+```yaml
+"translator/key_correction/trust_first_key": true
+```
+
+- 这是硬约束：首键不参与邻键替换，也不能与第二键换位。首键确实按错时，插件不会修复它。
+- 只保护当前 translator 查询输入的首键，不保护后续每个音节的首键；分隔符后的音节仍可纠错。部分选词后，剩余待转换输入是新查询，其首键重新受保护。
+- 只约束插件新增的机械搜索。原生候选、方案自带 algebra 和旧 `enable_correction` 不受此设置过滤。
+- 邻键搜索和新增候选使用 QWERTY 实际键距代价，并结合词频排序；不为某个词或码单独加权。键距排序也适用于 `trust_first_key: false`。
+
+在无词频的 flypy 音形词典隔离验证中，开启后 `cwui`、`crui` 的首选均为 `ceui → 测试`，`ceui` 的正常首选不变。其他词典或带外围过滤器的宿主不保证相同排序。这是插件隔离测试的结果，不是任意元书方案的首选承诺。使用旧版本元书时，应先更新到包含这些参数支持的插件版本，再部署／加载配置；旧插件不识别新参数时会报配置错误并回退。
+
+### `max_edits`：每个拼写允许的编辑次数
+
+- **默认值：**`1`。
+- **可填写：**整数 `1` 或 `2`。
+- **作用：**控制匹配一个目标拼写时，最多允许使用几次上述机械编辑。
+
+一次邻键替换或一次相邻换位计为一次编辑。例如 `jso → hao` 需要两次邻键替换，必须允许两次编辑。增大此值也不会启用补键或删键。
+
+这里的“拼写”指一个音节对应的输入编码：全拼如 `hao`，双拼则使用当前方案中对应的编码；直接音形码表中，每个完整源编码也可能作为一个拼写处理。**它不是整个词语或句子的总次数限制。**多个音节可以分别发生纠错。
+
+设为 `2` 可以搜索错误更多的拼写，但也会增加竞争结果和计算量，更容易达到下文的搜索上限。建议先保留 `1`，确有需求时再尝试 `2`。想关闭纠错应使用对应开关，而不是填写 `0`。
+
+### `max_input_bytes`：参与纠错的输入长度上限
+
+- **默认值：**`64`。
+- **可填写：**整数 `1～256`。
+- **作用：**一次传给该 translator 的输入超过这个长度时，不运行插件新增纠错，直接使用原生翻译流程。
+
+单位是**字节**，不是汉字数量；常用英文字母、分号、空格和单引号都是一字节。检查的是当前这次查询的输入串，不是整篇已上屏文本。
+
+调小可以减少长输入时的纠错开销，但超过上限的输入不再获得插件新增纠错；调大可让更长的输入参与搜索，也可能增加耗时。**超过上限不会截断、删除或阻止用户继续输入，只是不再进行插件新增纠错。**
+
+### `max_states` 与 `max_query_states`：搜索工作量上限
+
+“搜索状态”是算法探索中的一种中间情况，例如已经走到某个编码位置、消费了多少原始按键、用了几次编辑。它不是一个汉字候选，也不是一个最终匹配结果。
+
+| 参数 | 默认值 | 可填写范围 | 控制对象 |
+|---|---:|---|---|
+| `max_states` | `1024` | 整数 `1～8192` | 从一个输入位置开始搜索时，最多调度多少个状态，包括已经处理和仍在排队的状态。 |
+| `max_query_states` | `8192` | 整数 `1～65536` | 一次 translator 查询中，各个搜索起点合计最多处理多少个状态。 |
+
+一个多音节输入可能需要从多个位置搜索，所以需要同时设置“单个起点上限”和“整次查询总上限”。单个起点也受查询剩余预算限制；即使 `max_states` 很大，总预算耗尽后也不会继续新增搜索。
+
+- **调大：**允许探索更多拼写路径，可能减少因搜索提前停止造成的漏召回，但会增加 CPU 和内存开销。
+- **调小：**更早限制搜索工作量，但可能使某些纠错路径还没找到就被截断。
+
+这些数值是工作量限制，不是毫秒超时；它们只约束插件的机械搜索，不限制原生查词、组句或旧纠错的总耗时。通常应保留默认值，不建议一开始就全部调到最大。
+
+### `max_results`：保留的拼写修正假设数量
+
+- **默认值：**`64`。
+- **可填写：**整数 `1～256`。
+- **作用：**每个搜索起点最多保留多少个不同目标拼写的修正假设，再通过原有词典接口查词。
+
+例如，某段输入可能被解释成多个合法拼写，`max_results` 限制的是保留多少种这样的解释。超过上限时，优先保留编辑次数更少的结果；次数相同时，优先保留消费原始输入更长的结果，再比较键距代价，最后按拼写 ID 确定顺序。此顺序用于筛选拼写假设，不是最终汉字候选菜单的固定排序。
+
+**它不是候选菜单中的汉字或词语数量。**一个拼写可能对应多个同音词，保留下来的假设还会受到原生切分、查词、组句和候选截断的影响。
+
+调大可以保留更多已经找到的拼写假设，但可能增加后续处理开销；调小可以减少用于后续查词的假设数量，但也可能丢掉目标。它不能找回因搜索状态上限而根本没有探索到的结果，也不能提高 script/table 新增候选流的固定截断上限。
+
+### 修改与验证
+
+1. 只改需要调整的参数，其余保持默认；尽量一次修改一项，便于比较效果。
+2. 使用上表规定的布尔值或整数范围。未知字段、错误类型或越界数值会记录 `correction.invalid_config`，插件新增纠错回退到原生流程。
+3. 保存 custom 文件后重新部署并重新加载方案。参数和编码索引在 translator 创建时读取，单纯切换纠错开关不会重新读取 YAML。
+4. 用同一组输入对比纠错结果和响应速度。增加编辑次数、搜索状态或结果上限都不保证目标词一定进入菜单。
+
+更完整的命名空间和原生配置继承规则见[插件配置规格](https://github.com/imfuxiao/librime-correction/blob/main/doc/configuration.md)。
+
+## 保存后如何生效
+
+1. 保存 `.custom.yaml`，确认文件位于**当前使用的方案目录**。
+2. 在元书首页进入「RIME」，点击「部署」旁的「运行」，等待完成。
+3. 回到输入框，重新唤起元书键盘，选择刚才修改的方案。
+4. 本页示例使用 `reset: 1`，方案初始化时即开启纠错。如果使用 `reset: 0`，需要再手动打开对应开关。
+
+部署失败时查看「RIME → 日志」。只修改文件而不部署，键盘不会自动使用新配置；**不需要运行“方案重置”**。
+
+### 可选：给纠错功能绑定一个开关键
+
+可以通过皮肤按键动作 `rimeOption` 切换。以下属于**皮肤按键的动作配置**，不要放进方案的 `.custom.yaml`，也不是让你在输入框里输入这些字符。
+
+全拼：
+
+```yaml
+action: { rimeOption: pinyin_correction_enabled }
+```
+
+双拼或使用双拼入口的音形码表：
+
+```yaml
+action: { rimeOption: double_pinyin_correction_enabled }
+```
+
+每次执行动作都会切换对应开关。也可以在工具栏项的「按键动作」中选择 `Rime Option` 并填写对应开关名，再把该项加入实际工具栏。[皮肤按键动作](/apps/hamster/v3/docs/guides/skins/action/#切换-rime-option-选项状态)。
+
+## 如何检查是否有效
+
+以全拼为例，先确认正确输入 `nihao` 能得到目标词，再分别测试：
+
+| 输入 | 想验证的功能 | 配置条件 |
+| --- | --- | --- |
+| `nihao` | 正常输入不被纠错打乱 | 原生首选为完整正常词条时，保留原候选流 |
+| `nihso` | 邻键误按，尝试按 `nihao` 查词 | 纠错开关开启，`neighbour: true` |
+| `nihoa` | 相邻换位，尝试按 `nihao` 查词 | 纠错开关开启，`transpose: true` |
+
+再关闭纠错开关，用相同输入作对照。纠错不会直接改写你输入的字母，而是尝试提供对应汉字候选，选词上屏仍沿用原方案的操作方式。
+
+<Aside type="caution" title="示例不是必定命中的承诺">
+结果取决于词典、输入切分、原生候选、过滤器和搜索上限。目标词不保证出现，也不保证排在第一位。
+
+如果误码恰好使原生首选成为覆盖完整输入的正常词条，插件会保留原候选流，不再追加纠错。只有前缀、补全或临时组句时，仍可能尝试纠错。因此，不能用“某个错码没有出现预期词”单独判断插件是否加载成功。
+</Aside>
