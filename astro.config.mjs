@@ -147,6 +147,10 @@ export default defineConfig({
               slug: "guides/faqs/keyboard-not-in-system-list",
             },
             {
+              label: "系统语音听写如何添加粤语支持？",
+              slug: "guides/faqs/how-to-use-system-dictation",
+            },
+            {
               label: "如何将键盘文件复制到应用目录",
               slug: "guides/faqs/how-to-copy-keyboard-files",
             },
