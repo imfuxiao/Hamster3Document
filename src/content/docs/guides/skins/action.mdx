@@ -389,6 +389,9 @@ action: { keyboardType: '自定义键盘名称' }
 - `#verticalCandidatesPageUp`: 纵向候选栏向上翻页。
 - `#showPhraseView`：显示常用语视图。
 - `#showPasteboardView`：显示剪贴板视图。
+- `#showPhraseSearchView`：直接进入常用语搜索页面。详见下方 [直达搜索与 AI 对话](#直达搜索与-ai-对话)。
+- `#showPasteboardSearchView`：直接进入剪贴板搜索页面。
+- `#showAIChatView`：直接进入命令面板下的 AI 对话页面。
 - `#toggleScriptView`：脚本页面显示与隐藏切换。
 - `#candidatesBarStateToggle`: 候选栏状态切换。用来展开候选文字或收起候选文字。
 - `#rimePreviousPage`：rime 候选页向前翻页。仅在开启手工分页模式下有效。
@@ -404,6 +407,34 @@ action: { keyboardType: '自定义键盘名称' }
 ```yaml
 action: { shortcut: '#candidatesBarStateToggle' }
 ```
+
+### 直达搜索与 AI 对话
+
+以下快捷指令可以一步进入对应页面，不需要先打开列表或命令面板：
+
+- `#showPhraseSearchView`：常用语搜索页面。
+- `#showPasteboardSearchView`：剪贴板搜索页面。
+- `#showAIChatView`：命令面板下的 AI 对话页面，每次进入都是一个新对话。
+
+行为说明：
+
+- 当前已停在该指令对应的页面时，再次触发会关闭页面，回到键盘。搜索页会连同底下的列表一起关闭，AI 对话会连同命令面板一起关闭。
+- 停在其他页面时，触发后会先关闭当前页面，再进入目标页面。例如在常用语搜索页触发 `#showPasteboardSearchView`，会直接切换到剪贴板搜索页。
+- 在搜索页点击「返回」，回到对应的常用语或剪贴板列表；在 AI 对话页点击「返回」，回到命令面板首页。
+- AI 正在生成回复时再次触发 `#showAIChatView`，会直接停止生成并关闭，不弹确认。
+
+配置示例：
+
+```yaml
+action: { shortcut: '#showPhraseSearchView' }
+action: { shortcut: '#showPasteboardSearchView' }
+action: { shortcut: '#showAIChatView' }
+```
+
+<Aside type="tip" title="注意">
+  - 需 TF >= 651，商店 >= 1.13.3 版本
+  - 需开启键盘「完全访问」权限。`#showPhraseView`、`#showPasteboardView` 同样需要此权限。
+</Aside>
 
 ### RIME 部署与同步
 
