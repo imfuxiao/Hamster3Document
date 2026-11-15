@@ -362,6 +362,41 @@ action: { keyboardType: 'pinyin' }
 action: { keyboardType: '自定义键盘名称' }
 ```
 
+## 指定切换输入法 switchInputMethod
+
+<Badge text="Android" variant="success" size="medium" />
+
+`switchInputMethod`: 从当前使用的元书键盘直接切换到指定的系统输入法，无需先弹出系统输入法选择列表。参数为目标输入法的完整 ID 字符串，不是输入法名称，也不是单独的应用包名。
+
+与其他切换动作的区别：`keyboardType` 切换元书内部的键盘布局，`nextKeyboard` 切换到系统列表中的下一个输入法，`switchInputMethod` 则按 ID 指定目标输入法。
+
+### 获取输入法 ID
+
+1. 打开元书 App，进入「输入行为 → 系统输入法 ID 查询」。
+2. 页面列出除元书自身外的全部已安装输入法，标题为输入法名称，副标题为完整 ID。
+3. 点击目标输入法所在行，即可复制 ID，然后将其填入 `switchInputMethod` 参数。
+
+也可以在按键动作选择器中选择「指定切换输入法」，在输入框中粘贴复制的 ID。
+
+配置示例：
+
+```yaml
+# 切换到系统 Android 键盘；请以当前设备查询到的 ID 为准
+action: { switchInputMethod: 'com.android.inputmethod.latin/.LatinIME' }
+```
+
+行为说明：
+
+- 查询页包含尚未启用的输入法，但执行切换前，必须先在 Android 系统设置中启用目标输入法。
+- ID 为空、填写错误、目标已卸载或未启用，以及系统拒绝切换时，会提示「无法切换：目标输入法不可用或未启用」，不会自动启用目标，也不会改切其他输入法。
+- 切换后如需返回元书，请使用目标输入法的切换功能或系统输入法选择器。
+
+<Aside type="caution" title="仅 Android">
+  - 此动作仅元书 Android 版支持，需 0.1.0(58) 及以上版本。
+  - iOS 版无法识别此动作，使用此动作的按键在 iOS 上不会生效。跨平台共享的皮肤请避免使用。
+  - 示例中的输入法不一定安装在你的设备上，请复制当前设备查询到的完整 ID，不要直接照抄示例。
+</Aside>
+
 ## 快捷指令
 
 `shortcut`: 表示执行一个快捷指令。
