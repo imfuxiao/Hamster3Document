@@ -182,6 +182,11 @@ export default defineConfig({
               label: "为什么键盘启动时，$rimeSchemaName 文本内容不显示",
               slug: "guides/faqs/why-rime-schema-name-not-display"
             },
+            {
+              label: "在 MT 管理器中查看元书目录",
+              slug: "guides/faqs/view-the-metabook-catalog-in-the-mt-manager",
+              badge: { text: "Android", variant: "tip" },
+            }
           ],
           collapsed: true
         },
