@@ -92,6 +92,10 @@ export default defineConfig({
           slug: "guides/file-manager",
         },
         {
+          label: "LevelDB 数据库",
+          slug: "guides/leveldb",
+        },
+        {
           label: "网络存储",
           slug: "guides/remote-storage",
         },

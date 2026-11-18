@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="208" viewBox="0 0 480 208" role="img" aria-labelledby="title desc">
+  <title id="title">打开词库时选哪一层？</title>
+  <desc id="desc">在 RimeUserData 的 rime-ice 方案目录中，选中 rime_ice.userdb 文件夹，不要选里面的 CURRENT 文件。</desc>
+  <defs>
+    <path id="folder" d="M1 5a2 2 0 0 1 2-2h6l3 3h9a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2Z" fill="#ffe4a3" stroke="#946318" stroke-width="1.4"/>
+  </defs>
+  <rect width="480" height="208" rx="14" fill="#f5f7fa"/>
+  <g font-family="system-ui, sans-serif" font-size="18" fill="#243549">
+    <use href="#folder" x="22" y="20"/><text x="56" y="39">RimeUserData</text>
+    <path d="M34 49v23h20m13 12v32h20m13 16v32h20" fill="none" stroke="#8494a4" stroke-width="2"/>
+    <use href="#folder" x="56" y="60"/><text x="90" y="79">rime-ice</text>
+    <rect x="87" y="95" width="375" height="41" rx="8" fill="#d9f3e7" stroke="#78b5a2"/>
+    <use href="#folder" x="97" y="103"/><text x="131" y="122" font-weight="650">rime_ice.userdb</text>
+    <text x="447" y="122" text-anchor="end" font-size="17" fill="#115d48">选择这个文件夹</text>
+    <path d="M123 151h12l6 6v14h-18z" fill="#fff" stroke="#8494a4" stroke-width="1.5"/>
+    <text x="150" y="168">CURRENT</text><text x="447" y="168" text-anchor="end" font-size="16" fill="#546272">不选里面的文件</text>
+  </g>
+</svg>
