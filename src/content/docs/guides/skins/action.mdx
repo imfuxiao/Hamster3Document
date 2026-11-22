@@ -430,7 +430,8 @@ action: { switchInputMethod: 'com.android.inputmethod.latin/.LatinIME' }
 - `#showEmojiSearchView`：直接进入 Emoji 搜索页面。
    注意：此指令会直接打开内置的 Emoji 搜索页面，不管皮肤中是否设置的自己的 Emoji 键盘
 - `#toggleScriptView`：脚本页面显示与隐藏切换。
-- `#candidatesBarStateToggle`: 候选栏状态切换。用来展开候选文字或收起候选文字。
+- `#candidatesBarStateToggle`：展开或收起皮肤的纵向候选栏，不带首笔筛选。
+- `#candidateFilterPanelToggle`：展开或收起独立的[候选筛选面板](../candidate-filter-panel/)。有中文输入候选时可打开，支持首笔、单字和表情筛选。
 - `#rimePreviousPage`：rime 候选页向前翻页。仅在开启手工分页模式下有效。
 - `#rimeNextPage`：rime 候选页向后翻页。仅在开启手工分页模式下有效。
 - `#toggleEmbeddedInputMode`：内嵌模式状态切换。

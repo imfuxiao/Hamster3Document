@@ -112,6 +112,7 @@ export default defineConfig({
             { label: "键盘布局", slug: "guides/skins/layout" },
             { label: "预编辑区", slug: "guides/skins/preedit" },
             { label: "工具栏区", slug: "guides/skins/toolbar" },
+            { label: "候选字筛选面板", slug: "guides/skins/candidate-filter-panel" },
             { label: "按键区", slug: "guides/skins/keysarea" },
             { label: "样式", slug: "guides/skins/styles" },
             { label: "集合视图", slug: "guides/skins/collection" },

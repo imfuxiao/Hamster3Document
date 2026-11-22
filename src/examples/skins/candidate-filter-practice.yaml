@@ -1,0 +1,59 @@
+# 完整的浅色练习键盘文件，放在练习皮肤的 light/，不要覆盖日常使用的皮肤。
+preeditHeight: 24
+toolbarHeight: 44
+keyboardHeight: 180
+preeditStyle: {}
+toolbarStyle: {}
+keyboardStyle: {}
+
+# 第一部分：练习用的按键。character 交给中文输入方案处理，不是直接上屏。
+keyboardLayout:
+  - HStack:
+      subviews:
+        - Cell: practiceK
+        - Cell: practiceN
+        - Cell: practiceDelete
+practiceK: { action: { character: 'k' }, foregroundStyle: practiceKText }
+practiceN: { action: { character: 'n' }, foregroundStyle: practiceNText }
+practiceDelete: { action: backspace, foregroundStyle: practiceDeleteText }
+practiceKText: { buttonStyleType: text, text: 'k', fontSize: 22 }
+practiceNText: { buttonStyleType: text, text: 'n', fontSize: 22 }
+practiceDeleteText: { buttonStyleType: text, text: '退格', fontSize: 18 }
+
+# 第二部分：有候选时，左边显示原候选，右边显示「筛选」。
+horizontalCandidatesStyle: {}
+horizontalCandidatesLayout:
+  - HStack:
+      subviews:
+        - Cell: practiceCandidates
+        - Cell: filterPanelEntry
+practiceCandidates:
+  type: horizontalCandidates
+filterPanelEntry:
+  size: { width: 52 }
+  foregroundStyle: filterPanelEntryText
+  action: { shortcut: '#candidateFilterPanelToggle' }
+filterPanelEntryText:
+  buttonStyleType: text
+  text: '筛选'
+  fontSize: 15
+  normalColor: '#145C49'       # 外面横栏上的入口文字
+  highlightColor: '#092E24'    # 手指按住入口时的文字
+
+# 第三部分：面板内部。可以整段省略，仍能打开默认面板。
+candidateFilterPanelStyle:
+  backgroundColor: '#F3F8F5'   # 整个面板的浅绿色底
+  normal: { textColor: '#20382F', backgroundColor: '#00000000' }
+  candidate:
+    fontSize: 20
+    selected: { textColor: '#FFFFFF', backgroundColor: '#146451' }
+    pressed: { textColor: '#FFFFFF', backgroundColor: '#0D483B' }
+  stroke:
+    fontSize: 17               # 不重复写颜色，所选笔形自动和高亮候选同色
+  heading:
+    fontSize: 12
+    normal: { textColor: '#50665B' }
+  tool:
+    fontSize: 14
+    selected: { textColor: '#FFFFFF', backgroundColor: '#146451' }  # 当前范围
+    pressed: { textColor: '#092E24', backgroundColor: '#CBE5D7' }   # 按住工具键

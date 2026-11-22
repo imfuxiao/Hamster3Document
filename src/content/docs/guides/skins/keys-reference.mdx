@@ -139,6 +139,7 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 | `keyboardLayout` | `[LayoutNode]` | 否 | 按键区布局。 |
 | `horizontalCandidatesStyle` | `Object` | 否 | 横向候选区容器样式节点。 |
 | `horizontalCandidatesLayout` | `[LayoutNode]` | 否 | 横向候选区布局。 |
+| `candidateFilterPanelStyle` | `Object` | 否 | [展开候选筛选面板的外观](../candidate-filter-panel/)：候选、笔形、工具键和无结果提示。不负责添加入口。 |
 | `verticalCandidatesStyle` | `Object` | 否 | 纵向候选区容器样式节点。 |
 | `verticalCandidatesLayout` | `[LayoutNode]` | 否 | 纵向候选区布局。 |
 | `candidateContextMenu` | `[Object]` | 否 | 长按候选字弹出的菜单，见 [4.10](#410-候选字长按菜单-candidatecontextmenu)。 |
@@ -604,7 +605,8 @@ import { Aside, Badge } from "@astrojs/starlight/components";
 | `#showPhraseView` | 显示短语视图 |
 | `#showPasteboardView` | 显示剪贴板视图 |
 | `#toggleScriptView` | 切换脚本视图 |
-| `#candidatesBarStateToggle` | 候选栏展开 / 收起 |
+| `#candidatesBarStateToggle` | 旧纵向候选栏展开 / 收起 |
+| `#candidateFilterPanelToggle` | [展开 / 收起候选筛选面板](../candidate-filter-panel/)；不影响旧指令。 |
 | `#rimePreviousPage` | RIME 上一页 |
 | `#rimeNextPage` | RIME 下一页 |
 | `#toggleEmbeddedInputMode` | 切换内嵌输入模式 |
