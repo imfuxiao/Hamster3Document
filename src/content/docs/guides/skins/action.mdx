@@ -520,6 +520,49 @@ action: { switchRimeSchema: '方案ID或方案名称' }
 
 - v1.4.0 及以上版本有效
 
+## 邻键纠错 adjacentKeyCorrection
+
+`adjacentKeyCorrection`: 用于在键盘中切换、开启或关闭「邻键纠错」选项。适合单独绑定到按键，或配合 [组合 Action](#组合-action) 写在 `switchRimeSchema` 之前，在切换方案前按方案需求调整邻键纠错状态。
+
+参数支持以下取值（不区分大小写）：
+
+- `toggle`：在开与关之间切换当前状态。
+- `on`：开启邻键纠错（亦兼容 `true`）。
+- `off`：关闭邻键纠错（亦兼容 `false`）。
+
+配置示例：
+
+```yaml
+# 切换邻键纠错开关
+action: { adjacentKeyCorrection: 'toggle' }
+
+# 显式开启 / 关闭
+action: { adjacentKeyCorrection: 'on' }
+action: { adjacentKeyCorrection: 'off' }
+```
+
+配合 `combine` 在切换方案前设置状态：
+
+```yaml
+action:
+  combine:
+    - adjacentKeyCorrection: 'off'
+    - switchRimeSchema: wubi86
+```
+
+行为说明：
+
+- 当使用 `on` / `off` 且当前已经处于目标状态时，会静默跳过，不清空正在输入的编码，也不弹出提示。
+- 状态实际发生切换时，会先清空当前未上屏的编码与触控采样，再应用新状态。
+- 已开启键盘「完全访问」权限时，新状态会写入配置文件并立即生效，同时提示「邻键纠错·开」或「邻键纠错·关」。
+- 未开启键盘「完全访问」权限时，无法写入配置文件，新状态仅在本次键盘会话中临时生效，并提示「无完全访问权限，邻键纠错状态无法保存」。
+
+<Aside type="tip" title="注意">
+  - 仅支持通过皮肤 YAML 配置使用，不在 App 内按键动作选择器中提供入口。
+  - 参数 `on` / `off` 加不加引号均可识别，建议加上引号以获得更清晰的 YAML 语义；其他非法参数值将被忽略。
+  - 需开启键盘「完全访问」权限才能将修改持久化保存到配置文件。
+</Aside>
+
 ## 发送系统通知
 
 `userNotification`: 表示由键盘发送一条系统通知。通知正文为 JSON 格式，包含快捷指令名称与内容，可供快捷指令自动化读取使用。
