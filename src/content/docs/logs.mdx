@@ -2,16 +2,25 @@
 title: 更新日志
 description: 元书输入法版本更新历史记录
 ---
+import { Aside } from "@astrojs/starlight/components";
+
+
 ## 2.1.0(2026-11-24)
 
-本次版本更新 librime 引擎到 master 分支（dd705412），如遇到无法正常打字的情况，请重新部署方案后在尝试。 
+<Aside type="danger">
+本次版本更新 librime 引擎到 master 分支（dd705412）
+- 如遇到无法正常打字的情况，请重新部署方案后在尝试
+- 如果您的方案没有词库源码文件（text,yaml)，请联系方案作者更新
+</Aside>
 
 - 修复
   - 修复切换底部导航后日志和文本文件的无法关闭的行为
 - 优化
   - 皮肤浏览界面显示优化
   - 使用 [jrsonnet](https://github.com/deltarocks/jrsonnet) 替换 [jsonnet](https://github.com/google/jsonnet)，加速 Jsonnet 编译速度
+    - 「运行 main.jsonnet」选项默认不显示，如需此功能，请打开「皮肤开发者模式」（在皮肤页面右上角菜单内）
 - 功能
+  - 更新 librime 引擎到 master 分支（dd705412）
   - 新增候选字筛选面板：用于展开横向滑动候选字，并带有「首笔画」筛选功能
     - [功能文档](/apps/hamster/v3/docs/guides/skins/candidate-filter-panel/)
     - 默认隐藏筛选「单字」「表情」tab，下滑显示
